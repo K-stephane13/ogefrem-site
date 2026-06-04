@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OGEFREM | Horaires navires et avions desservant la RDC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/animations.css">
+</head>
+<body>
+
+    <div id="navbar-placeholder"></div>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 data-aos="fade-up">Horaires navires & avions</h1>
+                <p data-aos="fade-up" data-aos-delay="100">Desservant la République Démocratique du Congo</p>
+                <div class="header-decoration" data-aos="fade-up" data-aos-delay="150"></div>
+            </div>
+        </section>
+
+        <section class="service-content-section">
+            <div class="container">
+                <div class="row g-5">
+                    <div class="col-lg-6" data-aos="fade-right">
+                        <div class="service-card-glass">
+                            <div class="service-card-header"><i class="fas fa-ship"></i><h3>Horaires navires - Port de Matadi</h3></div>
+                            <div class="table-responsive-wrapper">
+                                <table class="table-service">
+                                    <thead><tr><th>Compagnie</th><th>Provenance</th><th>Arrivée prévue</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>MAERSK</td><td>Shanghai</td><td>10/06/2025</td></tr>
+                                        <tr><td>CMA CGM</td><td>Anvers</td><td>15/06/2025</td></tr>
+                                        <tr><td>MSC</td><td>Dubaï</td><td>20/06/2025</td></tr>
+                                        <tr><td>Bolloré</td><td>Le Havre</td><td>25/06/2025</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6" data-aos="fade-left">
+                        <div class="service-card-glass">
+                            <div class="service-card-header"><i class="fas fa-plane"></i><h3>Horaires avions - Aéroport de Kinshasa (FIH)</h3></div>
+                            <div class="table-responsive-wrapper">
+                                <table class="table-service">
+                                    <thead><tr><th>Compagnie</th><th>Provenance</th><th>Arrivée</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>Ethiopian Airlines</td><td>Addis-Abeba</td><td>08h00, 14h30</td></tr>
+                                        <tr><td>Kenya Airways</td><td>Nairobi</td><td>10h15, 17h45</td></tr>
+                                        <tr><td>RwandAir</td><td>Kigali</td><td>12h30</td></tr>
+                                        <tr><td>Air France</td><td>Paris</td><td>20h00</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-banner mt-4" data-aos="fade-up">
+                    <i class="fas fa-info-circle"></i>
+                    <div>Les horaires sont donnés à titre indicatif. Veuillez confirmer auprès des compagnies.</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="../assets/js/admin-data.js"></script>
+    <script src="../assets/js/components.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { AOS.init({ duration: 800, once: true }); });</script>
+</body>
+</html>

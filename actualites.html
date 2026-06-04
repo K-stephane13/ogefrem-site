@@ -1,0 +1,70 @@
+<!-- actualites.html - VERSION COMPLÈTE AVEC ADMIN-DATA.JS -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OGEFREM | Actualités - Toute l'actualité de l'OGEFREM</title>
+    <meta name="description" content="Retrouvez toutes les actualités, événements et communiqués de l'OGEFREM. Restez informés des dernières nouvelles du fret congolais.">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+</head>
+<body>
+
+    <div id="navbar-placeholder"></div>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 data-aos="fade-up">Actualités</h1>
+                <p data-aos="fade-up" data-aos-delay="100">Toute l'actualité de l'OGEFREM - Restez informés !</p>
+                <div class="header-decoration" data-aos="fade-up" data-aos-delay="150"></div>
+            </div>
+        </section>
+
+        <section class="actualites-page-section">
+            <div class="container">
+                <!-- Filtres par catégorie -->
+                <div class="filters-bar" data-aos="fade-up">
+                    <button class="filter-active-btn active" data-filter="all">Toutes</button>
+                    <button class="filter-active-btn" data-filter="evenement">Événements</button>
+                    <button class="filter-active-btn" data-filter="communique">Communiqués</button>
+                    <button class="filter-active-btn" data-filter="projet">Projets</button>
+                    <button class="filter-active-btn" data-filter="partenariat">Partenariats</button>
+                    <button class="filter-active-btn" data-filter="avis">Avis officiels</button>
+                </div>
+
+                <!-- Grille des actualités -->
+                <div class="row g-4" id="actualitesGrid">
+                    <!-- Les actualités seront chargées dynamiquement -->
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-wrapper mt-5" data-aos="fade-up">
+                    <nav aria-label="Pagination">
+                        <ul class="pagination justify-content-center" id="pagination">
+                            <!-- Pagination générée dynamiquement -->
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/admin-data.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/actualites.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!-- services.html - VERSION COMPLÈTE AVEC ADMIN-DATA.JS -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OGEFREM | Nos services - Solutions pour chargeurs et transitaires</title>
+    <meta name="description" content="OGEFREM propose des services digitaux pour le fret multimodal : suivi des cargaisons, mandataires, transporteurs, mercuriales, et plus encore.">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+</head>
+<body>
+
+    <div id="navbar-placeholder"></div>
+
+    <main>
+        <!-- PAGE HEADER -->
+        <section class="page-header">
+            <div class="container">
+                <h1 data-aos="fade-up">Nos services</h1>
+                <p data-aos="fade-up" data-aos-delay="100">Des solutions digitales pour tous vos besoins en fret multimodal</p>
+                <div class="header-decoration" data-aos="fade-up" data-aos-delay="150"></div>
+            </div>
+        </section>
+
+        <!-- SECTION INTRO -->
+        <section class="services-intro">
+            <div class="container">
+                <div class="intro-text" data-aos="fade-up">
+                    <p>L'OGEFREM met à votre disposition une gamme complète de services digitaux pour faciliter vos opérations de fret multimodal. Que vous soyez chargeur, transitaire ou transporteur, nos solutions sont conçues pour vous offrir une expérience fluide et efficace.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRILLE DES SERVICES DYNAMIQUE -->
+        <section class="services-full-grid">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <h2>Nos <span class="highlight">services</span> opérationnels</h2>
+                    <p>Des services digitaux à votre disposition</p>
+                    <div class="header-decoration"></div>
+                </div>
+                <div class="row g-4" id="servicesContainer">
+                    <!-- Les services seront chargés dynamiquement -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION STATISTIQUES AVEC CHART.JS -->
+        <section class="stats-chart-section">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <h2>Statistiques du <span class="highlight">fret en RDC</span></h2>
+                    <p>Volumes de marchandises traités par l'OGEFREM (en tonnes)</p>
+                    <div class="header-decoration"></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-10 mx-auto" data-aos="fade-up">
+                        <div class="chart-container">
+                            <canvas id="fretChart" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4" data-aos="fade-up">
+                    <a href="#" class="btn btn-outline-primary"><i class="fas fa-download"></i> Télécharger les statistiques complètes (PDF)</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION BESOIN D'AIDE -->
+        <section class="help-section">
+            <div class="container">
+                <div class="help-card" data-aos="fade-up">
+                    <div class="help-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div class="help-content">
+                        <h3>Besoin d'aide ?</h3>
+                        <p>Notre équipe support est à votre disposition pour vous accompagner dans l'utilisation de nos services.</p>
+                        <a href="messagerie.html" class="btn btn-primary">Contacter le support <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/admin-data.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({ duration: 800, once: true });
+            
+            // Charger les services dynamiquement
+            const services = AdminData.getServices();
+            const servicesContainer = document.getElementById('servicesContainer');
+            if (servicesContainer && services.length > 0) {
+                servicesContainer.innerHTML = services.map((service, index) => `
+                    <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="${(index + 1) * 50}">
+                        <a href="${service.lien}" class="service-card-modern">
+                            <div class="service-card-modern-icon">
+                                <i class="fas ${service.icone}"></i>
+                            </div>
+                            <h3>${service.titre}</h3>
+                            <p>${service.description.substring(0, 100)}${service.description.length > 100 ? '...' : ''}</p>
+                            <span class="service-card-modern-link">Accéder au service <i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+                `).join('');
+            }
+        });
+    </script>
+</body>
+</html>

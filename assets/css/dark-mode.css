@@ -1,0 +1,61 @@
+/* ===== MODE SOMBRE ===== */
+body.dark-mode {
+    background: var(--dark-bg);
+    color: #e0e0e0;
+}
+
+body.dark-mode .navbar {
+    background: rgba(10, 15, 26, 0.95);
+}
+
+body.dark-mode .card-glass {
+    background: rgba(30, 35, 50, 0.9);
+    border-color: rgba(255,255,255,0.1);
+    color: #e0e0e0;
+}
+
+body.dark-mode .stats-section {
+    background: var(--dark-bg);
+}
+
+body.dark-mode .stat-card {
+    background: #1a1f2e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .mission-card,
+body.dark-mode .member-card,
+body.dark-mode .service-card {
+    background: #1a1f2e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background: #1a1f2e;
+    border-color: #333;
+    color: #e0e0e0;
+}
+
+body.dark-mode .filter-btn {
+    border-color: var(--primary-yellow);
+    color: var(--primary-yellow);
+}
+
+body.dark-mode .filter-btn:hover,
+body.dark-mode .filter-btn.active {
+    background: var(--primary-yellow);
+    color: var(--dark-bg);
+}
+
+.dark-mode-toggle {
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: white;
+    transition: var(--transition);
+}
+
+.dark-mode-toggle:hover {
+    color: var(--primary-yellow);
+    transform: rotate(15deg);
+}

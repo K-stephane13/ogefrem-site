@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "titre": "Appel d'offres : Modernisation du Port Sec de Kasumbalesa",
+    "date": "2025-05-20",
+    "contenu": "OGEFREM lance un appel d'offres international pour la concession et la modernisation du Port Sec de Kasumbalesa. Les candidatures sont ouvertes jusqu'au 30 septembre 2025.",
+    "lien_pdf": "#"
+  },
+  {
+    "id": 2,
+    "titre": "Communiqué : Nouvelle plateforme FERI 2.0",
+    "date": "2025-05-15",
+    "contenu": "Lancement officiel de la plateforme FERI modernisée avec suivi en temps réel des cargaisons. Formation des utilisateurs prévue en juin 2025.",
+    "lien_pdf": "#"
+  },
+  {
+    "id": 3,
+    "titre": "Avis : Attention aux faux sites OGEFREM",
+    "date": "2025-05-10",
+    "contenu": "Un site frauduleux www.ogefrem-feri-fere-da.org a été détecté. Utilisez uniquement ogefremsite.org pour toutes vos démarches officielles.",
+    "lien_pdf": "#"
+  }
+]

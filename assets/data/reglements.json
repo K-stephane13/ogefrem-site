@@ -1,0 +1,82 @@
+[
+    {
+        "id": 1,
+        "titre": "Arrêté ministériel n°001/CAB/MIN/TRANS/2025",
+        "categorie": "Arrêtés",
+        "date": "2025-01-15",
+        "resume": "Fixation des nouveaux tarifs FERI pour l'exercice 2025. Applicable à partir du 1er février 2025.",
+        "pdf_url": "#"
+    },
+    {
+        "id": 2,
+        "titre": "Avis aux chargeurs n°002/OGEFREM/2025",
+        "categorie": "Avis aux chargeurs",
+        "date": "2025-02-10",
+        "resume": "Nouvelles procédures de déclaration FERE pour les produits sensibles. Les déclarations doivent désormais être effectuées au plus tard 48h avant l'embarquement.",
+        "pdf_url": "#"
+    },
+    {
+        "id": 3,
+        "titre": "Circulaire n°003/OGEFREM/DG/2024",
+        "categorie": "Circulaires",
+        "date": "2024-12-20",
+        "resume": "Modalités d'application de la commission d'intervention (1%) pour les produits de première nécessité.",
+        "pdf_url": "#"
+    },
+    {
+        "id": 4,
+        "titre": "Grille tarifaire FERI 2025",
+        "categorie": "Grilles tarifaires",
+        "date": "2025-01-01",
+        "resume": "Tarifs applicables pour la déclaration FERI/FERE par catégorie de produits et par mode de transport.",
+        "pdf_url": "#"
+    },
+    {
+        "id": 5,
+        "titre": "Décret de création de l'OGEFREM n°80-123",
+        "categorie": "Autres",
+        "date": "1980-05-15",
+        "resume": "Décret présidentiel portant création de l'Office de Gestion du Fret Multimodal (OGEFREM).",
+        "pdf_url": "#"
+    },
+    {
+        "id": 6,
+        "titre": "Avis aux chargeurs n°001/OGEFREM/2025",
+        "categorie": "Avis aux chargeurs",
+        "date": "2025-01-20",
+        "resume": "Information sur la modernisation de la plateforme FERI et la nouvelle interface utilisateur.",
+        "pdf_url": "#"
+    },
+    {
+        "id": 7,
+        "titre": "Arrêté interministériel n°045/CAB/MIN/TRANS/2024",
+        "categorie": "Arrêtés",
+        "date": "2024-11-10",
+        "resume": "Dispositions relatives au contrôle des marchandises transitant par le Port Sec de Kasumbalesa.",
+        "pdf_url": "#"
+    },
+    {
+        "id": 8,
+        "titre": "Circulaire n°005/OGEFREM/DG/2025",
+        "categorie": "Circulaires",
+        "date": "2025-03-05",
+        "resume": "Modalités de renouvellement des agréments des mandataires et transitaires pour l'année 2025.",
+        "pdf_url": "#"
+    },
+    {
+        "id": 9,
+        "titre": "Grille tarifaire commission d'intervention",
+        "categorie": "Grilles tarifaires",
+        "date": "2025-01-15",
+        "resume": "Détail des taux de commission par catégorie de produits (produits de première nécessité, produits industriels, etc.).",
+        "pdf_url": "#"
+    },
+    {
+        "id": 10,
+        "titre": "Code ISPS - Règles de sûreté maritime",
+        "categorie": "Autres",
+        "date": "2024-06-01",
+        "resume": "International Ship and Port Facility Security Code - Règles applicables aux ports congolais.",
+        "pdf_url": "#"
+    }
+]

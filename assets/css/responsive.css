@@ -1,0 +1,546 @@
+/* ===== RESPONSIVE ===== */
+/* Très grand écran (Desktop > 1400px) */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1320px;
+    }
+    
+    .hero-content h1 {
+        font-size: 4rem;
+    }
+}
+
+/* Grand écran (Desktop 1200px - 1400px) */
+@media (max-width: 1200px) {
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+}
+
+/* Tablette et petit desktop (992px - 1200px) */
+@media (max-width: 992px) {
+    /* Général */
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    /* Stats */
+    .stats-section {
+        padding: 60px 0;
+    }
+    
+    .stat-card {
+        padding: 20px;
+    }
+    
+    .stat-number {
+        font-size: 1.8rem;
+    }
+    
+    /* Grille services */
+    .service-card-modern {
+        padding: 30px 20px;
+    }
+    
+    .service-card-modern h3 {
+        font-size: 1.1rem;
+    }
+    
+    /* Timeline */
+    .timeline-vertical {
+        padding-left: 20px;
+    }
+    
+    .timeline-year-vertical {
+        position: relative;
+        left: 0;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+    
+    .timeline-item-vertical {
+        margin-bottom: 25px;
+    }
+    
+    .timeline-vertical::before {
+        left: 0;
+    }
+    
+    .timeline-content-vertical {
+        padding-left: 15px;
+    }
+    
+    /* Alternance sections */
+    .alternance-section .row {
+        flex-direction: column !important;
+    }
+    
+    .alternance-image {
+        margin-bottom: 30px;
+        max-width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .alternance-content {
+        text-align: center;
+        padding: 0;
+    }
+    
+    .alternance-content ul {
+        text-align: left;
+        display: inline-block;
+    }
+    
+    /* Leaders */
+    .leader-photo-large {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .leader-card-large h4 {
+        font-size: 1.1rem;
+    }
+    
+    .leader-message {
+        font-size: 0.85rem;
+    }
+    
+    /* Organigramme */
+    .org-niveau-2, .org-niveau-3, .org-niveau-4 {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .org-node {
+        width: 80%;
+        min-width: auto;
+    }
+    
+    /* Footer */
+    .footer {
+        text-align: center;
+    }
+    
+    .social-links {
+        justify-content: center;
+    }
+    
+    .footer ul {
+        text-align: center;
+    }
+}
+
+/* Tablette (768px - 992px) */
+@media (max-width: 768px) {
+    /* Général */
+    body {
+        font-size: 14px;
+    }
+    
+    .content-section {
+        padding: 50px 0;
+    }
+    
+    .section-header {
+        margin-bottom: 40px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.6rem;
+    }
+    
+    .section-header p {
+        font-size: 0.9rem;
+        padding: 0 15px;
+    }
+    
+    /* Header */
+    .page-header {
+        padding: 100px 0 50px;
+    }
+    
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .page-header p {
+        font-size: 0.9rem;
+    }
+    
+    /* Hero */
+    .hero-section {
+        min-height: 500px;
+    }
+    
+    .hero-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .hero-buttons .btn {
+        display: block;
+        margin: 10px auto;
+        width: 80%;
+        font-size: 0.9rem;
+    }
+    
+    /* Cards */
+    .card-glass {
+        padding: 20px;
+    }
+    
+    .mission-card-large, .member-card-large {
+        padding: 20px;
+    }
+    
+    /* Stats */
+    .stat-card {
+        margin-bottom: 20px;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .stat-icon {
+        font-size: 2rem;
+    }
+    
+    /* Services grid */
+    .service-card-modern {
+        padding: 25px 15px;
+    }
+    
+    .service-card-modern-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .service-card-modern-icon i {
+        font-size: 1.8rem;
+    }
+    
+    .service-card-modern h3 {
+        font-size: 1rem;
+    }
+    
+    .service-card-modern p {
+        font-size: 0.85rem;
+    }
+    
+    /* Tables */
+    .table-service th, .table-service td {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .table-responsive-wrapper {
+        overflow-x: auto;
+    }
+    
+    /* Formulaire */
+    .form-control, .form-select {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+    
+    /* Boutons */
+    .btn {
+        padding: 8px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+    
+    /* Filtres */
+    .filter-buttons {
+        gap: 8px;
+    }
+    
+    .filter-btn {
+        padding: 6px 14px;
+        font-size: 0.8rem;
+    }
+    
+    /* Contact page */
+    .contact-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .contact-icon {
+        margin: 0 auto;
+    }
+    
+    .emergency-contact, .secure-access {
+        flex-direction: column;
+        text-align: center;
+        margin: 0 15px 20px;
+    }
+    
+    /* Help card */
+    .help-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 20px;
+    }
+    
+    /* Timeline */
+    .timeline-moderne {
+        padding-left: 20px;
+    }
+    
+    .timeline-dot {
+        left: -20px;
+    }
+}
+
+/* Petit téléphone (moins de 576px) */
+@media (max-width: 576px) {
+    /* Général */
+    body {
+        font-size: 13px;
+    }
+    
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.4rem;
+    }
+    
+    .section-header p {
+        font-size: 0.85rem;
+    }
+    
+    /* Hero */
+    .hero-section {
+        min-height: 450px;
+    }
+    
+    .hero-content h1 {
+        font-size: 1.4rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.85rem;
+    }
+    
+    .hero-buttons .btn {
+        width: 90%;
+        font-size: 0.85rem;
+    }
+    
+    /* Statistiques - 2 colonnes au lieu de 4 */
+    .stats-section .col-sm-6 {
+        width: 50%;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-number {
+        font-size: 1.3rem;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
+    }
+    
+    /* Cartes */
+    .card-glass {
+        padding: 15px;
+    }
+    
+    /* Membres - 2 par ligne */
+    .member-card-large {
+        padding: 15px;
+    }
+    
+    .member-photo-large {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+    }
+    
+    /* Leaders */
+    .leader-photo-large {
+        width: 120px;
+        height: 120px;
+    }
+    
+    /* Footer */
+    .footer {
+        padding: 40px 0 20px;
+    }
+    
+    .footer h5 {
+        font-size: 1rem;
+    }
+    
+    .footer ul li a {
+        font-size: 0.85rem;
+    }
+    
+    /* Formulaires */
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        height: 50px;
+    }
+    
+    /* Tables */
+    .table-service th, .table-service td {
+        padding: 6px 8px;
+        font-size: 0.7rem;
+    }
+    
+    /* Offres et demandes */
+    .offre-card {
+        margin-bottom: 15px;
+    }
+    
+    .offre-header h3 {
+        font-size: 0.9rem;
+    }
+    
+    .offre-body p {
+        font-size: 0.8rem;
+    }
+    
+    .demande-item h4 {
+        font-size: 0.9rem;
+        padding-right: 60px;
+    }
+    
+    .demande-badge {
+        font-size: 0.6rem;
+        padding: 2px 8px;
+    }
+    
+    /* Partenaires - 2 par ligne */
+    .partners-grid {
+        gap: 15px;
+    }
+    
+    .partner-item {
+        min-width: calc(50% - 15px);
+        padding: 15px;
+    }
+    
+    .partner-logo {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .partner-name {
+        font-size: 0.8rem;
+    }
+    
+    .partner-item small {
+        font-size: 0.6rem;
+    }
+    
+    /* DG section */
+    .dg-photo-large {
+        max-width: 250px;
+    }
+    
+    .mot-dg-content-large {
+        padding: 20px;
+    }
+    
+    .mot-dg-content-large p {
+        font-size: 0.9rem;
+    }
+    
+    .signature-block {
+        text-align: center;
+    }
+    
+    .signature-line {
+        margin: 10px auto;
+    }
+    
+    /* FAQ */
+    .faq-question {
+        padding: 12px 15px;
+        font-size: 0.85rem;
+    }
+    
+    .faq-answer {
+        font-size: 0.8rem;
+    }
+    
+    /* Alertes */
+    .alert-card-danger {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .info-banner {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* Très petit téléphone (moins de 400px) */
+@media (max-width: 400px) {
+    .stat-number {
+        font-size: 1.1rem;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .hero-content h1 {
+        font-size: 1.2rem;
+    }
+    
+    .btn {
+        padding: 6px 15px;
+        font-size: 0.8rem;
+    }
+    
+    .section-header h2 {
+        font-size: 1.2rem;
+    }
+    
+    .partner-item {
+        min-width: 100%;
+    }
+}
+
+/* Orientation paysage sur mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero-section {
+        min-height: 350px;
+    }
+    
+    .hero-content h1 {
+        font-size: 1.3rem;
+    }
+    
+    .navbar {
+        padding: 0.5rem 0;
+    }
+}
