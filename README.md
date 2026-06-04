@@ -24,4 +24,4 @@ Site institutionnel de l'Office de Gestion du Fret Multimodal de la RDC.
 
 1. Clonez le dépôt :
 ```bash
-git clone https://github.com/K-S/ogefrem-site.git
+git clone https://github.com/K-stephane13/ogefrem-site.git
