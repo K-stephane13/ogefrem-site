@@ -42,8 +42,8 @@ const AdminData = {
             return JSON.parse(saved);
         }
         return [
-            { id: 1, nom: "Directeur Général", titre: "Directeur Général", message: "Moderniser le fret congolais pour une meilleure compétitivité", photo: "assets/images/DG-MAYELE.jpeg", ordre: 1 },
-            { id: 2, nom: "Directeur Général Adjoint", titre: "Directeur Général Adjoint", message: "L'innovation au service des chargeurs", photo: "assets/images/dga.jpg", ordre: 2 },
+            { id: 1, nom: "Directeur Général", titre: "Directeur Général", message: "Moderniser le fret congolais pour une meilleure compétitivité", photo: "assets/images/DG.jpeg", ordre: 1 },
+            { id: 2, nom: "Directeur Général Adjoint", titre: "Directeur Général Adjoint", message: "L'innovation au service des chargeurs", photo: "assets/images/DG-MAYELE.jpeg", ordre: 2 },
             { id: 3, nom: "Président du CA", titre: "Président du Conseil d'Administration", message: "Une gouvernance transparente et efficace", photo: "assets/images/PCA.png", ordre: 3 },
             { id: 4, nom: "Ministre des Transports", titre: "Ministre des Transports", message: "Partenariat stratégique avec l'OGEFREM", photo: "assets/images/MINISTRE.png", ordre: 4 }
         ];
