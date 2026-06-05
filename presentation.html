@@ -15,6 +15,95 @@
     <link rel="stylesheet" href="assets/css/dark-mode.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
     <link rel="stylesheet" href="assets/css/animations.css">
+    
+    <style>
+        /* Styles spécifiques pour le Comité de Gestion - cartes réduites et alignées */
+        .comite-section .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .comite-card {
+            background: var(--card-bg, #ffffff);
+            border-radius: 16px;
+            padding: 20px 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .comite-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+        
+        .comite-photo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #FFCC00;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+        
+        .comite-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .comite-card h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 10px 0 5px;
+            color: #003399;
+        }
+        
+        .comite-card .comite-title {
+            font-size: 0.8rem;
+            color: #FFCC00;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .comite-card .comite-message {
+            font-size: 0.75rem;
+            line-height: 1.4;
+            color: #666;
+            margin: 0;
+            padding: 0 5px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            font-style: italic;
+        }
+        
+        /* Version responsive pour mobile */
+        @media (max-width: 768px) {
+            .comite-photo {
+                width: 100px;
+                height: 100px;
+            }
+            .comite-card h4 {
+                font-size: 1rem;
+            }
+            .comite-card .comite-title {
+                font-size: 0.7rem;
+            }
+            .comite-card .comite-message {
+                font-size: 0.7rem;
+                -webkit-line-clamp: 2;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -309,14 +398,14 @@
             </div>
         </section>
 
-        <!-- SECTION 7 : COMITÉ DE GESTION (AVEC PHOTOS) -->
+        <!-- SECTION 7 : COMITÉ DE GESTION (AVEC PHOTOS) - VERSION AVEC CARTES RÉDUITES -->
         <section class="content-section comite-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
                     <h2>Comité de <span class="highlight">Gestion</span></h2>
                     <div class="header-decoration"></div>
                 </div>
-                <div class="row g-5" id="comiteContainer">
+                <div class="row g-4" id="comiteContainer">
                     <!-- Les leaders seront chargés dynamiquement -->
                 </div>
             </div>
@@ -406,19 +495,19 @@
         document.addEventListener('DOMContentLoaded', function() {
             AOS.init({ duration: 800, once: true });
             
-            // Charger les leaders pour la section Comité de Gestion
+            // Charger les leaders pour la section Comité de Gestion - Version avec cartes réduites
             const leaders = AdminData.getLeaders();
             const comiteContainer = document.getElementById('comiteContainer');
             if (comiteContainer && leaders.length > 0) {
                 comiteContainer.innerHTML = leaders.map(leader => `
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                        <div class="leader-card-large">
-                            <div class="leader-photo-large">
-                                <img src="${leader.photo || 'https://placehold.co/300x300/003399/white?text=' + leader.nom.charAt(0)}" alt="${leader.nom}" onerror="this.src='https://placehold.co/300x300/003399/white?text=${leader.nom.charAt(0)}'">
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="comite-card">
+                            <div class="comite-photo">
+                                <img src="${leader.photo || 'https://placehold.co/120x120/003399/white?text=' + leader.nom.charAt(0)}" alt="${leader.nom}" onerror="this.src='https://placehold.co/120x120/003399/white?text=${leader.nom.charAt(0)}'">
                             </div>
                             <h4>${leader.nom}</h4>
-                            <p class="leader-title">${leader.titre}</p>
-                            <p class="leader-message">"${leader.message}"</p>
+                            <p class="comite-title">${leader.titre}</p>
+                            <p class="comite-message">"${leader.message.length > 80 ? leader.message.substring(0, 80) + '...' : leader.message}"</p>
                         </div>
                     </div>
                 `).join('');
