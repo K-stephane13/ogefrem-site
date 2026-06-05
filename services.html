@@ -1,4 +1,4 @@
-<!-- services.html - VERSION COMPLÈTE AVEC ADMIN-DATA.JS -->
+<!-- services.html - VERSION COMPLÈTE AVEC GRAPHIQUE CORRIGÉ -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -15,6 +15,22 @@
     <link rel="stylesheet" href="assets/css/dark-mode.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
     <link rel="stylesheet" href="assets/css/animations.css">
+    
+    <style>
+        /* Styles supplémentaires pour le graphique */
+        .chart-container {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            position: relative;
+            height: 400px;
+        }
+        .chart-container canvas {
+            max-height: 350px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
 
@@ -28,7 +44,7 @@
                 <p data-aos="fade-up" data-aos-delay="100">Des solutions digitales pour tous vos besoins en fret multimodal</p>
                 <div class="header-decoration" data-aos="fade-up" data-aos-delay="150"></div>
             </div>
-        </section>
+        </section> <br>
 
         <!-- SECTION INTRO -->
         <section class="services-intro">
@@ -51,14 +67,14 @@
                     <!-- Les services seront chargés dynamiquement -->
                 </div>
             </div>
-        </section>
+        </section> <br>
 
         <!-- SECTION STATISTIQUES AVEC CHART.JS -->
         <section class="stats-chart-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
                     <h2>Statistiques du <span class="highlight">fret en RDC</span></h2>
-                    <p>Volumes de marchandises traités par l'OGEFREM (en tonnes)</p>
+                    <p>Volumes de marchandises traités par l'OGEFREM (en milliers de tonnes)</p>
                     <div class="header-decoration"></div>
                 </div>
                 <div class="row">
@@ -69,17 +85,16 @@
                     </div>
                 </div>
                 <div class="text-center mt-4" data-aos="fade-up">
-                    <a href="#" class="btn btn-outline-primary"><i class="fas fa-download"></i> Télécharger les statistiques complètes (PDF)</a>
+                    <a href="#" class="btn btn-outline-primary" id="downloadStatsBtn"><i class="fas fa-download"></i> Télécharger les statistiques complètes (PDF)</a>
                 </div>
             </div>
-        </section>
+        </section> <br>
 
         <!-- SECTION BESOIN D'AIDE -->
         <section class="help-section">
             <div class="container">
                 <div class="help-card" data-aos="fade-up">
                     <div class="help-icon">
-                        <i class="fas fa-headset"></i>
                     </div>
                     <div class="help-content">
                         <h3>Besoin d'aide ?</h3>
@@ -103,7 +118,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             AOS.init({ duration: 800, once: true });
             
-            // Charger les services dynamiquement
+            // Charger les services dynamiquement depuis AdminData
             const services = AdminData.getServices();
             const servicesContainer = document.getElementById('servicesContainer');
             if (servicesContainer && services.length > 0) {
@@ -119,6 +134,95 @@
                         </a>
                     </div>
                 `).join('');
+            }
+            
+            // ==================== CRÉATION DU GRAPHIQUE CHART.JS ====================
+            const ctx = document.getElementById('fretChart')?.getContext('2d');
+            if (ctx) {
+                // Données des volumes de fret (en milliers de tonnes)
+                // Ces données peuvent être modifiées via l'admin plus tard
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
+                        datasets: [{
+                            label: 'Volumes de fret (milliers de tonnes)',
+                            data: [125, 142, 138, 156, 162, 178, 185, 192, 188, 201, 215, 228],
+                            borderColor: '#003399',
+                            backgroundColor: 'rgba(0, 51, 153, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#FFCC00',
+                            pointBorderColor: '#003399',
+                            pointRadius: 5,
+                            pointHoverRadius: 8,
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: {
+                                        size: 12,
+                                        family: 'Inter, sans-serif'
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.raw + ' milliers de tonnes';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Milliers de tonnes',
+                                    font: {
+                                        weight: 'bold',
+                                        size: 12
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(0,0,0,0.05)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Mois de l\'année 2025',
+                                    font: {
+                                        weight: 'bold',
+                                        size: 12
+                                    }
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Téléchargement des statistiques (simulation)
+            const downloadBtn = document.getElementById('downloadStatsBtn');
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('📊 Téléchargement des statistiques complètes du fret (PDF)\n\nCette fonctionnalité sera disponible prochainement.');
+                });
             }
         });
     </script>
