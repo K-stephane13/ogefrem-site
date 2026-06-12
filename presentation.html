@@ -1,4 +1,4 @@
-<!-- presentation.html - VERSION COMPLÈTE AVEC ADMIN-DATA.JS -->
+<!-- presentation.html - VERSION COMPLÈTE AVEC ORDRE CORRIGÉ -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -86,7 +86,6 @@
             font-style: italic;
         }
         
-        /* Version responsive pour mobile */
         @media (max-width: 768px) {
             .comite-photo {
                 width: 100px;
@@ -113,40 +112,72 @@
         <!-- PAGE HEADER -->
         <section class="page-header">
             <div class="container">
-                <h1 data-aos="fade-up">Présentation d'OGEFREM</h1>
+                <h1 data-aos="fade-up">Présentation de l'OGEFREM</h1>
                 <p data-aos="fade-up" data-aos-delay="100">Découvrez notre histoire, nos missions, notre organisation et nos réalisations</p>
                 <div class="header-decoration" data-aos="fade-up" data-aos-delay="150"></div>
             </div>
         </section>
 
-        <!-- SECTION 1 : HISTORIQUE -->
-        <section class="content-section historique-section">
-            <div class="container">
-                <div class="section-header" data-aos="fade-up">
-                    <h2>Notre <span class="highlight">Histoire</span></h2>
-                    <div class="header-decoration"></div>
-                </div>
-                <div class="row align-items-center g-5">
-                    <div class="col-lg-6" data-aos="fade-right">
-                        <div class="historique-texte">
-                            <p><strong>OGEFREM</strong>, alors Office de Gestion du Fret Maritime, est né de la volonté de l'État Congolais de se conformer aux recommandations et dispositions du Code de conduite des conférences maritimes adopté par la CNUCED en 1974, ainsi que celles de la Charte des transports maritimes en Afrique de l'Ouest et du Centre appelée <strong>« Charte d'Abidjan »</strong>.</p>
-                            <p>Il est créé par l'ordonnance présidentielle <strong>n°80/256 du 12 novembre 1980</strong>. Par le décret <strong>n°09/63 du 03/12/2009</strong>, ses attributions sont étendues à tous les modes de transport et s'appelle désormais <strong>Office de Gestion du Fret Multimodal</strong>.</p>
-                            <p>Il est membre de l'<strong>Union des Conseils des Chargeurs Africains (UCCA)</strong>, organe spécialisé de l'Organisation Maritime des Etats de l'Ouest et du Centre (OMAOC).</p>
-                            <div class="historique-links mt-4">
-                                <a href="assets/pdfs/decret_creation_ogefrem_multimodal.pdf" class="btn-pdf-link" target="_blank">
-                                    <i class="fas fa-file-pdf"></i> Télécharger l'ordonnance de création
+        <!-- SECTION 1 : HISTORIQUE AVEC LIENS PDF -->
+<section class="content-section historique-section">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <h2>Notre <span class="highlight">Histoire</span></h2>
+            <div class="header-decoration"></div>
+        </div>
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="historique-texte">
+                    <p><strong>OGEFREM</strong>, alors Office de Gestion du Fret Maritime, est né de la volonté de l'État Congolais de se conformer aux recommandations et dispositions du Code de conduite des conférences maritimes adopté par la CNUCED en 1974, ainsi que celles de la Charte des transports maritimes en Afrique de l'Ouest et du Centre appelée <strong>« Charte d'Abidjan »</strong>.</p>
+                    <p>Il est créé par l'ordonnance présidentielle <strong>n°80/256 du 12 novembre 1980</strong>. Par le décret <strong>n°09/63 du 03/12/2009</strong>, ses attributions sont étendues à tous les modes de transport et s'appelle désormais <strong>Office de Gestion du Fret Multimodal</strong>.</p>
+                    <p>Il est membre de l'<strong>Union des Conseils des Chargeurs Africains (UCCA)</strong>, organe spécialisé de l'Organisation Maritime des Etats de l'Ouest et du Centre (OMAOC).</p>
+                    
+                    <!-- DOCUMENTS À TÉLÉCHARGER - DESIGN AMÉLIORÉ -->
+                    <div class="documents-download-section mt-4">
+                        <h4 class="mb-3" style="font-size: 1.1rem; font-weight: 600; color: var(--primary-blue);">
+                            <i class="fas fa-file-pdf" style="color: #e74c3c; margin-right: 8px;"></i> Documents officiels
+                        </h4>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <a href="assets/pdfs/decret_creation_ogefrem_multimodal.pdf" class="pdf-download-card" target="_blank">
+                                    <div class="pdf-icon">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                    <div class="pdf-info">
+                                        <strong>Ordonnance de création</strong>
+                                        <small>n°80/256 du 12 nov. 1980</small>
+                                    </div>
+                                    <div class="pdf-download-icon">
+                                        <i class="fas fa-download"></i>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="assets/pdfs/ordonnance_creation_ogefrem.pdf" class="pdf-download-card" target="_blank">
+                                    <div class="pdf-icon">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                    <div class="pdf-info">
+                                        <strong>Ordonnance présidentielle</strong>
+                                        <small>Télécharger le PDF</small>
+                                    </div>
+                                    <div class="pdf-download-icon">
+                                        <i class="fas fa-download"></i>
+                                    </div>
                                 </a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6" data-aos="fade-left">
-                        <div class="historique-image">
-                            <img src="assets/images/ogefrem batiment.jpeg" alt="Histoire OGEFREM" onerror="this.src='https://placehold.co/600x400/003399/white?text=OGEFREM+1980'">
-                        </div>
-                    </div>
                 </div>
             </div>
-        </section>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="historique-image">
+                    <img src="assets/images/ogefrem batiment.jpeg" alt="Histoire OGEFREM" onerror="this.src='https://placehold.co/600x400/003399/white?text=OGEFREM+1980'">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
         <!-- SECTION 2 : HISTORIQUE EN BREF (TIMELINE) -->
         <section class="content-section historique-bref-section bg-light">
@@ -294,7 +325,7 @@
             </div>
         </section>
 
-        <!-- SECTION 5 : OBSERVATOIRE NATIONAL DES TRANSPORTS -->
+        <!-- SECTION 5 : OBSERVATOIRE NATIONAL DES TRANSPORTS - STATUT "EN COURS" -->
         <section class="content-section observatoire-section">
             <div class="container">
                 <div class="row align-items-center g-5">
@@ -392,13 +423,13 @@
                         <div class="representation-card"><img src="assets/images/drapeaux/emirats-arabes-unis.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=AE'"><span>Émirats Arabes Unis</span></div>
                         <div class="representation-card"><img src="assets/images/drapeaux/Namibie.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=NA'"><span>Namibie</span></div>
                         <div class="representation-card"><img src="assets/images/drapeaux/congo.png" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=CG'"><span>Congo</span></div>
-                        <div class="representation-card"><img src="assets/images/drapeaux/burundi.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=BI'"><span>Burundi</span></div>
+                        <div class="representation-card"><img src="assets/images/drapeaux/togo.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=TG'"><span>Togo</span></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 7 : COMITÉ DE GESTION (AVEC PHOTOS) - VERSION AVEC CARTES RÉDUITES -->
+        <!-- SECTION 7 : COMITÉ DE GESTION - ORDRE: MINISTRE, PCA, DG, DGA -->
         <section class="content-section comite-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
@@ -406,7 +437,7 @@
                     <div class="header-decoration"></div>
                 </div>
                 <div class="row g-4" id="comiteContainer">
-                    <!-- Les leaders seront chargés dynamiquement -->
+                    <!-- Les leaders seront chargés dynamiquement avec l'ordre corrigé -->
                 </div>
             </div>
         </section>
@@ -450,7 +481,7 @@
                             <div class="realisation-icon-modern"><i class="fas fa-chart-line"></i></div>
                             <h4>Observatoire National des Transports</h4>
                             <p>Banque de données statistiques et économiques sur le transport.</p>
-                            <span class="realisation-status status-termine">Réalisé</span>
+                            <span class="realisation-status status-en-cours">En cours</span>
                         </div>
                     </div>
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="500">
@@ -479,6 +510,7 @@
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="400"><div class="projet-card"><i class="fas fa-warehouse"></i><h4>Port sec de Kasindi</h4></div></div>
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="500"><div class="projet-card"><i class="fas fa-tree"></i><h4>Parc à bois de Mbandaka</h4></div></div>
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="600"><div class="projet-card"><i class="fas fa-search"></i><h4>Nouveau système de suivi des cargaisons</h4></div></div>
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="700"><div class="projet-card"><i class="fas fa-globe"></i><h4>Trade Point</h4></div></div>
                 </div>
             </div>
         </section>
@@ -495,12 +527,37 @@
         document.addEventListener('DOMContentLoaded', function() {
             AOS.init({ duration: 800, once: true });
             
-            // Charger les leaders pour la section Comité de Gestion - Version avec cartes réduites
+            // ===== CHARGEMENT DES LEADERS POUR COMITÉ DE GESTION - ORDRE: MINISTRE, PCA, DG, DGA =====
             const leaders = AdminData.getLeaders();
             const comiteContainer = document.getElementById('comiteContainer');
+            
             if (comiteContainer && leaders.length > 0) {
-                comiteContainer.innerHTML = leaders.map(leader => `
-                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                // Définir l'ordre souhaité: Ministre, PCA, DG, DGA
+                const ordreSouhaite = [
+                    { nom: "Ministre des Transports", titre: "Ministre des Transports" },
+                    { nom: "Président du CA", titre: "Président du Conseil d'Administration" },
+                    { nom: "Directeur Général", titre: "Directeur Général" },
+                    { nom: "Directeur Général Adjoint", titre: "Directeur Général Adjoint" }
+                ];
+                
+                // Reconstruire le tableau dans l'ordre souhaité
+                const leadersOrdonnes = [];
+                for (const ordre of ordreSouhaite) {
+                    const leader = leaders.find(l => l.titre === ordre.titre);
+                    if (leader) {
+                        leadersOrdonnes.push(leader);
+                    }
+                }
+                
+                // Ajouter les leaders qui ne sont pas dans l'ordre (au cas où)
+                for (const leader of leaders) {
+                    if (!leadersOrdonnes.find(l => l.id === leader.id)) {
+                        leadersOrdonnes.push(leader);
+                    }
+                }
+                
+                comiteContainer.innerHTML = leadersOrdonnes.map((leader, index) => `
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
                         <div class="comite-card">
                             <div class="comite-photo">
                                 <img src="${leader.photo || 'https://placehold.co/120x120/003399/white?text=' + leader.nom.charAt(0)}" alt="${leader.nom}" onerror="this.src='https://placehold.co/120x120/003399/white?text=${leader.nom.charAt(0)}'">

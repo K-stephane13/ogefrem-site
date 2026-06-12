@@ -35,17 +35,18 @@ const AdminData = {
         ];
     },
     
-    // ==================== LEADERS (4) ====================
+    // ==================== LEADERS (4) - ORDRE: MINISTRE, PCA, DG, DGA ====================
     getLeaders: function() {
         const saved = localStorage.getItem('ogefrem_leaders');
         if (saved && JSON.parse(saved).length > 0) {
             return JSON.parse(saved);
         }
+        // Ordre: 1. Ministre, 2. PCA, 3. DG, 4. DGA
         return [
-            { id: 1, nom: "Directeur Général", titre: "Directeur Général", message: "Moderniser le fret congolais pour une meilleure compétitivité", photo: "assets/images/DG.jpeg", ordre: 1 },
-            { id: 2, nom: "Directeur Général Adjoint", titre: "Directeur Général Adjoint", message: "L'innovation au service des chargeurs", photo: "assets/images/DG-MAYELE.jpeg", ordre: 2 },
-            { id: 3, nom: "Président du CA", titre: "Président du Conseil d'Administration", message: "Une gouvernance transparente et efficace", photo: "assets/images/PCA.png", ordre: 3 },
-            { id: 4, nom: "Ministre des Transports", titre: "Ministre des Transports", message: "Partenariat stratégique avec l'OGEFREM", photo: "assets/images/MINISTRE.png", ordre: 4 }
+            { id: 4, nom: "Ministre des Transports", titre: "Ministre des Transports", message: "Partenariat stratégique avec l'OGEFREM", photo: "assets/images/MINISTRE.png", ordre: 1 },
+            { id: 3, nom: "Président du CA", titre: "Président du Conseil d'Administration", message: "Une gouvernance transparente et efficace", photo: "assets/images/PCA.png", ordre: 2 },
+            { id: 1, nom: "Directeur Général", titre: "Directeur Général", message: "Moderniser le fret congolais pour une meilleure compétitivité", photo: "assets/images/DG.jpeg", ordre: 3 },
+            { id: 2, nom: "Directeur Général Adjoint", titre: "Directeur Général Adjoint", message: "L'innovation au service des chargeurs", photo: "assets/images/DG-MAYELE.jpeg", ordre: 4 }
         ];
     },
     
@@ -139,7 +140,7 @@ const AdminData = {
             
             // ARRÊTÉS (4)
             { id: 42, titre: "Arrêté ministériel conditions d'abonnement chargeur", categorie: "Arrêtés", date: "2019-01-22", pdf_url: "assets/pdfs/Arrêté ministériel N°010/CAB/VPM/MIN/TC/2019 DU 22 JANVIER 2019 modifiant l'Arrêté départemental N°409-002-83 du 17 janvier 1983 fixant les conditions d'abonnement à l'OGEFREM.pdf" },
-            { id: 43, titre: "Arrêté interministériel FERI-AD-FERE", categorie: "Arrêtés", date: "2019-01-22", pdf_url: "assets/pdfs/Arrêté interministériel Nº008-CAB-VPM-MIN-TC-2019, Nº002-CAB-MIN-ECONAT-JKN-2019, N°63-CAB-MIN.ETAT-COMEXT-2019 ET N°001-CAB-MIN-FINANCES-2019 DU 22 JANVIER 2019.pdf" },
+            { id: 43, titre: "Arrêté interministériel FERI-AD-FERE", categorie: "Arrêtés", date: "2019-01-22", pdf_url: "assets/pdfs/Arrêté interministériel Nº008/CAB-VPM-MIN-TC-2019, Nº002-CAB-MIN-ECONAT-JKN-2019, N°63-CAB-MIN.ETAT-COMEXT-2019 ET N°001-CAB-MIN-FINANCES-2019 DU 22 JANVIER 2019.pdf" },
             { id: 44, titre: "Arrêté ministériel modalités gestion fret multimodal", categorie: "Arrêtés", date: "2019-01-22", pdf_url: "assets/pdfs/Arrêté ministériel N°011/CAB/VPM/MIN/TC/2019 DU 22 JANVIER 2019 fixant les modalités de gestion du fret multimodal.pdf" },
             { id: 45, titre: "Arrêté interministériel taux commission fret multimodal", categorie: "Arrêtés", date: "2019-01-22", pdf_url: "assets/pdfs/Arrêté interministériel N°009-CAB-VPM-MIN-TC-2019, Nº003-CAB-MIN-ECONAT-JKN-2019, ET Nº002-CAB-MIN-FINANCES-2019 DU 22 JANVIER 2019.pdf" },
             

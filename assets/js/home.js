@@ -1,4 +1,4 @@
-// assets/js/home.js - VERSION MISE À JOUR
+// assets/js/home.js - VERSION CORRIGÉE AVEC ORDRE: MINISTRE, PCA, DG, DGA
 document.addEventListener('DOMContentLoaded', function() {
     // ===== COMPTEURS ANIMÉS =====
     const counters = document.querySelectorAll('.stat-number');
@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const servicesPreview = document.getElementById('servicesPreview');
     if (servicesPreview) {
         const services = AdminData.getServices();
-        // Afficher les 6 premiers services sur la page d'accueil
         const servicesToShow = services.slice(0, 6);
         
         servicesPreview.innerHTML = servicesToShow.map(service => `
@@ -59,11 +58,35 @@ document.addEventListener('DOMContentLoaded', function() {
         `).join('');
     }
     
-    // ===== CHARGEMENT DES LEADERS =====
+    // ===== CHARGEMENT DES LEADERS - ORDRE FORCÉ: MINISTRE, PCA, DG, DGA =====
     const leaders = AdminData.getLeaders();
     const leadersContainer = document.querySelector('.leaders-section .row');
     if (leadersContainer && leaders.length > 0) {
-        leadersContainer.innerHTML = leaders.map((leader, index) => `
+        // Définir l'ordre souhaité: Ministre, PCA, DG, DGA
+        const ordreSouhaite = [
+            { nom: "Ministre des Transports", titre: "Ministre des Transports" },
+            { nom: "Président du CA", titre: "Président du Conseil d'Administration" },
+            { nom: "Directeur Général", titre: "Directeur Général" },
+            { nom: "Directeur Général Adjoint", titre: "Directeur Général Adjoint" }
+        ];
+        
+        // Reconstruire le tableau dans l'ordre souhaité
+        const leadersOrdonnes = [];
+        for (const ordre of ordreSouhaite) {
+            const leader = leaders.find(l => l.titre === ordre.titre);
+            if (leader) {
+                leadersOrdonnes.push(leader);
+            }
+        }
+        
+        // Ajouter les leaders qui ne sont pas dans l'ordre (au cas où)
+        for (const leader of leaders) {
+            if (!leadersOrdonnes.find(l => l.id === leader.id)) {
+                leadersOrdonnes.push(leader);
+            }
+        }
+        
+        leadersContainer.innerHTML = leadersOrdonnes.map((leader, index) => `
             <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
                 <div class="leader-card-large">
                     <div class="leader-photo-large">
@@ -93,20 +116,17 @@ document.addEventListener('DOMContentLoaded', function() {
         `).join('');
     }
     
-    // ===== CHARGEMENT DES ACTUALITÉS (DOCUMENTS OFFICIELS + ACTUS) =====
+    // ===== CHARGEMENT DES ACTUALITÉS =====
     const actualitesContainer = document.getElementById('actualites-container');
     if (actualitesContainer) {
-        // Récupérer les actualités depuis l'admin
         const actualites = AdminData.getActualites();
         
-        // Trier par date (du plus récent au plus ancien)
         const sortedActualites = [...actualites].sort((a, b) => {
             const dateA = new Date(a.date.split('-').join('-'));
             const dateB = new Date(b.date.split('-').join('-'));
             return dateB - dateA;
         });
         
-        // Afficher les 6 dernières actualités sur la page d'accueil
         const recentActualites = sortedActualites.slice(0, 6);
         
         const getTypeClass = (categorie) => {
@@ -153,7 +173,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // ===== MISE À JOUR DU MOT DU DG =====
-    const dg = leaders.find(l => l.titre === "Directeur Général" || l.id === 1);
+    const leadersList = AdminData.getLeaders();
+    const dg = leadersList.find(l => l.titre === "Directeur Général" || l.id === 1);
     if (dg) {
         const dgNameElement = document.querySelector('.dg-signature h4');
         const dgTitleElement = document.querySelector('.dg-signature p');
@@ -162,9 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (dgNameElement) dgNameElement.textContent = dg.nom;
         if (dgTitleElement) dgTitleElement.textContent = dg.titre;
         
-        // Mettre à jour le message du DG s'il y a plusieurs paragraphes
         if (dgMessageElements.length >= 3 && dg.message) {
-            // Diviser le message en plusieurs paragraphes si nécessaire
             const messages = dg.message.split('\n\n');
             dgMessageElements.forEach((el, idx) => {
                 if (messages[idx]) {

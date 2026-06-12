@@ -1,4 +1,4 @@
-// assets/js/messagerie.js - VERSION MISE À JOUR
+// assets/js/messagerie.js - VERSION AVEC ENVOI EMAIL
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('contactForm');
     const fileInput = document.getElementById('fichier');
@@ -55,44 +55,68 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             
             try {
-                // Sauvegarder le message dans localStorage (accessible depuis l'admin)
-                const messageData = {
-                    nom: nom,
-                    societe: societe,
-                    email: email,
-                    telephone: telephone,
-                    categorie: categorie,
-                    objet: objet,
-                    message: message,
-                    date: new Date().toLocaleString('fr-FR')
-                };
+                // Envoi au serveur PHP
+                const response = await fetch('../assets/php/send-mail.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'contact',
+                        nom: nom,
+                        societe: societe,
+                        email: email,
+                        telephone: telephone,
+                        categorie: categorie,
+                        objet: objet,
+                        message: message
+                    })
+                });
                 
-                // Utiliser AdminData pour sauvegarder
-                if (typeof AdminData !== 'undefined' && AdminData.saveMessage) {
-                    AdminData.saveMessage(messageData);
+                const result = await response.json();
+                
+                if (result.success) {
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> 
+                            ${result.message}
+                        </div>
+                    `;
+                    form.reset();
+                    
+                    // Sauvegarde aussi dans localStorage pour l'admin
+                    if (typeof AdminData !== 'undefined' && AdminData.saveMessage) {
+                        AdminData.saveMessage({
+                            nom: nom,
+                            societe: societe,
+                            email: email,
+                            telephone: telephone,
+                            categorie: categorie,
+                            objet: objet,
+                            message: message
+                        });
+                    }
                 } else {
-                    // Fallback si AdminData n'est pas chargé
-                    let messages = JSON.parse(localStorage.getItem('ogefrem_messages') || '[]');
-                    messages.push({ ...messageData, id: Date.now(), lu: false });
-                    localStorage.setItem('ogefrem_messages', JSON.stringify(messages));
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i> 
+                            ${result.message}
+                        </div>
+                    `;
                 }
                 
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                setTimeout(() => {
+                    if (statusDiv.innerHTML.includes('succès')) {
+                        statusDiv.innerHTML = '';
+                    }
+                }, 5000);
                 
-                statusDiv.innerHTML = `
-                    <div class="alert alert-success">
-                        <i class="fas fa-check-circle"></i> 
-                        ✅ Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.
-                    </div>
-                `;
-                form.reset();
-                
-                setTimeout(() => statusDiv.innerHTML = '', 5000);
             } catch (error) {
+                console.error('Erreur:', error);
                 statusDiv.innerHTML = `
                     <div class="alert alert-danger">
                         <i class="fas fa-exclamation-circle"></i> 
-                        ❌ Erreur lors de l'envoi. Veuillez réessayer ou nous contacter par téléphone.
+                        ❌ Erreur de connexion. Veuillez réessayer ou nous contacter par téléphone.
                     </div>
                 `;
             }

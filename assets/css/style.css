@@ -4752,3 +4752,77 @@ body.dark-mode .page-link {
         flex-wrap: wrap;
     }
 }
+
+/* ===== PDF DOWNLOAD CARDS ===== */
+.documents-download-section h4 {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary-yellow);
+    display: inline-block;
+}
+
+.pdf-download-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border-radius: 12px;
+    padding: 12px 15px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e0e0e0;
+}
+
+.pdf-download-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: var(--primary-blue);
+}
+
+.pdf-icon i {
+    font-size: 2rem;
+    color: #e74c3c;
+}
+
+.pdf-info {
+    flex: 1;
+}
+
+.pdf-info strong {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-dark);
+    margin-bottom: 3px;
+}
+
+.pdf-info small {
+    font-size: 0.7rem;
+    color: #888;
+}
+
+.pdf-download-icon i {
+    font-size: 1rem;
+    color: var(--primary-blue);
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.pdf-download-card:hover .pdf-download-icon i {
+    opacity: 1;
+    transform: translateY(2px);
+}
+
+/* Mode sombre */
+body.dark-mode .pdf-download-card {
+    background: #1a1f2e;
+    border-color: #333;
+}
+
+body.dark-mode .pdf-info strong {
+    color: #e0e0e0;
+}
+
+body.dark-mode .pdf-info small {
+    color: #888;
+}
