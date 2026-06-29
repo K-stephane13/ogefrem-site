@@ -264,7 +264,202 @@ if ($type === 'contact') {
             'message' => '❌ Une erreur technique est survenue. Veuillez réessayer ou nous contacter par téléphone.'
         ]);
     }
+
+} elseif ($type === 'subscription_notification') {
+    // ===== NOTIFICATION D'ABONNEMENT (PAIEMENT) =====
+    $name = htmlspecialchars($input['name'] ?? '');
+    $email = htmlspecialchars($input['email'] ?? '');
+    $phone = htmlspecialchars($input['phone'] ?? '');
+    $company = htmlspecialchars($input['company'] ?? '');
+    $feri = htmlspecialchars($input['feri'] ?? '');
+    $method = htmlspecialchars($input['method'] ?? 'PayPal');
+    $amount = $input['amount'] ?? 50;
+    $currency = htmlspecialchars($input['currency'] ?? 'USD');
+    $year = $input['year'] ?? date('Y');
     
+    // Validation
+    if (empty($name) || empty($email)) {
+        echo json_encode(['success' => false, 'message' => 'Données manquantes']);
+        exit;
+    }
+    
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo json_encode(['success' => false, 'message' => 'Email invalide']);
+        exit;
+    }
+    
+    // ===== EMAIL ADMIN =====
+    $admin_subject = "[OGEFREM] 🎉 NOUVEL ABONNEMENT - " . $name;
+    $admin_message = "
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset='UTF-8'></head>
+    <body style='font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px;'>
+        <div style='max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);'>
+            <div style='background: linear-gradient(135deg, #003399, #0066CC); padding: 25px; text-align: center;'>
+                <h2 style='color: #FFCC00; margin: 0;'>🎉 NOUVEL ABONNEMENT</h2>
+                <p style='color: white; margin: 10px 0 0;'>Abonnement annuel OGEFREM 2025</p>
+            </div>
+            <div style='padding: 25px;'>
+                <p><strong>📅 Date :</strong> " . date('d/m/Y H:i:s') . "</p>
+                <hr style='margin: 15px 0; border-color: #eee;'>
+                
+                <h3 style='color: #003399;'>👤 Informations du client</h3>
+                <table style='width: 100%; border-collapse: collapse;'>
+                    <tr><td style='padding: 8px 0;'><strong>Nom :</strong></td><td>" . $name . "</td></tr>
+                    <tr><td style='padding: 8px 0;'><strong>Email :</strong></td><td><a href='mailto:" . $email . "'>" . $email . "</a></td></tr>
+                    <tr><td style='padding: 8px 0;'><strong>Téléphone :</strong></td><td>" . ($phone ?: '<em>Non renseigné</em>') . "</td></tr>
+                    <tr><td style='padding: 8px 0;'><strong>Société :</strong></td><td>" . ($company ?: '<em>Non renseignée</em>') . "</td></tr>
+                    <tr><td style='padding: 8px 0;'><strong>Numéro FERI :</strong></td><td>" . ($feri ?: '<em>Non renseigné</em>') . "</td></tr>
+                </table>
+                
+                <hr style='margin: 15px 0; border-color: #eee;'>
+                <h3 style='color: #003399;'>💳 Détails du paiement</h3>
+                <table style='width: 100%; border-collapse: collapse;'>
+                    <tr><td style='padding: 8px 0;'><strong>Méthode :</strong></td><td>" . $method . "</td></tr>
+                    <tr><td style='padding: 8px 0;'><strong>Montant :</strong></td><td><strong style='color: #003399; font-size: 1.2rem;'>" . $amount . " " . $currency . "</strong></td></tr>
+                    <tr><td style='padding: 8px 0;'><strong>Abonnement :</strong></td><td>Année " . $year . "</td></tr>
+                    <tr><td style='padding: 8px 0;'><strong>Période :</strong></td><td>01/01/" . $year . " - 31/12/" . $year . "</td></tr>
+                    <tr><td style='padding: 8px 0;'><strong>Statut :</strong></td><td><span style='background: #28a745; color: white; padding: 3px 12px; border-radius: 20px; font-size: 0.8rem;'>ACTIF</span></td></tr>
+                </table>
+                
+                <hr style='margin: 15px 0; border-color: #eee;'>
+                <div style='background: #e8f5e9; padding: 15px; border-radius: 10px; border-left: 4px solid #28a745;'>
+                    <strong>✅ Abonnement confirmé</strong><br>
+                    L'utilisateur a effectué le paiement avec succès via " . $method . ".
+                </div>
+                
+                <hr style='margin: 15px 0; border-color: #eee;'>
+                <div style='background: #fff3cd; padding: 15px; border-radius: 10px; border-left: 4px solid #ffc107;'>
+                    <strong>📋 ACTION ADMIN :</strong>
+                    <ul style='margin: 10px 0 0 20px;'>
+                        <li>Vérifier la réception du paiement (si virement bancaire)</li>
+                        <li>Activer l'abonnement dans la base de données</li>
+                        <li>Envoyer les identifiants d'accès à l'utilisateur</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>";
+    
+    // ===== EMAIL CONFIRMATION UTILISATEUR =====
+    $user_subject = "[OGEFREM] Confirmation de votre abonnement";
+    $user_message = "
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset='UTF-8'></head>
+    <body style='font-family: Arial, sans-serif; padding: 20px;'>
+        <div style='max-width: 500px; margin: 0 auto; background: white; border-radius: 16px; padding: 25px; border: 1px solid #ddd;'>
+            <div style='text-align: center;'>
+                <img src='https://www.ogefrem.cd/assets/images/ogefrem_logo2.png' alt='OGEFREM' style='height: 60px;'>
+                <h2 style='color: #003399;'>✅ Abonnement confirmé</h2>
+            </div>
+            <p>Bonjour <strong>" . $name . "</strong>,</p>
+            <p>Nous vous confirmons la validation de votre abonnement annuel OGEFREM.</p>
+            
+            <div style='background: #e8f5e9; padding: 15px; border-radius: 10px; margin: 20px 0;'>
+                <table style='width: 100%;'>
+                    <tr><td><strong>Période :</strong></td><td>01/01/" . $year . " - 31/12/" . $year . "</td></tr>
+                    <tr><td><strong>Montant :</strong></td><td>" . $amount . " " . $currency . "</td></tr>
+                    <tr><td><strong>Méthode :</strong></td><td>" . $method . "</td></tr>
+                </table>
+            </div>
+            
+            <p><strong>Avantages de votre abonnement :</strong></p>
+            <ul>
+                <li>✅ Accès à la plateforme FERI/FERE</li>
+                <li>✅ Assistance prioritaire</li>
+                <li>✅ Facture électronique disponible</li>
+            </ul>
+            
+            <p>Vous recevrez prochainement vos identifiants de connexion.</p>
+            <hr style='margin: 20px 0;'>
+            <p style='font-size: 12px; color: #666;'>OGEFREM - Office de Gestion du Fret Multimodal</p>
+            <p style='font-size: 12px; color: #666;'>📞 +243 81 641 85 65 | ✉️ abonnement@ogefrem.cd</p>
+        </div>
+    </body>
+    </html>";
+    
+    // Envoi des emails
+    $admin_sent = sendEmailSMTP($ADMIN_EMAIL, $admin_subject, $admin_message, $email, $name);
+    $user_sent = sendEmailSMTP($email, $user_subject, $user_message, $ADMIN_EMAIL, $ADMIN_NAME);
+    
+    if ($admin_sent) {
+        echo json_encode([
+            'success' => true,
+            'message' => '✅ Abonnement enregistré avec succès. Un email de confirmation a été envoyé.'
+        ]);
+    } else {
+        echo json_encode([
+            'success' => false,
+            'message' => '❌ Erreur lors de l\'envoi de l\'email. Veuillez contacter l\'administration.'
+        ]);
+    }
+
+} elseif ($type === 'bank_confirmation') {
+    // ===== CONFIRMATION VIREMENT BANCAIRE =====
+    $name = htmlspecialchars($input['name'] ?? '');
+    $email = htmlspecialchars($input['email'] ?? '');
+    $company = htmlspecialchars($input['company'] ?? '');
+    $feri = htmlspecialchars($input['feri'] ?? '');
+    $amount = $input['amount'] ?? 50;
+    $currency = htmlspecialchars($input['currency'] ?? 'USD');
+    
+    if (empty($name) || empty($email)) {
+        echo json_encode(['success' => false, 'message' => 'Données manquantes']);
+        exit;
+    }
+    
+    $subject = "[OGEFREM] 💰 CONFIRMATION VIREMENT - " . $name;
+    $message = "
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset='UTF-8'></head>
+    <body style='font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px;'>
+        <div style='max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);'>
+            <div style='background: linear-gradient(135deg, #003399, #0066CC); padding: 25px; text-align: center;'>
+                <h2 style='color: #FFCC00; margin: 0;'>💰 CONFIRMATION VIREMENT</h2>
+                <p style='color: white; margin: 10px 0 0;'>Abonnement annuel OGEFREM 2025</p>
+            </div>
+            <div style='padding: 25px;'>
+                <p><strong>📅 Date :</strong> " . date('d/m/Y H:i:s') . "</p>
+                <hr>
+                <h3 style='color: #003399;'>👤 Client</h3>
+                <table style='width: 100%;'>
+                    <tr><td style='padding: 8px 0;'><strong>Nom :</strong></td><td>" . $name . "</td></tr>
+                    <tr><td style='padding: 8px 0;'><strong>Email :</strong></td><td><a href='mailto:" . $email . "'>" . $email . "</a></td></tr>
+                    <tr><td style='padding: 8px 0;'><strong>Société :</strong></td><td>" . ($company ?: '<em>Non renseignée</em>') . "</td></tr>
+                    <tr><td style='padding: 8px 0;'><strong>FERI :</strong></td><td>" . ($feri ?: '<em>Non renseigné</em>') . "</td></tr>
+                </table>
+                <hr>
+                <h3 style='color: #003399;'>💳 Détails</h3>
+                <table style='width: 100%;'>
+                    <tr><td style='padding: 8px 0;'><strong>Montant :</strong></td><td><strong style='color: #003399;'>" . $amount . " " . $currency . "</strong></td></tr>
+                    <tr><td style='padding: 8px 0;'><strong>Statut :</strong></td><td><span style='background: #ffc107; color: #003399; padding: 3px 12px; border-radius: 20px; font-size: 0.8rem;'>EN ATTENTE DE VÉRIFICATION</span></td></tr>
+                </table>
+                <hr>
+                <div style='background: #fff3cd; padding: 15px; border-radius: 10px;'>
+                    <strong>⚠️ ACTION REQUISE :</strong>
+                    <ul style='margin: 10px 0 0 20px;'>
+                        <li>Vérifier la réception du virement sur le compte bancaire</li>
+                        <li>Activer l'abonnement manuellement dans le système</li>
+                        <li>Confirmer l'activation à l'utilisateur</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>";
+    
+    $admin_sent = sendEmailSMTP($ADMIN_EMAIL, $subject, $message, $email, $name);
+    
+    if ($admin_sent) {
+        echo json_encode(['success' => true, 'message' => 'Confirmation envoyée à l\'administration']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Erreur d\'envoi']);
+    }
+
 } else {
     echo json_encode(['success' => false, 'message' => 'Type de requête invalide']);
 }

@@ -1,3 +1,4 @@
+<!-- offres-transport.html - CHARGEMENT DYNAMIQUE DEPUIS AdminData -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -28,43 +29,8 @@
 
         <section class="service-content-section">
             <div class="container">
-                <div class="row g-4">
-                    <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                        <div class="offre-card">
-                            <div class="offre-header"><i class="fas fa-truck"></i><h3>TRANS LOGISTIC SARL</h3></div>
-                            <div class="offre-body">
-                                <p><i class="fas fa-map-marker-alt"></i> Kinshasa → Matadi</p>
-                                <p><i class="fas fa-weight-hanging"></i> Capacité : 100 tonnes</p>
-                                <p><i class="fas fa-tag"></i> Tarif : XXX USD/tonne</p>
-                                <span class="offre-type routier">Routier</span>
-                            </div>
-                            <div class="offre-footer"><button class="btn btn-primary btn-sm w-100" onclick="alert('Contacter TRANS LOGISTIC: +243 XXX XXX XXX')">Contacter</button></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                        <div class="offre-card">
-                            <div class="offre-header"><i class="fas fa-ship"></i><h3>MAERSK RDC</h3></div>
-                            <div class="offre-body">
-                                <p><i class="fas fa-map-marker-alt"></i> Matadi → Europe</p>
-                                <p><i class="fas fa-box"></i> Conteneurs 20'/40'</p>
-                                <p><i class="fas fa-tag"></i> Tarif : XXX USD/conteneur</p>
-                                <span class="offre-type maritime">Maritime</span>
-                            </div>
-                            <div class="offre-footer"><button class="btn btn-primary btn-sm w-100" onclick="alert('Contacter MAERSK RDC: +243 XXX XXX XXX')">Contacter</button></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
-                        <div class="offre-card">
-                            <div class="offre-header"><i class="fas fa-plane"></i><h3>DHL Global</h3></div>
-                            <div class="offre-body">
-                                <p><i class="fas fa-map-marker-alt"></i> Kinshasa → Dubai</p>
-                                <p><i class="fas fa-weight-hanging"></i> Capacité : 50 tonnes/semaine</p>
-                                <p><i class="fas fa-tag"></i> Tarif : XXX USD/kg</p>
-                                <span class="offre-type aerien">Aérien</span>
-                            </div>
-                            <div class="offre-footer"><button class="btn btn-primary btn-sm w-100" onclick="alert('Contacter DHL Global: +243 XXX XXX XXX')">Contacter</button></div>
-                        </div>
-                    </div>
+                <div class="row g-4" id="offresContainer">
+                    <!-- Chargé dynamiquement depuis AdminData.getOffres() -->
                 </div>
             </div>
         </section>
@@ -77,5 +43,53 @@
     <script src="../assets/js/admin-data.js"></script>
     <script src="../assets/js/components.js"></script>
     <script src="../assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({ duration: 800, once: true });
+            
+            const offres = AdminData.getOffres();
+            const container = document.getElementById('offresContainer');
+            
+            if (container && offres.length > 0) {
+                container.innerHTML = offres.map((offre, index) => {
+                    let iconClass = 'fa-truck';
+                    if (offre.type === 'Maritime') iconClass = 'fa-ship';
+                    else if (offre.type === 'Aérien') iconClass = 'fa-plane';
+                    else if (offre.type === 'Ferroviaire') iconClass = 'fa-train';
+                    
+                    return `
+                        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
+                            <div class="offre-card">
+                                <div class="offre-header">
+                                    <i class="fas ${iconClass}"></i>
+                                    <h3>${offre.titre}</h3>
+                                </div>
+                                <div class="offre-body">
+                                    <p><i class="fas fa-map-marker-alt"></i> ${offre.origine} → ${offre.destination}</p>
+                                    ${offre.capacite ? `<p><i class="fas fa-weight-hanging"></i> Capacité : ${offre.capacite}</p>` : ''}
+                                    ${offre.tarif ? `<p><i class="fas fa-tag"></i> Tarif : ${offre.tarif}</p>` : ''}
+                                    ${offre.description ? `<p><i class="fas fa-info-circle"></i> ${offre.description}</p>` : ''}
+                                    <span class="offre-type ${offre.type.toLowerCase()}">${offre.type}</span>
+                                </div>
+                                <div class="offre-footer">
+                                    <button class="btn btn-primary btn-sm w-100" onclick="alert('Contacter ${offre.titre}: ${offre.contact || 'Contact non disponible'}')">
+                                        <i class="fas fa-phone"></i> Contacter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                container.innerHTML = `
+                    <div class="col-12 text-center">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> Aucune offre de transport disponible pour le moment.
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    </script>
 </body>
 </html>

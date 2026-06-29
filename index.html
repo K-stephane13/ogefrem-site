@@ -1,4 +1,4 @@
-<!-- index.html - VERSION COMPLÈTE AVEC ADMIN-DATA.JS -->
+<!-- index.html - VERSION AVEC LEADERS, PARTENAIRES ET SERVICES EN DUR -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -39,22 +39,64 @@
             </div>
         </section><br>
 
-        <!-- SECTION TÊTES D'AFFICHE (GRANDES PHOTOS) -->
-        <!-- Dans index.html, la section leaders charge automatiquement dans l'ordre de AdminData -->
-<section class="leaders-section">
-    <div class="container">
-        <div class="section-header" data-aos="fade-up">
-            <h2>Gouvernance de <span class="highlight">l'OGEFREM</span></h2>
-            <p>Les dirigeants et partenaires institutionnels</p>
-            <div class="header-decoration"></div>
-        </div>
-        <div class="row g-5" id="leadersContainer">
-            <!-- Les leaders seront chargés dynamiquement par home.js dans l'ordre de AdminData -->
-        </div>
-    </div>
-</section>
+        <!-- SECTION LEADERS - EN DUR -->
+        <section class="leaders-section">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <h2>Gouvernance de <span class="highlight">l'OGEFREM</span></h2>
+                    <p>Les dirigeants et partenaires institutionnels</p>
+                    <div class="header-decoration"></div>
+                </div>
+                <div class="row g-5">
+                    <!-- Ministre -->
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="leader-card-large">
+                            <div class="leader-photo-large">
+                                <img src="assets/images/MINISTRE.png" alt="Ministre des Transports" onerror="this.src='https://placehold.co/300x300/003399/white?text=M'">
+                            </div>
+                            <h4>Ministre des Transports</h4>
+                            <p class="leader-title">Ministre des Transports</p>
+                            <p class="leader-message">"Partenariat stratégique avec l'OGEFREM"</p>
+                        </div>
+                    </div>
+                    <!-- PCA -->
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="leader-card-large">
+                            <div class="leader-photo-large">
+                                <img src="assets/images/PCA.png" alt="Président du CA" onerror="this.src='https://placehold.co/300x300/003399/white?text=P'">
+                            </div>
+                            <h4>Président du CA</h4>
+                            <p class="leader-title">Président du Conseil d'Administration</p>
+                            <p class="leader-message">"Une gouvernance transparente et efficace"</p>
+                        </div>
+                    </div>
+                    <!-- DG -->
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="leader-card-large">
+                            <div class="leader-photo-large">
+                                <img src="assets/images/DG.jpeg" alt="Directeur Général" onerror="this.src='https://placehold.co/300x300/003399/white?text=DG'">
+                            </div>
+                            <h4>Directeur Général</h4>
+                            <p class="leader-title">Directeur Général</p>
+                            <p class="leader-message">"Moderniser le fret congolais pour une meilleure compétitivité"</p>
+                        </div>
+                    </div>
+                    <!-- DGA -->
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                        <div class="leader-card-large">
+                            <div class="leader-photo-large">
+                                <img src="assets/images/DG-MAYELE.jpeg" alt="Directeur Général Adjoint" onerror="this.src='https://placehold.co/300x300/003399/white?text=DGA'">
+                            </div>
+                            <h4>Directeur Général Adjoint</h4>
+                            <p class="leader-title">Directeur Général Adjoint</p>
+                            <p class="leader-message">"L'innovation au service des chargeurs"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <!-- SECTION MOT DU DG AVEC GRANDE PHOTO -->
+        <!-- SECTION MOT DU DG -->
         <section class="mot-dg-section-large">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
@@ -65,18 +107,18 @@
                     <div class="col-lg-5" data-aos="fade-right">
                         <div class="dg-photo-large-wrapper">
                             <div class="dg-photo-large">
-                                <img id="dgPhoto" src="assets/images/DG.png" alt="Directeur Général OGEFREM" onerror="this.src='https://placehold.co/500x600/003399/white?text=DG+OGEFREM'">
+                                <img src="assets/images/DG.jpeg" alt="Directeur Général OGEFREM" onerror="this.src='https://placehold.co/500x600/003399/white?text=DG+OGEFREM'">
                             </div>
                             <div class="dg-signature">
-                                <h4 id="dgName">Directeur Général</h4>
-                                <p id="dgTitle">Directeur Général de l'OGEFREM</p>
+                                <h4>Directeur Général</h4>
+                                <p>Directeur Général de l'OGEFREM</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-7" data-aos="fade-left">
                         <div class="mot-dg-content-large">
                             <i class="fas fa-quote-left"></i>
-                            <div id="dgMessage">
+                            <div>
                                 <p>"L'OGEFREM s'engage résolument dans la modernisation du fret congolais. Notre vision est de faire de la RDC un hub logistique régional de référence, grâce à la digitalisation, la transparence et l'efficacité.</p>
                                 <p>La plateforme FERI/FERE modernisée, le futur Port Sec de Kasumbalesa, l'Observatoire national des transports et la Bourse nationale des transports sont autant de projets concrets qui façonnent l'avenir du secteur.</p>
                                 <p>Ensemble, construisons un fret multimodal 100% connecté, au service des chargeurs et de l'économie nationale."</p>
@@ -91,7 +133,7 @@
             </div>
         </section>
 
-        <!-- CHIFFRES CLÉS ANIMÉS -->
+        <!-- CHIFFRES CLÉS - EN DUR -->
         <section class="stats-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
@@ -132,7 +174,7 @@
             </div>
         </section>
 
-        <!-- SECTION SERVICES RAPIDES (GRID 6) -->
+        <!-- SECTION SERVICES - EN DUR -->
         <section class="services-preview-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
@@ -140,14 +182,57 @@
                     <p>Des solutions digitales pour tous vos besoins en fret multimodal</p>
                     <div class="header-decoration"></div>
                 </div>
-                <div class="row g-4" id="servicesPreview"></div>
+                <div class="row g-4">
+                    <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="100">
+                        <a href="services/mandataires-liste.html" class="service-mini-card">
+                            <div class="service-mini-icon"><i class="fas fa-users"></i></div>
+                            <h4>Liste des mandataires</h4>
+                            <p>Annuaire officiel des mandataires agréés avec contacts complets</p>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="150">
+                        <a href="services/suivi-cargaisons.html" class="service-mini-card">
+                            <div class="service-mini-icon"><i class="fas fa-map-marked-alt"></i></div>
+                            <h4>Suivi des cargaisons</h4>
+                            <p>Traçabilité en temps réel FERI/FERE de vos marchandises</p>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="200">
+                        <a href="services/operateurs-transport.html" class="service-mini-card">
+                            <div class="service-mini-icon"><i class="fas fa-truck"></i></div>
+                            <h4>Opérateurs de transport</h4>
+                            <p>Base des transporteurs agréés par l'OGEFREM</p>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="250">
+                        <a href="services/produits-exportables.html" class="service-mini-card">
+                            <div class="service-mini-icon"><i class="fas fa-boxes"></i></div>
+                            <h4>Produits exportables</h4>
+                            <p>Liste des marchandises exportables de la RDC</p>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="300">
+                        <a href="services/mercuriales.html" class="service-mini-card">
+                            <div class="service-mini-icon"><i class="fas fa-chart-line"></i></div>
+                            <h4>Mercuriales</h4>
+                            <p>Prix de référence du fret actualisés mensuellement</p>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="350">
+                        <a href="services/demandes-transport.html" class="service-mini-card">
+                            <div class="service-mini-icon"><i class="fas fa-file-signature"></i></div>
+                            <h4>Demandes de transport</h4>
+                            <p>Publiez un besoin de transport pour vos marchandises</p>
+                        </a>
+                    </div>
+                </div>
                 <div class="text-center mt-5" data-aos="fade-up">
                     <a href="services.html" class="btn btn-primary btn-lg">Voir tous nos services <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION ACTUALITÉS -->
+        <!-- SECTION ACTUALITÉS - DYNAMIQUE -->
         <section class="news-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
@@ -162,7 +247,7 @@
             </div>
         </section>
 
-        <!-- SECTION PARTENAIRES INSTITUTIONNELS -->
+        <!-- SECTION PARTENAIRES - EN DUR -->
         <section class="partners-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
@@ -170,8 +255,32 @@
                     <p>Une collaboration étroite pour l'efficacité du fret</p>
                     <div class="header-decoration"></div>
                 </div>
-                <div class="partners-grid" id="partnersContainer">
-                    <!-- Les partenaires seront chargés dynamiquement -->
+                <div class="partners-grid">
+                    <div class="partner-item">
+                        <div class="partner-logo"><img src="assets/images/partenaires/Logo-dgda.png" alt="DGDA" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><span class="partner-fallback">DGDA</span></div>
+                        <span class="partner-name">DGDA</span>
+                        <small>Direction Générale des Douanes</small>
+                    </div>
+                    <div class="partner-item">
+                        <div class="partner-logo"><img src="assets/images/partenaires/logo-occ.jpg" alt="OCC" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><span class="partner-fallback">OCC</span></div>
+                        <span class="partner-name">OCC</span>
+                        <small>Office Congolais de Contrôle</small>
+                    </div>
+                    <div class="partner-item">
+                        <div class="partner-logo"><img src="assets/images/partenaires/logo-seguce.png" alt="SEGUCE" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><span class="partner-fallback">SEGUCE</span></div>
+                        <span class="partner-name">SEGUCE</span>
+                        <small>Guichet Unique</small>
+                    </div>
+                    <div class="partner-item">
+                        <div class="partner-logo"><img src="assets/images/partenaires/logo-ministre.png" alt="Ministère" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><span class="partner-fallback">Ministère</span></div>
+                        <span class="partner-name">Ministère des Transports</span>
+                        <small>Tutelle</small>
+                    </div>
+                    <div class="partner-item">
+                        <div class="partner-logo"><img src="assets/images/partenaires/logo-conseil-chargeur.png" alt="Fédération" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><span class="partner-fallback">Fédération</span></div>
+                        <span class="partner-name">Fédération des Chargeurs</span>
+                        <small>Représentants des chargeurs</small>
+                    </div>
                 </div>
             </div>
         </section>

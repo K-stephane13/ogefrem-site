@@ -6,12 +6,10 @@
     <title>OGEFREM - Administration</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f0f2f5; }
         
-        /* Login Page */
         .login-container {
             min-height: 100vh;
             display: flex;
@@ -27,25 +25,22 @@
             max-width: 450px;
             box-shadow: 0 25px 50px rgba(0,0,0,0.2);
         }
-        .login-card h2 { color: #003399; margin-bottom: 10px; }
+        .login-card h2 { color: #003399; }
         .login-card .logo { text-align: center; margin-bottom: 30px; }
-        .login-card .logo img { height: 70px; }
+        .login-card .logo img { height: 60px; }
         
-        /* Admin Layout */
         .admin-wrapper { display: flex; min-height: 100vh; }
         .admin-sidebar {
-            width: 280px;
+            width: 260px;
             background: #003399;
             color: white;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
-            transition: all 0.3s;
             z-index: 100;
         }
         .admin-sidebar .logo { padding: 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
-        .admin-sidebar .logo img { height: 50px; margin-bottom: 10px; }
-        .admin-sidebar .logo h3 { color: #FFCC00; font-size: 1.2rem; }
+        .admin-sidebar .logo h3 { color: #FFCC00; font-size: 1.1rem; margin-top: 8px; }
         .admin-sidebar .nav-item {
             padding: 14px 25px;
             display: flex;
@@ -57,8 +52,9 @@
         }
         .admin-sidebar .nav-item:hover { background: rgba(255,255,255,0.1); }
         .admin-sidebar .nav-item.active { background: rgba(255,204,0,0.2); border-left-color: #FFCC00; }
-        .admin-sidebar .nav-item i { width: 24px; font-size: 1.2rem; }
-        .admin-main { flex: 1; margin-left: 280px; padding: 20px 30px; }
+        .admin-sidebar .nav-item i { width: 24px; }
+        
+        .admin-main { flex: 1; margin-left: 260px; padding: 20px 30px; }
         .admin-header {
             background: white;
             border-radius: 16px;
@@ -67,24 +63,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             flex-wrap: wrap;
             gap: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        .admin-header h1 { font-size: 1.5rem; margin: 0; }
-        .logout-btn, .backup-btn, .reset-btn { padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: 500; border: none; margin-left: 10px; }
-        .logout-btn { background: #dc3545; color: white; }
-        .backup-btn { background: #28a745; color: white; }
-        .reset-btn { background: #ffc107; color: #003399; }
+        .admin-header h1 { font-size: 1.4rem; margin: 0; }
+        .logout-btn { background: #dc3545; color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; }
+        .backup-btn { background: #28a745; color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; margin-right: 10px; }
+        .reset-btn { background: #ffc107; color: #003399; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; margin-right: 10px; }
         
-        /* Content Cards */
         .content-card { background: white; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .card-header-custom { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #FFCC00; flex-wrap: wrap; gap: 15px; }
         .btn-add { background: #003399; color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; }
         .btn-edit { background: #FFCC00; color: #003399; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; margin-right: 5px; }
         .btn-delete { background: #dc3545; color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
         
-        /* Modal */
         .modal-custom { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
         .modal-custom.active { display: flex; }
         .modal-content-custom { background: white; border-radius: 24px; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; padding: 30px; }
@@ -94,24 +87,16 @@
         .form-control, .form-select { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; }
         textarea.form-control { resize: vertical; min-height: 100px; }
         
-        /* Stats Grid */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .stat-card-admin { background: white; border-radius: 16px; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .stat-number-admin { font-size: 2.5rem; font-weight: 800; color: #FFCC00; }
+        .stat-number-admin { font-size: 2rem; font-weight: 800; color: #FFCC00; }
         
-        /* Table */
         .data-table { width: 100%; overflow-x: auto; }
         .data-table table { width: 100%; border-collapse: collapse; }
         .data-table th, .data-table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
         .data-table th { background: #f8f9fa; font-weight: 600; }
         
-        /* Messages */
-        .message-item { background: #f8f9fa; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
-        .message-item.unread { border-left: 4px solid #FFCC00; background: #fffef5; }
-        
-        .toast-notification { position: fixed; bottom: 20px; right: 20px; background: #28a745; color: white; padding: 12px 24px; border-radius: 8px; z-index: 1100; display: none; }
-        
-        .badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; margin-left: 8px; }
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; }
         .badge-primary { background: #003399; color: white; }
         .badge-warning { background: #ffc107; color: #003399; }
         
@@ -119,18 +104,29 @@
         .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #999; }
         .search-box input { padding-left: 45px; border-radius: 50px; }
         
+        .toast-notification { position: fixed; bottom: 20px; right: 20px; background: #28a745; color: white; padding: 12px 24px; border-radius: 8px; z-index: 1100; display: none; }
+        
+        .page-link { background: white; border: 1px solid #ddd; padding: 6px 12px; border-radius: 6px; color: #003399; cursor: pointer; transition: all 0.3s ease; margin: 0 2px; }
+        .page-link:hover { background: #003399; color: white; border-color: #003399; }
+        .page-link:disabled { opacity: 0.5; cursor: not-allowed; }
+        .active .page-link { background: #003399; color: white; border-color: #003399; }
+        .disabled .page-link { opacity: 0.5; cursor: not-allowed; }
+        
         @media (max-width: 768px) {
             .admin-sidebar { width: 0; transform: translateX(-100%); position: fixed; }
-            .admin-sidebar.open { width: 280px; transform: translateX(0); }
+            .admin-sidebar.open { width: 260px; transform: translateX(0); }
             .admin-main { margin-left: 0; }
             .sidebar-toggle { display: block; background: #003399; color: white; border: none; padding: 10px; border-radius: 8px; margin-right: 15px; }
+        }
+        @media (min-width: 769px) {
+            .sidebar-toggle { display: none; }
         }
     </style>
 </head>
 <body>
 
 <div id="app">
-    <!-- Login Page -->
+    <!-- Login -->
     <div id="loginPage" class="login-container">
         <div class="login-card">
             <div class="logo">
@@ -147,33 +143,30 @@
                     <label>Mot de passe</label>
                     <input type="password" id="password" class="form-control" placeholder="••••••" required>
                 </div>
-                <button type="submit" class="btn-add" style="width: 100%; padding: 12px;">Se connecter</button>
+                <button type="submit" class="btn-add" style="width:100%; padding:12px;">Se connecter</button>
             </form>
         </div>
     </div>
 
-    <!-- Admin Dashboard -->
-    <div id="adminPanel" style="display: none;">
+    <!-- Admin Panel -->
+    <div id="adminPanel" style="display:none;">
         <div class="admin-wrapper">
             <div class="admin-sidebar" id="sidebar">
                 <div class="logo">
-                    <img src="../assets/images/ogefrem_logo2.png" alt="OGEFREM" onerror="this.style.display='none'">
+                    <img src="../assets/images/ogefrem_logo2.png" alt="OGEFREM" onerror="this.src='https://placehold.co/40x40/003399/white?text=OG'" style="height:40px;">
                     <h3>OGEFREM Admin</h3>
                 </div>
                 <div class="nav-item active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
                 <div class="nav-item" data-section="actualites"><i class="fas fa-newspaper"></i> Actualités</div>
-                <div class="nav-item" data-section="leaders"><i class="fas fa-users"></i> Leaders</div>
-                <div class="nav-item" data-section="partenaires"><i class="fas fa-handshake"></i> Partenaires</div>
-                <div class="nav-item" data-section="services"><i class="fas fa-cogs"></i> Services</div>
-                <div class="nav-item" data-section="reglementations"><i class="fas fa-gavel"></i> Règlementations</div>
-                <div class="nav-item" data-section="statistiques"><i class="fas fa-chart-line"></i> Statistiques</div>
-                <div class="nav-item" data-section="messages"><i class="fas fa-envelope"></i> Messages</div>
+                <div class="nav-item" data-section="demandes"><i class="fas fa-file-signature"></i> Demandes de transport</div>
+                <div class="nav-item" data-section="offres"><i class="fas fa-tags"></i> Offres de transport</div>
+                <div class="nav-item" data-section="comite"><i class="fas fa-users"></i> Comité de Gestion</div>
             </div>
             
             <div class="admin-main">
                 <div class="admin-header">
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <button class="sidebar-toggle" id="sidebarToggle" style="display: none;"><i class="fas fa-bars"></i></button>
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
                         <h1 id="sectionTitle">Dashboard</h1>
                     </div>
                     <div>
@@ -195,14 +188,10 @@
     // ==================== CONFIGURATION ====================
     const ADMIN_PASSWORD_HASH = btoa('OGEFREM2026Admin!');
     let currentSection = 'dashboard';
-    
-    // Variables de pagination - 15 éléments par page
     let currentPageActualites = 1;
-    let currentPagePartenaires = 1;
-    let currentPageServices = 1;
-    let currentPageReglements = 1;
-    let currentPageMessages = 1;
-    const itemsPerPage = 15;
+    let currentPageDemandes = 1;
+    let currentPageOffres = 1;
+    const itemsPerPage = 10;
     
     function showToast(message, isError = false) {
         const toast = document.getElementById('toast');
@@ -263,90 +252,66 @@
         }
     });
     
-    // ==================== SIDEBAR TOGGLE ====================
+    // ==================== SIDEBAR ====================
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.getElementById('sidebar');
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', () => { sidebar.classList.toggle('open'); });
     }
     
-    function checkResponsive() {
-        const toggle = document.getElementById('sidebarToggle');
-        if (window.innerWidth <= 768) {
-            if (toggle) toggle.style.display = 'block';
-        } else {
-            if (toggle) toggle.style.display = 'none';
-            if (sidebar) sidebar.classList.remove('open');
-        }
-    }
-    window.addEventListener('resize', checkResponsive);
-    checkResponsive();
-    
     // ==================== NAVIGATION ====================
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', function() {
             document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
             this.classList.add('active');
-            const section = this.dataset.section;
-            currentSection = section;
-            loadSection(section);
+            currentSection = this.dataset.section;
+            loadSection(currentSection);
             if (window.innerWidth <= 768) { sidebar.classList.remove('open'); }
         });
     });
     
     function loadSection(section) {
         const titleMap = {
-            dashboard: 'Dashboard', actualites: 'Gestion des Actualités', leaders: 'Gestion des Leaders',
-            partenaires: 'Gestion des Partenaires', services: 'Gestion des Services',
-            reglementations: 'Gestion des Règlementations', statistiques: 'Statistiques du site', messages: 'Messages reçus'
+            dashboard: 'Dashboard',
+            actualites: 'Gestion des Actualités',
+            demandes: 'Gestion des Demandes de transport',
+            offres: 'Gestion des Offres de transport',
+            comite: 'Comité de Gestion - Photos'
         };
         document.getElementById('sectionTitle').textContent = titleMap[section] || section;
         
         switch(section) {
             case 'dashboard': renderDashboard(); break;
             case 'actualites': renderActualites(); break;
-            case 'leaders': renderLeaders(); break;
-            case 'partenaires': renderPartenaires(); break;
-            case 'services': renderServices(); break;
-            case 'reglementations': renderReglementations(); break;
-            case 'statistiques': renderStatistiques(); break;
-            case 'messages': renderMessages(); break;
+            case 'demandes': renderDemandes(); break;
+            case 'offres': renderOffres(); break;
+            case 'comite': renderComite(); break;
         }
     }
     
     // ==================== DASHBOARD ====================
     function renderDashboard() {
         const actualites = AdminData.getActualites();
-        const messages = AdminData.getMessages();
-        const stats = AdminData.getStatistiques();
-        const leaders = AdminData.getLeaders();
-        const partenaires = AdminData.getPartenaires();
-        const services = AdminData.getServices();
-        const reglements = AdminData.getReglementations();
-        const currentYear = new Date().getFullYear();
-        const actualitesThisYear = actualites.filter(a => new Date(a.date).getFullYear() === currentYear).length;
+        const demandes = AdminData.getDemandes();
+        const offres = AdminData.getOffres();
+        const comite = AdminData.getComite();
         
         const html = `
             <div class="stats-grid">
-                <div class="stat-card-admin"><div class="stat-number-admin">${actualites.length}</div><div>Actualités</div><small>${actualitesThisYear} cette année</small></div>
-                <div class="stat-card-admin"><div class="stat-number-admin">${messages.filter(m => !m.lu).length}</div><div>Messages non lus</div><small>${messages.length} total reçus</small></div>
-                <div class="stat-card-admin"><div class="stat-number-admin">${leaders.length}</div><div>Leaders</div></div>
-                <div class="stat-card-admin"><div class="stat-number-admin">${partenaires.length}</div><div>Partenaires</div></div>
-                <div class="stat-card-admin"><div class="stat-number-admin">${services.length}</div><div>Services</div></div>
-                <div class="stat-card-admin"><div class="stat-number-admin">${reglements.length}</div><div>Documents</div></div>
-                <div class="stat-card-admin"><div class="stat-number-admin">${stats.anneeCreation || 1980}</div><div>Année création</div></div>
-                <div class="stat-card-admin"><div class="stat-number-admin">${(stats.fretParAn || 500000).toLocaleString()}+</div><div>Tonnes/an</div></div>
+                <div class="stat-card-admin"><div class="stat-number-admin">${actualites.length}</div><div>Actualités</div></div>
+                <div class="stat-card-admin"><div class="stat-number-admin">${demandes.length}</div><div>Demandes de transport</div></div>
+                <div class="stat-card-admin"><div class="stat-number-admin">${offres.length}</div><div>Offres de transport</div></div>
+                <div class="stat-card-admin"><div class="stat-number-admin">${comite.length}</div><div>Membres du Comité</div></div>
             </div>
             <div class="content-card">
-                <div class="card-header-custom"><h3><i class="fas fa-newspaper"></i> Dernières actualités (${Math.min(5, actualites.length)} sur ${actualites.length})</h3><button class="btn-add" onclick="loadSection('actualites')"><i class="fas fa-arrow-right"></i> Gérer tout</button></div>
-                <div class="data-table"><table class="table"><thead><tr><th>Titre</th><th>Date</th><th>Catégorie</th></tr></thead>
-                    <tbody>${actualites.slice(0,5).map(a => `<tr><td>${a.titre.substring(0, 50)}${a.titre.length > 50 ? '...' : ''}</td><td>${a.date}</td><td>${a.categorie}</td></tr>`).join('')}${actualites.length === 0 ? '<tr><td colspan="3" style="text-align:center">Aucune actualité</td></tr>' : ''}</tbody>
-                </table></div>
+                <div class="card-header-custom"><h3><i class="fas fa-newspaper"></i> Dernières actualités</h3><button class="btn-add" onclick="loadSection('actualites')">Gérer tout</button></div>
+                <div class="data-table"><table><thead><tr><th>Titre</th><th>Date</th><th>Catégorie</th></tr></thead>
+                <tbody>${actualites.slice(0,5).map(a => `<tr><td>${a.titre.substring(0, 50)}${a.titre.length > 50 ? '...' : ''}</td><td>${a.date}</td><td>${a.categorie}</td></tr>`).join('')}</tbody></table></div>
             </div>
             <div class="content-card">
-                <div class="card-header-custom"><h3><i class="fas fa-envelope"></i> Derniers messages (${Math.min(5, messages.length)} sur ${messages.length})</h3><button class="btn-add" onclick="loadSection('messages')"><i class="fas fa-arrow-right"></i> Voir tous</button></div>
-                ${messages.slice(0,5).map(m => `<div class="message-item ${!m.lu ? 'unread' : ''}"><div style="display:flex; justify-content:space-between;"><strong>${m.nom}</strong><small>${m.date || 'Date inconnue'}</small></div><div><strong>Email:</strong> ${m.email}</div><div><strong>Objet:</strong> ${m.objet}</div><p>${(m.message || '').substring(0, 100)}...</p></div>`).join('')}
-                ${messages.length === 0 ? '<p>Aucun message reçu</p>' : ''}
+                <div class="card-header-custom"><h3><i class="fas fa-file-signature"></i> Demandes récentes</h3><button class="btn-add" onclick="loadSection('demandes')">Gérer tout</button></div>
+                <div class="data-table"><table><thead><tr><th>Marchandises</th><th>Origine → Destination</th><th>Date</th></tr></thead>
+                <tbody>${demandes.slice(0,5).map(d => `<tr><td>${d.marchandises}</td><td>${d.origine} → ${d.destination}</td><td>${d.date}</td></tr>`).join('')}</tbody></table></div>
             </div>
         `;
         document.getElementById('sectionContent').innerHTML = html;
@@ -358,420 +323,265 @@
         const totalPages = Math.ceil(actualites.length / itemsPerPage);
         const start = (currentPageActualites - 1) * itemsPerPage;
         const end = start + itemsPerPage;
-        const paginatedItems = actualites.slice(start, end);
+        const paginated = actualites.slice(start, end);
         
         const html = `
             <div class="content-card">
-                <div class="card-header-custom"><h3><i class="fas fa-newspaper"></i> Toutes les actualités <span class="badge badge-primary">${actualites.length} total</span> <span class="badge badge-warning">Page ${currentPageActualites}/${totalPages}</span></h3>
-                    <div><button class="btn-add" onclick="exportToCSV('actualites')"><i class="fas fa-download"></i> Exporter CSV</button><button class="btn-add" onclick="openModal('actualite', null)"><i class="fas fa-plus"></i> Nouvelle actualité</button></div>
+                <div class="card-header-custom">
+                    <h3><i class="fas fa-newspaper"></i> Actualités <span class="badge badge-primary">${actualites.length}</span></h3>
+                    <button class="btn-add" onclick="openModal('actualite', null)"><i class="fas fa-plus"></i> Nouvelle actualité</button>
                 </div>
-                <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchActualites" class="form-control" placeholder="Rechercher une actualité..."></div>
-                <div class="data-table"><table class="table"><thead><tr><th><input type="checkbox" id="selectAllActualites"></th><th>ID</th><th>Titre</th><th>Date</th><th>Catégorie</th><th>Likes</th><th>Images</th><th>Actions</th></tr></thead>
-                    <tbody id="actualitesTableBody">${paginatedItems.map(a => `<tr><td><input type="checkbox" class="select-actualite" data-id="${a.id}"></td><td>${a.id}</td><td>${a.titre.substring(0, 50)}${a.titre.length > 50 ? '...' : ''}</td><td>${a.date}</td><td>${a.categorie}</td><td>${a.likes || 0}</td><td>${a.images?.length || 0} image(s)</td><td><button class="btn-edit" onclick="openModal('actualite', ${a.id})"><i class="fas fa-edit"></i></button><button class="btn-delete" onclick="deleteItem('actualite', ${a.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('')}${paginatedItems.length === 0 ? '<tr><td colspan="8" style="text-align:center">Aucune actualité</td></tr>' : ''}</tbody>
-                </table></div>
-                <div class="mt-3 d-flex justify-content-between align-items-center flex-wrap" style="gap:15px">
-                    <button class="btn-delete" onclick="deleteSelected('actualites')"><i class="fas fa-trash"></i> Supprimer sélection</button>
-                    <div class="d-flex align-items-center gap-2">
-                        <button class="btn btn-sm btn-outline-primary ${currentPageActualites === 1 ? 'disabled' : ''}" onclick="changePage('actualites', ${currentPageActualites - 1})" ${currentPageActualites === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i> Précédent</button>
-                        <span>Page <strong>${currentPageActualites}</strong> sur <strong>${totalPages}</strong></span>
-                        <button class="btn btn-sm btn-outline-primary ${currentPageActualites === totalPages ? 'disabled' : ''}" onclick="changePage('actualites', ${currentPageActualites + 1})" ${currentPageActualites === totalPages ? 'disabled' : ''}>Suivant <i class="fas fa-chevron-right"></i></button>
-                    </div>
-                    <div>Affichage ${start + 1} - ${Math.min(end, actualites.length)} sur ${actualites.length}</div>
-                </div>
+                <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchActualites" class="form-control" placeholder="Rechercher..."></div>
+                <div class="data-table"><table><thead><tr><th>Titre</th><th>Date</th><th>Catégorie</th><th>Likes</th><th>Actions</th></tr></thead>
+                <tbody id="actualitesTableBody">${paginated.map(a => `<tr><td>${a.titre.substring(0, 50)}${a.titre.length > 50 ? '...' : ''}</td><td>${a.date}</td><td>${a.categorie}</td><td>${a.likes || 0}</td><td><button class="btn-edit" onclick="openModal('actualite', ${a.id})"><i class="fas fa-edit"></i></button><button class="btn-delete" onclick="deleteItem('actualite', ${a.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table></div>
+                <div class="mt-3">${renderPagination('actualites', currentPageActualites, totalPages)}</div>
             </div>
         `;
         document.getElementById('sectionContent').innerHTML = html;
         
         document.getElementById('searchActualites')?.addEventListener('input', function(e) {
             const term = e.target.value.toLowerCase();
-            document.querySelectorAll('#actualitesTableBody tr').forEach(row => { row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none'; });
+            document.querySelectorAll('#actualitesTableBody tr').forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
+            });
         });
-        document.getElementById('selectAllActualites')?.addEventListener('change', function(e) { document.querySelectorAll('.select-actualite').forEach(cb => cb.checked = e.target.checked); });
     }
     
-    // ==================== LEADERS ====================
-    function renderLeaders() {
-        const leaders = AdminData.getLeaders();
-        const html = `<div class="content-card"><div class="card-header-custom"><h3><i class="fas fa-users"></i> Équipe dirigeante <span class="badge badge-primary">${leaders.length} total</span></h3></div>
-            <div class="data-table"><table class="table"><thead><tr><th>Nom</th><th>Titre</th><th>Message</th><th>Actions</th></tr></thead>
-            <tbody>${leaders.map(l => `<tr><td>${l.nom}</td><td>${l.titre}</td><td>${l.message.substring(0, 50)}${l.message.length > 50 ? '...' : ''}</td><td><button class="btn-edit" onclick="openModal('leader', ${l.id})"><i class="fas fa-edit"></i></button></td></tr>`).join('')}</tbody>
-        </table></div></div>`;
-        document.getElementById('sectionContent').innerHTML = html;
-    }
-    
-    // ==================== PARTENAIRES ====================
-    function renderPartenaires() {
-        const partenaires = AdminData.getPartenaires();
-        const totalPages = Math.ceil(partenaires.length / itemsPerPage);
-        const start = (currentPagePartenaires - 1) * itemsPerPage;
+    // ==================== DEMANDES DE TRANSPORT ====================
+    function renderDemandes() {
+        const demandes = AdminData.getDemandes();
+        const totalPages = Math.ceil(demandes.length / itemsPerPage);
+        const start = (currentPageDemandes - 1) * itemsPerPage;
         const end = start + itemsPerPage;
-        const paginatedItems = partenaires.slice(start, end);
-        
-        const html = `<div class="content-card"><div class="card-header-custom"><h3><i class="fas fa-handshake"></i> Partenaires institutionnels <span class="badge badge-primary">${partenaires.length} total</span></h3>
-            <div><button class="btn-add" onclick="exportToCSV('partenaires')"><i class="fas fa-download"></i> Exporter CSV</button><button class="btn-add" onclick="openModal('partenaire', null)"><i class="fas fa-plus"></i> Ajouter un partenaire</button></div></div>
-            <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchPartenaires" class="form-control" placeholder="Rechercher un partenaire..."></div>
-            <div class="data-table"><table class="table"><thead><tr><th><input type="checkbox" id="selectAllPartenaires"></th><th>ID</th><th>Nom</th><th>Description</th><th>Actions</th></tr></thead>
-            <tbody id="partenairesTableBody">${paginatedItems.map(p => `<tr><td><input type="checkbox" class="select-partenaire" data-id="${p.id}"></td><td>${p.id}</td><td>${p.nom}</td><td>${p.description || ''}</td><td><button class="btn-edit" onclick="openModal('partenaire', ${p.id})"><i class="fas fa-edit"></i></button><button class="btn-delete" onclick="deleteItem('partenaire', ${p.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('')}${paginatedItems.length === 0 ? '<tr><td colspan="5" style="text-align:center">Aucun partenaire</td></tr>' : ''}</tbody>
-            </table></div>
-            <div class="mt-3 d-flex justify-content-between align-items-center"><button class="btn-delete" onclick="deleteSelected('partenaires')"><i class="fas fa-trash"></i> Supprimer sélection</button><div>${renderPaginationControls('partenaires', currentPagePartenaires, totalPages)}</div><div>Affichage ${start + 1} - ${Math.min(end, partenaires.length)} sur ${partenaires.length}</div></div>
-        </div>`;
-        document.getElementById('sectionContent').innerHTML = html;
-        
-        document.getElementById('searchPartenaires')?.addEventListener('input', function(e) {
-            const term = e.target.value.toLowerCase();
-            document.querySelectorAll('#partenairesTableBody tr').forEach(row => { row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none'; });
-        });
-        document.getElementById('selectAllPartenaires')?.addEventListener('change', function(e) { document.querySelectorAll('.select-partenaire').forEach(cb => cb.checked = e.target.checked); });
-    }
-    
-    // ==================== SERVICES ====================
-    function renderServices() {
-        const services = AdminData.getServices();
-        const totalPages = Math.ceil(services.length / itemsPerPage);
-        const start = (currentPageServices - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        const paginatedItems = services.slice(start, end);
-        
-        const html = `<div class="content-card"><div class="card-header-custom"><h3><i class="fas fa-cogs"></i> Services opérationnels <span class="badge badge-primary">${services.length} total</span></h3>
-            <div><button class="btn-add" onclick="exportToCSV('services')"><i class="fas fa-download"></i> Exporter CSV</button><button class="btn-add" onclick="openModal('service', null)"><i class="fas fa-plus"></i> Ajouter un service</button></div></div>
-            <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchServices" class="form-control" placeholder="Rechercher un service..."></div>
-            <div class="data-table"><table class="table"><thead><tr><th><input type="checkbox" id="selectAllServices"></th><th>ID</th><th>Titre</th><th>Description</th><th>Icône</th><th>Lien</th><th>Actions</th></tr></thead>
-            <tbody id="servicesTableBody">${paginatedItems.map(s => `<tr><td><input type="checkbox" class="select-service" data-id="${s.id}"></td><td>${s.id}</td><td>${s.titre}</td><td>${s.description.substring(0, 50)}${s.description.length > 50 ? '...' : ''}</td><td><i class="fas ${s.icone}"></i></td><td>${s.lien}</td><td><button class="btn-edit" onclick="openModal('service', ${s.id})"><i class="fas fa-edit"></i></button><button class="btn-delete" onclick="deleteItem('service', ${s.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('')}${paginatedItems.length === 0 ? '<tr><td colspan="7" style="text-align:center">Aucun service</td></tr>' : ''}</tbody>
-            </table></div>
-            <div class="mt-3 d-flex justify-content-between align-items-center"><button class="btn-delete" onclick="deleteSelected('services')"><i class="fas fa-trash"></i> Supprimer sélection</button><div>${renderPaginationControls('services', currentPageServices, totalPages)}</div><div>Affichage ${start + 1} - ${Math.min(end, services.length)} sur ${services.length}</div></div>
-        </div>`;
-        document.getElementById('sectionContent').innerHTML = html;
-        
-        document.getElementById('searchServices')?.addEventListener('input', function(e) {
-            const term = e.target.value.toLowerCase();
-            document.querySelectorAll('#servicesTableBody tr').forEach(row => { row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none'; });
-        });
-        document.getElementById('selectAllServices')?.addEventListener('change', function(e) { document.querySelectorAll('.select-service').forEach(cb => cb.checked = e.target.checked); });
-    }
-    
-    // ==================== RÈGLEMENTATIONS (77 documents, 6 pages) ====================
-    function renderReglementations() {
-        const reglements = AdminData.getReglementations();
-        const totalItems = reglements.length;
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-        const start = (currentPageReglements - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        const paginatedItems = reglements.slice(start, end);
+        const paginated = demandes.slice(start, end);
         
         const html = `
             <div class="content-card">
                 <div class="card-header-custom">
-                    <h3><i class="fas fa-gavel"></i> Documents règlementaires 
-                        <span class="badge badge-primary">${totalItems} documents au total</span>
-                        <span class="badge badge-warning">Page ${currentPageReglements} / ${totalPages}</span>
-                    </h3>
-                    <div>
-                        <button class="btn-add" onclick="exportToCSV('reglementations')"><i class="fas fa-download"></i> Exporter CSV</button>
-                        <button class="btn-add" onclick="openModal('reglementation', null)"><i class="fas fa-plus"></i> Ajouter un document</button>
-                    </div>
+                    <h3><i class="fas fa-file-signature"></i> Demandes de transport <span class="badge badge-primary">${demandes.length}</span></h3>
+                    <button class="btn-add" onclick="openModal('demande', null)"><i class="fas fa-plus"></i> Ajouter une demande</button>
                 </div>
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchReglements" class="form-control" placeholder="Rechercher un document (titre, catégorie)...">
-                </div>
-                <div class="data-table">
-                    <table class="table">
-                        <thead>
-                            <tr><th><input type="checkbox" id="selectAllReglements"></th><th>ID</th><th>Titre</th><th>Catégorie</th><th>Date</th><th>Actions</th></tr>
-                        </thead>
-                        <tbody id="reglementsTableBody">
-                            ${paginatedItems.map(r => `
-                                <tr>
-                                    <td><input type="checkbox" class="select-reglement" data-id="${r.id}"></td>
-                                    <td>${r.id}</td>
-                                    <td>${r.titre.substring(0, 70)}${r.titre.length > 70 ? '...' : ''}</td>
-                                    <td><span class="badge" style="background:#003399; color:white; padding:4px 8px;">${r.categorie}</span></td>
-                                    <td>${r.date}</td>
-                                    <td>
-                                        <button class="btn-edit" onclick="openModal('reglementation', ${r.id})"><i class="fas fa-edit"></i></button>
-                                        <button class="btn-delete" onclick="deleteItem('reglementation', ${r.id})"><i class="fas fa-trash"></i></button>
-                                    </td>
-                                 </tr>
-                            `).join('')}
-                            ${paginatedItems.length === 0 ? '<tr><td colspan="6" style="text-align:center">Aucun document trouvé</td>' : ''}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="mt-4 d-flex justify-content-between align-items-center flex-wrap" style="gap: 15px;">
-                    <div>
-                        <button class="btn-delete" onclick="deleteSelected('reglementations')" style="background:#dc3545; color:white; padding:8px 16px;">
-                            <i class="fas fa-trash"></i> Supprimer sélection
-                        </button>
-                    </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <button class="btn btn-sm btn-outline-primary ${currentPageReglements === 1 ? 'disabled' : ''}" 
-                                onclick="changePage('reglements', ${currentPageReglements - 1})" 
-                                ${currentPageReglements === 1 ? 'disabled' : ''}>
-                            <i class="fas fa-chevron-left"></i> Précédent
-                        </button>
-                        <span class="mx-2">
-                            Page <strong>${currentPageReglements}</strong> sur <strong>${totalPages}</strong>
-                            (${totalItems} documents)
-                        </span>
-                        <button class="btn btn-sm btn-outline-primary ${currentPageReglements === totalPages ? 'disabled' : ''}" 
-                                onclick="changePage('reglements', ${currentPageReglements + 1})" 
-                                ${currentPageReglements === totalPages ? 'disabled' : ''}>
-                            Suivant <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    <div>
-                        <select id="pageSelect" class="form-select form-select-sm" style="width: auto; display: inline-block;">
-                            ${Array.from({length: totalPages}, (_, i) => `<option value="${i + 1}" ${currentPageReglements === i + 1 ? 'selected' : ''}>Aller à la page ${i + 1}</option>`).join('')}
-                        </select>
-                    </div>
-                </div>
-                <div class="mt-2 text-muted small text-center">
-                    Affichage des documents ${start + 1} à ${Math.min(end, totalItems)} sur ${totalItems}
-                </div>
+                <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchDemandes" class="form-control" placeholder="Rechercher..."></div>
+                <div class="data-table"><table><thead><tr><th>Marchandises</th><th>Origine</th><th>Destination</th><th>Date</th><th>Nom</th><th>Actions</th></tr></thead>
+                <tbody id="demandesTableBody">${paginated.map(d => `<tr><td>${d.marchandises}</td><td>${d.origine}</td><td>${d.destination}</td><td>${d.date}</td><td>${d.nom}</td><td><button class="btn-edit" onclick="openModal('demande', ${d.id})"><i class="fas fa-edit"></i></button><button class="btn-delete" onclick="deleteItem('demande', ${d.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table></div>
+                <div class="mt-3">${renderPagination('demandes', currentPageDemandes, totalPages)}</div>
             </div>
         `;
         document.getElementById('sectionContent').innerHTML = html;
         
-        // Recherche en temps réel
-        const searchInput = document.getElementById('searchReglements');
-        if (searchInput) {
-            searchInput.addEventListener('input', function(e) {
-                const term = e.target.value.toLowerCase();
-                const rows = document.querySelectorAll('#reglementsTableBody tr');
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(term) ? '' : 'none';
-                });
-            });
-        }
-        
-        // Sélection tout
-        const selectAll = document.getElementById('selectAllReglements');
-        if (selectAll) {
-            selectAll.addEventListener('change', function(e) {
-                document.querySelectorAll('.select-reglement').forEach(cb => cb.checked = e.target.checked);
-            });
-        }
-        
-        // Selecteur de page
-        const pageSelect = document.getElementById('pageSelect');
-        if (pageSelect) {
-            pageSelect.addEventListener('change', function(e) {
-                changePage('reglements', parseInt(e.target.value));
-            });
-        }
-    }
-    
-    // ==================== STATISTIQUES ====================
-    function renderStatistiques() {
-        const stats = AdminData.getStatistiques();
-        const html = `<div class="content-card"><div class="card-header-custom"><h3><i class="fas fa-chart-line"></i> Chiffres clés</h3></div>
-            <form id="statsForm"><div class="form-group"><label>Année de création</label><input type="number" id="anneeCreation" class="form-control" value="${stats.anneeCreation || 1980}"></div>
-            <div class="form-group"><label>Années d'expérience</label><input type="number" id="ansExperience" class="form-control" value="${stats.ansExperience || 45}"></div>
-            <div class="form-group"><label>Fret par an (tonnes)</label><input type="number" id="fretParAn" class="form-control" value="${stats.fretParAn || 500000}"></div>
-            <div class="form-group"><label>Nombre de partenaires</label><input type="number" id="partenairesCount" class="form-control" value="${stats.partenaires || 25}"></div>
-            <button type="submit" class="btn-add">Enregistrer les modifications</button></form></div>`;
-        document.getElementById('sectionContent').innerHTML = html;
-        
-        document.getElementById('statsForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            AdminData.saveStatistiques({
-                anneeCreation: parseInt(document.getElementById('anneeCreation').value),
-                ansExperience: parseInt(document.getElementById('ansExperience').value),
-                fretParAn: parseInt(document.getElementById('fretParAn').value),
-                partenaires: parseInt(document.getElementById('partenairesCount').value)
-            });
-            showToast('Statistiques mises à jour !');
-        });
-    }
-    
-    // ==================== MESSAGES ====================
-    function renderMessages() {
-        const messages = AdminData.getMessages();
-        const totalPages = Math.ceil(messages.length / itemsPerPage);
-        const start = (currentPageMessages - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        const paginatedItems = messages.slice(start, end);
-        
-        const html = `<div class="content-card"><div class="card-header-custom"><h3><i class="fas fa-envelope"></i> Tous les messages <span class="badge badge-primary">${messages.length} total</span> <span class="badge badge-warning">${messages.filter(m => !m.lu).length} non lus</span></h3>
-            <div><button class="btn-add" onclick="exportToCSV('messages')"><i class="fas fa-download"></i> Exporter CSV</button><button class="btn-add" onclick="markAllRead()"><i class="fas fa-check-double"></i> Tout marquer lu</button></div></div>
-            <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchMessages" class="form-control" placeholder="Rechercher un message..."></div>
-            <div id="messagesContainer">${paginatedItems.map(m => `<div class="message-item ${!m.lu ? 'unread' : ''}"><div style="display:flex; justify-content:space-between;"><strong>${m.nom}</strong><small>${m.date || 'Date inconnue'}</small></div><div><strong>Email:</strong> ${m.email}</div><div><strong>Société:</strong> ${m.societe || '-'}</div><div><strong>Téléphone:</strong> ${m.telephone || '-'}</div><div><strong>Catégorie:</strong> ${m.categorie}</div><div><strong>Objet:</strong> ${m.objet}</div><div><strong>Message:</strong></div><p style="background:#f0f0f0; padding:10px; border-radius:8px; margin-top:5px;">${m.message}</p><div>${!m.lu ? `<button class="btn-edit" onclick="markRead(${m.id})"><i class="fas fa-check"></i> Marquer lu</button>` : ''}<button class="btn-delete" onclick="deleteMessage(${m.id})"><i class="fas fa-trash"></i> Supprimer</button></div></div>`).join('')}</div>
-            <div class="mt-3 d-flex justify-content-between align-items-center"><div></div><div>${renderPaginationControls('messages', currentPageMessages, totalPages)}</div><div>Affichage ${start + 1} - ${Math.min(end, messages.length)} sur ${messages.length}</div></div>
-        </div>`;
-        document.getElementById('sectionContent').innerHTML = html;
-        
-        document.getElementById('searchMessages')?.addEventListener('input', function(e) {
+        document.getElementById('searchDemandes')?.addEventListener('input', function(e) {
             const term = e.target.value.toLowerCase();
-            document.querySelectorAll('#messagesContainer .message-item').forEach(item => { item.style.display = item.textContent.toLowerCase().includes(term) ? '' : 'none'; });
+            document.querySelectorAll('#demandesTableBody tr').forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
+            });
         });
+    }
+    
+    // ==================== OFFRES DE TRANSPORT ====================
+    function renderOffres() {
+        const offres = AdminData.getOffres();
+        const totalPages = Math.ceil(offres.length / itemsPerPage);
+        const start = (currentPageOffres - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginated = offres.slice(start, end);
+        
+        const html = `
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <h3><i class="fas fa-tags"></i> Offres de transport <span class="badge badge-primary">${offres.length}</span></h3>
+                    <button class="btn-add" onclick="openModal('offre', null)"><i class="fas fa-plus"></i> Nouvelle offre</button>
+                </div>
+                <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchOffres" class="form-control" placeholder="Rechercher..."></div>
+                <div class="data-table"><table><thead><tr><th>Titre</th><th>Type</th><th>Origine</th><th>Destination</th><th>Tarif</th><th>Actions</th></tr></thead>
+                <tbody id="offresTableBody">${paginated.map(o => `<tr><td>${o.titre}</td><td>${o.type}</td><td>${o.origine}</td><td>${o.destination}</td><td>${o.tarif}</td><td><button class="btn-edit" onclick="openModal('offre', ${o.id})"><i class="fas fa-edit"></i></button><button class="btn-delete" onclick="deleteItem('offre', ${o.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table></div>
+                <div class="mt-3">${renderPagination('offres', currentPageOffres, totalPages)}</div>
+            </div>
+        `;
+        document.getElementById('sectionContent').innerHTML = html;
+        
+        document.getElementById('searchOffres')?.addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('#offresTableBody tr').forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
+            });
+        });
+    }
+    
+    // ==================== COMITÉ DE GESTION (PHOTOS) ====================
+    function renderComite() {
+        const comite = AdminData.getComite();
+        
+        const html = `
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <h3><i class="fas fa-users"></i> Comité de Gestion - Photos</h3>
+                    <p class="text-muted" style="font-size:0.85rem; margin:0;">Cliquez sur "Changer photo" pour mettre à jour l'image</p>
+                </div>
+                <div class="row g-4">
+                    ${comite.map((m) => `
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card" style="border-radius:16px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.08);">
+                                <div style="position:relative; background:#f0f2f5; height:200px; display:flex; align-items:center; justify-content:center;">
+                                    <img src="${m.photo}" alt="${m.nom}" style="max-height:100%; max-width:100%; object-fit:contain;" onerror="this.src='https://placehold.co/200x200/003399/white?text=${m.nom.charAt(0)}'">
+                                    <button class="btn-edit" style="position:absolute; bottom:10px; right:10px; padding:5px 12px; border-radius:20px;" onclick="openModal('comite', ${m.id})">
+                                        <i class="fas fa-camera"></i> Changer photo
+                                    </button>
+                                </div>
+                                <div class="card-body text-center" style="padding:15px;">
+                                    <h5 style="font-size:1rem; font-weight:700; margin:0;">${m.nom}</h5>
+                                    <p style="font-size:0.8rem; color:#666; margin:5px 0 0;">${m.titre}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        document.getElementById('sectionContent').innerHTML = html;
     }
     
     // ==================== PAGINATION ====================
-    function renderPaginationControls(type, currentPage, totalPages) {
+    function renderPagination(type, currentPage, totalPages) {
         if (totalPages <= 1) return '';
-        return `<nav><ul class="pagination pagination-sm" style="margin:0"><li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><button class="page-link" onclick="changePage('${type}', ${currentPage - 1})">«</button></li>
-            ${Array.from({length: Math.min(5, totalPages)}, (_, i) => {
-                let pageNum = currentPage <= 3 ? i + 1 : (currentPage >= totalPages - 2 ? totalPages - 4 + i : currentPage - 2 + i);
-                if (pageNum >= 1 && pageNum <= totalPages) {
-                    return `<li class="page-item ${currentPage === pageNum ? 'active' : ''}"><button class="page-link" onclick="changePage('${type}', ${pageNum})">${pageNum}</button></li>`;
-                }
-                return '';
-            }).join('')}
-            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}"><button class="page-link" onclick="changePage('${type}', ${currentPage + 1})">»</button></li></ul></nav>`;
+        let html = `<nav><ul style="display:flex; gap:5px; list-style:none; flex-wrap:wrap; padding:0;">`;
+        html += `<li class="${currentPage === 1 ? 'disabled' : ''}"><button class="page-link" onclick="changePage('${type}', ${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>«</button></li>`;
+        for (let i = 1; i <= totalPages; i++) {
+            html += `<li class="${currentPage === i ? 'active' : ''}"><button class="page-link" onclick="changePage('${type}', ${i})">${i}</button></li>`;
+        }
+        html += `<li class="${currentPage === totalPages ? 'disabled' : ''}"><button class="page-link" onclick="changePage('${type}', ${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>»</button></li>`;
+        html += `</ul></nav>`;
+        return html;
     }
     
     function changePage(type, page) {
         switch(type) {
-            case 'actualites': 
-                if (page >= 1 && page <= Math.ceil(AdminData.getActualites().length / itemsPerPage)) {
-                    currentPageActualites = page; renderActualites();
-                } break;
-            case 'partenaires': 
-                if (page >= 1 && page <= Math.ceil(AdminData.getPartenaires().length / itemsPerPage)) {
-                    currentPagePartenaires = page; renderPartenaires();
-                } break;
-            case 'services': 
-                if (page >= 1 && page <= Math.ceil(AdminData.getServices().length / itemsPerPage)) {
-                    currentPageServices = page; renderServices();
-                } break;
-            case 'reglements': 
-                if (page >= 1 && page <= Math.ceil(AdminData.getReglementations().length / itemsPerPage)) {
-                    currentPageReglements = page; renderReglementations();
-                } break;
-            case 'messages': 
-                if (page >= 1 && page <= Math.ceil(AdminData.getMessages().length / itemsPerPage)) {
-                    currentPageMessages = page; renderMessages();
-                } break;
+            case 'actualites': currentPageActualites = page; renderActualites(); break;
+            case 'demandes': currentPageDemandes = page; renderDemandes(); break;
+            case 'offres': currentPageOffres = page; renderOffres(); break;
         }
     }
-    
-    // ==================== EXPORT CSV ====================
-    function exportToCSV(type) {
-        let data = [], headers = [];
-        switch(type) {
-            case 'actualites': data = AdminData.getActualites(); headers = ['ID', 'Titre', 'Date', 'Catégorie', 'Description', 'Likes']; break;
-            case 'partenaires': data = AdminData.getPartenaires(); headers = ['ID', 'Nom', 'Description']; break;
-            case 'services': data = AdminData.getServices(); headers = ['ID', 'Titre', 'Description', 'Icône', 'Lien']; break;
-            case 'reglementations': data = AdminData.getReglementations(); headers = ['ID', 'Titre', 'Catégorie', 'Date', 'PDF URL']; break;
-            case 'messages': data = AdminData.getMessages(); headers = ['ID', 'Nom', 'Email', 'Message', 'Date', 'Lu']; break;
-        }
-        const csvRows = [headers.join(',')];
-        for (const row of data) {
-            const values = headers.map(h => {
-                let key = h.toLowerCase().replace(/ /g, '');
-                let val = row[key] || '';
-                if (typeof val === 'string' && (val.includes(',') || val.includes('"'))) val = `"${val.replace(/"/g, '""')}"`;
-                return val;
-            });
-            csvRows.push(values.join(','));
-        }
-        const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `${type}_export_${new Date().toISOString().split('T')[0]}.csv`;
-        a.click();
-        URL.revokeObjectURL(a.href);
-        showToast(`Export CSV de ${data.length} éléments effectué`);
-    }
-    
-    // ==================== SUPPRESSION MULTIPLE ====================
-    function deleteSelected(type) {
-        let selectedIds = [];
-        const selector = `.select-${type === 'actualites' ? 'actualite' : type === 'partenaires' ? 'partenaire' : type === 'services' ? 'service' : 'reglement'}`;
-        document.querySelectorAll(selector).forEach(cb => { if (cb.checked) selectedIds.push(parseInt(cb.dataset.id)); });
-        if (selectedIds.length === 0) { showToast('Aucun élément sélectionné', true); return; }
-        if (confirm(`Supprimer ${selectedIds.length} élément(s) ?`)) {
-            let data = [];
-            switch(type) {
-                case 'actualites': data = AdminData.getActualites().filter(i => !selectedIds.includes(i.id)); AdminData.saveActualites(data); break;
-                case 'partenaires': data = AdminData.getPartenaires().filter(i => !selectedIds.includes(i.id)); AdminData.savePartenaires(data); break;
-                case 'services': data = AdminData.getServices().filter(i => !selectedIds.includes(i.id)); AdminData.saveServices(data); break;
-                case 'reglementations': data = AdminData.getReglementations().filter(i => !selectedIds.includes(i.id)); AdminData.saveReglementations(data); break;
-            }
-            showToast(`${selectedIds.length} élément(s) supprimés`);
-            switch(type) {
-                case 'actualites': currentPageActualites = 1; renderActualites(); break;
-                case 'partenaires': currentPagePartenaires = 1; renderPartenaires(); break;
-                case 'services': currentPageServices = 1; renderServices(); break;
-                case 'reglementations': currentPageReglements = 1; renderReglementations(); break;
-            }
-        }
-    }
-    
-    // ==================== MESSAGES FUNCTIONS ====================
-    function markRead(messageId) { AdminData.markMessageRead(messageId); renderMessages(); showToast('Message marqué comme lu'); }
-    function markAllRead() { const messages = AdminData.getMessages(); messages.forEach(m => m.lu = true); AdminData.saveMessages(messages); renderMessages(); showToast('Tous les messages ont été marqués comme lus'); }
-    function deleteMessage(messageId) { if (confirm('Supprimer ce message ?')) { AdminData.deleteMessage(messageId); renderMessages(); showToast('Message supprimé'); } }
     
     // ==================== CRUD OPERATIONS ====================
     function deleteItem(type, id) {
-        if (confirm('Supprimer définitivement cet élément ?')) {
-            let data = [];
-            switch(type) {
-                case 'actualite': data = AdminData.getActualites().filter(i => i.id !== id); AdminData.saveActualites(data); break;
-                case 'partenaire': data = AdminData.getPartenaires().filter(i => i.id !== id); AdminData.savePartenaires(data); break;
-                case 'service': data = AdminData.getServices().filter(i => i.id !== id); AdminData.saveServices(data); break;
-                case 'reglementation': data = AdminData.getReglementations().filter(i => i.id !== id); AdminData.saveReglementations(data); break;
-            }
-            showToast('Élément supprimé');
-            loadSection(type + 's');
+        if (!confirm('Supprimer définitivement ?')) return;
+        switch(type) {
+            case 'actualite':
+                let actualites = AdminData.getActualites().filter(a => a.id !== id);
+                AdminData.saveActualites(actualites);
+                break;
+            case 'demande':
+                AdminData.deleteDemande(id);
+                break;
+            case 'offre':
+                AdminData.deleteOffre(id);
+                break;
         }
+        showToast('Élément supprimé');
+        loadSection(type === 'actualite' ? 'actualites' : type === 'demande' ? 'demandes' : 'offres');
     }
     
     function openModal(type, id) {
-        let item = null, data = [];
+        let item = null;
+        let data = [];
+        
         switch(type) {
             case 'actualite': data = AdminData.getActualites(); break;
-            case 'leader': data = AdminData.getLeaders(); break;
-            case 'partenaire': data = AdminData.getPartenaires(); break;
-            case 'service': data = AdminData.getServices(); break;
-            case 'reglementation': data = AdminData.getReglementations(); break;
+            case 'demande': data = AdminData.getDemandes(); break;
+            case 'offre': data = AdminData.getOffres(); break;
+            case 'comite': data = AdminData.getComite(); break;
         }
         if (id) item = data.find(d => d.id === id);
         
         let modalHtml = '';
+        
         if (type === 'actualite') {
-            modalHtml = `<div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom"><div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} une actualité</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-                <form id="modalForm"><input type="hidden" id="itemId" value="${id || ''}"><div class="form-group"><label>Titre *</label><input type="text" id="titre" class="form-control" value="${item?.titre || ''}" required></div>
-                <div class="form-group"><label>Date *</label><input type="date" id="date" class="form-control" value="${item?.date || new Date().toISOString().split('T')[0]}" required></div>
-                <div class="form-group"><label>Catégorie *</label><select id="categorie" class="form-select"><option value="evenement" ${item?.categorie === 'evenement' ? 'selected' : ''}>Événement</option><option value="communique" ${item?.categorie === 'communique' ? 'selected' : ''}>Communiqué</option><option value="projet" ${item?.categorie === 'projet' ? 'selected' : ''}>Projet</option><option value="partenariat" ${item?.categorie === 'partenariat' ? 'selected' : ''}>Partenariat</option><option value="avis" ${item?.categorie === 'avis' ? 'selected' : ''}>Avis officiel</option></select></div>
-                <div class="form-group"><label>Description *</label><textarea id="description" class="form-control" rows="5" required>${item?.description || ''}</textarea></div>
-                <div class="form-group"><label>URL Facebook</label><input type="url" id="facebookUrl" class="form-control" value="${item?.facebookUrl || ''}"></div>
-                <div class="form-group"><label>URL Instagram</label><input type="url" id="instagramUrl" class="form-control" value="${item?.instagramUrl || ''}"></div>
-                <div class="form-group"><label>URL Twitter</label><input type="url" id="twitterUrl" class="form-control" value="${item?.twitterUrl || ''}"></div>
-                <div class="form-group"><label>Images (URLs séparées par des virgules)</label><input type="text" id="images" class="form-control" value="${item?.images?.join(', ') || ''}"></div>
-                <button type="submit" class="btn-add" style="width:100%">${id ? 'Modifier' : 'Ajouter'}</button></form></div></div>`;
-        } else if (type === 'leader') {
-            modalHtml = `<div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom"><div class="modal-header-custom"><h3>Modifier le leader</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-                <form id="modalForm"><input type="hidden" id="itemId" value="${id}"><div class="form-group"><label>Nom complet</label><input type="text" id="nom" class="form-control" value="${item?.nom || ''}" required></div>
-                <div class="form-group"><label>Titre</label><input type="text" id="titre" class="form-control" value="${item?.titre || ''}" required></div>
-                <div class="form-group"><label>Message</label><textarea id="message" class="form-control" rows="3">${item?.message || ''}</textarea></div>
-                <div class="form-group"><label>URL photo</label><input type="text" id="photo" class="form-control" value="${item?.photo || ''}"></div>
-                <button type="submit" class="btn-add" style="width:100%">Modifier</button></form></div></div>`;
-        } else if (type === 'partenaire') {
-            modalHtml = `<div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom"><div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} un partenaire</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-                <form id="modalForm"><input type="hidden" id="itemId" value="${id || ''}"><div class="form-group"><label>Nom</label><input type="text" id="nom" class="form-control" value="${item?.nom || ''}" required></div>
-                <div class="form-group"><label>Description</label><input type="text" id="description" class="form-control" value="${item?.description || ''}"></div>
-                <div class="form-group"><label>URL logo</label><input type="text" id="logo" class="form-control" value="${item?.logo || ''}"></div>
-                <button type="submit" class="btn-add" style="width:100%">${id ? 'Modifier' : 'Ajouter'}</button></form></div></div>`;
-        } else if (type === 'service') {
-            modalHtml = `<div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom"><div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} un service</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-                <form id="modalForm"><input type="hidden" id="itemId" value="${id || ''}"><div class="form-group"><label>Titre</label><input type="text" id="titre" class="form-control" value="${item?.titre || ''}" required></div>
-                <div class="form-group"><label>Description</label><textarea id="description" class="form-control" rows="3">${item?.description || ''}</textarea></div>
-                <div class="form-group"><label>Icône</label><input type="text" id="icone" class="form-control" value="${item?.icone || 'fa-cog'}"></div>
-                <div class="form-group"><label>Lien</label><input type="text" id="lien" class="form-control" value="${item?.lien || '#'}"></div>
-                <button type="submit" class="btn-add" style="width:100%">${id ? 'Modifier' : 'Ajouter'}</button></form></div></div>`;
-        } else if (type === 'reglementation') {
-            modalHtml = `<div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom"><div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} un document</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-                <form id="modalForm"><input type="hidden" id="itemId" value="${id || ''}"><div class="form-group"><label>Titre</label><input type="text" id="titre" class="form-control" value="${item?.titre || ''}" required></div>
-                <div class="form-group"><label>Catégorie</label><select id="categorie" class="form-select"><option value="Avis aux chargeurs" ${item?.categorie === 'Avis aux chargeurs' ? 'selected' : ''}>Avis aux chargeurs</option><option value="Arrêtés" ${item?.categorie === 'Arrêtés' ? 'selected' : ''}>Arrêtés</option><option value="Circulaires" ${item?.categorie === 'Circulaires' ? 'selected' : ''}>Circulaires</option><option value="Grilles tarifaires" ${item?.categorie === 'Grilles tarifaires' ? 'selected' : ''}>Grilles tarifaires</option></select></div>
-                <div class="form-group"><label>Date</label><input type="date" id="date" class="form-control" value="${item?.date || new Date().toISOString().split('T')[0]}"></div>
-                <div class="form-group"><label>URL du PDF</label><input type="text" id="pdf_url" class="form-control" value="${item?.pdf_url || ''}"></div>
-                <button type="submit" class="btn-add" style="width:100%">${id ? 'Modifier' : 'Ajouter'}</button></form></div></div>`;
+            modalHtml = `
+            <div class="modal-custom active" id="dynamicModal">
+                <div class="modal-content-custom">
+                    <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} une actualité</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+                    <form id="modalForm">
+                        <input type="hidden" id="itemId" value="${id || ''}">
+                        <div class="form-group"><label>Titre *</label><input type="text" id="titre" class="form-control" value="${item?.titre || ''}" required></div>
+                        <div class="form-group"><label>Date *</label><input type="date" id="date" class="form-control" value="${item?.date || new Date().toISOString().split('T')[0]}" required></div>
+                        <div class="form-group"><label>Catégorie *</label>
+                            <select id="categorie" class="form-select">
+                                <option value="evenement" ${item?.categorie === 'evenement' ? 'selected' : ''}>Événement</option>
+                                <option value="communique" ${item?.categorie === 'communique' ? 'selected' : ''}>Communiqué</option>
+                                <option value="projet" ${item?.categorie === 'projet' ? 'selected' : ''}>Projet</option>
+                                <option value="partenariat" ${item?.categorie === 'partenariat' ? 'selected' : ''}>Partenariat</option>
+                                <option value="avis" ${item?.categorie === 'avis' ? 'selected' : ''}>Avis officiel</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Description *</label><textarea id="description" class="form-control" rows="5" required>${item?.description || ''}</textarea></div>
+                        <div class="form-group"><label>Images (URLs séparées par des virgules)</label><input type="text" id="images" class="form-control" value="${item?.images?.join(', ') || ''}"></div>
+                        <div class="form-group"><label>URL Facebook</label><input type="url" id="facebookUrl" class="form-control" value="${item?.facebookUrl || ''}"></div>
+                        <div class="form-group"><label>URL Instagram</label><input type="url" id="instagramUrl" class="form-control" value="${item?.instagramUrl || ''}"></div>
+                        <div class="form-group"><label>URL Twitter</label><input type="url" id="twitterUrl" class="form-control" value="${item?.twitterUrl || ''}"></div>
+                        <button type="submit" class="btn-add" style="width:100%">${id ? 'Modifier' : 'Ajouter'}</button>
+                    </form>
+                </div>
+            </div>`;
+        } else if (type === 'demande') {
+            modalHtml = `
+            <div class="modal-custom active" id="dynamicModal">
+                <div class="modal-content-custom">
+                    <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} une demande</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+                    <form id="modalForm">
+                        <input type="hidden" id="itemId" value="${id || ''}">
+                        <div class="form-group"><label>Marchandises *</label><input type="text" id="marchandises" class="form-control" value="${item?.marchandises || ''}" required></div>
+                        <div class="form-group"><label>Origine *</label><input type="text" id="origine" class="form-control" value="${item?.origine || ''}" required></div>
+                        <div class="form-group"><label>Destination *</label><input type="text" id="destination" class="form-control" value="${item?.destination || ''}" required></div>
+                        <div class="form-group"><label>Date souhaitée *</label><input type="date" id="date" class="form-control" value="${item?.date || ''}" required></div>
+                        <div class="form-group"><label>Nom du demandeur *</label><input type="text" id="nom" class="form-control" value="${item?.nom || ''}" required></div>
+                        <div class="form-group"><label>Email</label><input type="email" id="email" class="form-control" value="${item?.email || ''}"></div>
+                        <div class="form-group"><label>Téléphone</label><input type="text" id="telephone" class="form-control" value="${item?.telephone || ''}"></div>
+                        <button type="submit" class="btn-add" style="width:100%">${id ? 'Modifier' : 'Ajouter'}</button>
+                    </form>
+                </div>
+            </div>`;
+        } else if (type === 'offre') {
+            modalHtml = `
+            <div class="modal-custom active" id="dynamicModal">
+                <div class="modal-content-custom">
+                    <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} une offre</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+                    <form id="modalForm">
+                        <input type="hidden" id="itemId" value="${id || ''}">
+                        <div class="form-group"><label>Titre *</label><input type="text" id="titre" class="form-control" value="${item?.titre || ''}" required></div>
+                        <div class="form-group"><label>Type *</label>
+                            <select id="type" class="form-select">
+                                <option value="Routier" ${item?.type === 'Routier' ? 'selected' : ''}>Routier</option>
+                                <option value="Maritime" ${item?.type === 'Maritime' ? 'selected' : ''}>Maritime</option>
+                                <option value="Aérien" ${item?.type === 'Aérien' ? 'selected' : ''}>Aérien</option>
+                                <option value="Ferroviaire" ${item?.type === 'Ferroviaire' ? 'selected' : ''}>Ferroviaire</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Origine *</label><input type="text" id="origine" class="form-control" value="${item?.origine || ''}" required></div>
+                        <div class="form-group"><label>Destination *</label><input type="text" id="destination" class="form-control" value="${item?.destination || ''}" required></div>
+                        <div class="form-group"><label>Capacité</label><input type="text" id="capacite" class="form-control" value="${item?.capacite || ''}"></div>
+                        <div class="form-group"><label>Tarif</label><input type="text" id="tarif" class="form-control" value="${item?.tarif || ''}"></div>
+                        <div class="form-group"><label>Contact</label><input type="text" id="contact" class="form-control" value="${item?.contact || ''}"></div>
+                        <div class="form-group"><label>Description</label><textarea id="description" class="form-control" rows="3">${item?.description || ''}</textarea></div>
+                        <button type="submit" class="btn-add" style="width:100%">${id ? 'Modifier' : 'Ajouter'}</button>
+                    </form>
+                </div>
+            </div>`;
+        } else if (type === 'comite') {
+            modalHtml = `
+            <div class="modal-custom active" id="dynamicModal">
+                <div class="modal-content-custom">
+                    <div class="modal-header-custom"><h3>Changer la photo</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+                    <form id="modalForm">
+                        <input type="hidden" id="itemId" value="${id || ''}">
+                        <div class="form-group"><label>URL de la photo *</label><input type="text" id="photo" class="form-control" value="${item?.photo || ''}" required></div>
+                        <p class="text-muted small">Ex: assets/images/MINISTRE.png, assets/images/DG.jpeg, etc.</p>
+                        <button type="submit" class="btn-add" style="width:100%">Mettre à jour</button>
+                    </form>
+                </div>
+            </div>`;
         }
         
         document.body.insertAdjacentHTML('beforeend', modalHtml);
+        
         document.getElementById('modalForm').addEventListener('submit', function(e) {
             e.preventDefault();
             let newItem;
@@ -785,56 +595,79 @@
                     date: document.getElementById('date').value,
                     categorie: document.getElementById('categorie').value,
                     description: document.getElementById('description').value,
+                    images: imagesStr ? imagesStr.split(',').map(s => s.trim()).filter(s => s) : [],
                     facebookUrl: document.getElementById('facebookUrl').value,
                     instagramUrl: document.getElementById('instagramUrl').value,
                     twitterUrl: document.getElementById('twitterUrl').value,
-                    images: imagesStr ? imagesStr.split(',').map(s => s.trim()).filter(s => s) : [],
                     likes: item?.likes || 0
                 };
-                let actualites = AdminData.getActualites();
-                if (formId) { const idx = actualites.findIndex(a => a.id === parseInt(formId)); if (idx !== -1) actualites[idx] = newItem; }
-                else { actualites.push(newItem); }
-                AdminData.saveActualites(actualites);
-            } else if (type === 'leader') {
-                newItem = { id: parseInt(formId), nom: document.getElementById('nom').value, titre: document.getElementById('titre').value, message: document.getElementById('message').value, photo: document.getElementById('photo').value, ordre: item?.ordre || 1 };
-                let leaders = AdminData.getLeaders();
-                const idx = leaders.findIndex(l => l.id === parseInt(formId));
-                if (idx !== -1) leaders[idx] = newItem;
-                AdminData.saveLeaders(leaders);
-            } else if (type === 'partenaire') {
-                newItem = { id: formId ? parseInt(formId) : Date.now(), nom: document.getElementById('nom').value, description: document.getElementById('description').value, logo: document.getElementById('logo').value, lien: item?.lien || '' };
-                let partenaires = AdminData.getPartenaires();
-                if (formId) { const idx = partenaires.findIndex(p => p.id === parseInt(formId)); if (idx !== -1) partenaires[idx] = newItem; }
-                else { partenaires.push(newItem); }
-                AdminData.savePartenaires(partenaires);
-            } else if (type === 'service') {
-                newItem = { id: formId ? parseInt(formId) : Date.now(), titre: document.getElementById('titre').value, description: document.getElementById('description').value, icone: document.getElementById('icone').value, lien: document.getElementById('lien').value };
-                let services = AdminData.getServices();
-                if (formId) { const idx = services.findIndex(s => s.id === parseInt(formId)); if (idx !== -1) services[idx] = newItem; }
-                else { services.push(newItem); }
-                AdminData.saveServices(services);
-            } else if (type === 'reglementation') {
-                newItem = { id: formId ? parseInt(formId) : Date.now(), titre: document.getElementById('titre').value, categorie: document.getElementById('categorie').value, date: document.getElementById('date').value, pdf_url: document.getElementById('pdf_url').value };
-                let reglements = AdminData.getReglementations();
-                if (formId) { const idx = reglements.findIndex(r => r.id === parseInt(formId)); if (idx !== -1) reglements[idx] = newItem; }
-                else { reglements.push(newItem); }
-                AdminData.saveReglementations(reglements);
+                let data = AdminData.getActualites();
+                if (formId) { const idx = data.findIndex(a => a.id === parseInt(formId)); if (idx !== -1) data[idx] = newItem; }
+                else { data.push(newItem); }
+                AdminData.saveActualites(data);
+            } else if (type === 'demande') {
+                newItem = {
+                    id: formId ? parseInt(formId) : Date.now(),
+                    marchandises: document.getElementById('marchandises').value,
+                    origine: document.getElementById('origine').value,
+                    destination: document.getElementById('destination').value,
+                    date: document.getElementById('date').value,
+                    nom: document.getElementById('nom').value,
+                    email: document.getElementById('email').value,
+                    telephone: document.getElementById('telephone').value,
+                    dateSoumission: new Date().toLocaleString('fr-FR'),
+                    statut: 'publiée'
+                };
+                let data = AdminData.getDemandes();
+                if (formId) { const idx = data.findIndex(d => d.id === parseInt(formId)); if (idx !== -1) data[idx] = newItem; }
+                else { data.push(newItem); }
+                AdminData.saveDemandes(data);
+            } else if (type === 'offre') {
+                newItem = {
+                    id: formId ? parseInt(formId) : Date.now(),
+                    titre: document.getElementById('titre').value,
+                    type: document.getElementById('type').value,
+                    origine: document.getElementById('origine').value,
+                    destination: document.getElementById('destination').value,
+                    capacite: document.getElementById('capacite').value,
+                    tarif: document.getElementById('tarif').value,
+                    contact: document.getElementById('contact').value,
+                    description: document.getElementById('description').value
+                };
+                let data = AdminData.getOffres();
+                if (formId) { const idx = data.findIndex(o => o.id === parseInt(formId)); if (idx !== -1) data[idx] = newItem; }
+                else { data.push(newItem); }
+                AdminData.saveOffres(data);
+            } else if (type === 'comite') {
+                newItem = {
+                    id: parseInt(formId),
+                    nom: item?.nom || '',
+                    titre: item?.titre || '',
+                    photo: document.getElementById('photo').value,
+                    message: item?.message || ''
+                };
+                let data = AdminData.getComite();
+                const idx = data.findIndex(c => c.id === parseInt(formId));
+                if (idx !== -1) data[idx] = newItem;
+                AdminData.saveComite(data);
             }
+            
             showToast(`${type} ${formId ? 'modifié' : 'ajouté'} avec succès !`);
             closeModal();
-            loadSection(type + 's');
+            loadSection(type === 'actualite' ? 'actualites' : type === 'demande' ? 'demandes' : type === 'offre' ? 'offres' : 'comite');
         });
     }
     
     function closeModal() { const modal = document.getElementById('dynamicModal'); if (modal) modal.remove(); }
     
     // Exposer les fonctions globalement
-    window.changePage = changePage; window.exportToCSV = exportToCSV; window.deleteSelected = deleteSelected;
-    window.deleteItem = deleteItem; window.openModal = openModal; window.closeModal = closeModal;
-    window.markRead = markRead; window.markAllRead = markAllRead; window.deleteMessage = deleteMessage;
-    window.loadSection = loadSection; window.renderReglementations = renderReglementations;
+    window.changePage = changePage;
+    window.deleteItem = deleteItem;
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    window.loadSection = loadSection;
     
-    // ==================== INITIALISATION ====================
+    // ==================== INIT ====================
     checkAuth();
 </script>
 </body>
