@@ -15,9 +15,6 @@
     <link rel="stylesheet" href="../assets/css/responsive.css">
     <link rel="stylesheet" href="../assets/css/animations.css">
 
-    <!-- Flutterwave Checkout -->
-    <script src="https://checkout.flutterwave.com/v3.js"></script>
-
     <style>
         .payment-container { max-width: 1000px; margin: 0 auto; }
         .payment-card {
@@ -69,21 +66,22 @@
             font-size: 1rem;
         }
         .payment-method-btn:hover { border-color: #003399; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
-        .payment-method-btn.active { border-color: #003399; background: rgba(0,51,153,0.05); }
         .payment-method-btn i { font-size: 1.8rem; color: #003399; }
 
         .badge-coming {
             background: #ffc107;
             color: #003399;
-            padding: 4px 12px;
+            padding: 4px 14px;
             border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
+            font-size: 0.75rem;
+            font-weight: 700;
             margin-left: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .btn-pay {
-            background: linear-gradient(135deg, #003399, #0066CC);
+        .btn-pay-disabled {
+            background: #6c757d;
             color: white;
             border: none;
             padding: 16px 30px;
@@ -91,44 +89,11 @@
             font-weight: 700;
             border-radius: 50px;
             width: 100%;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .btn-pay:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,51,153,0.3); }
-        .btn-pay:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-        .bank-info {
-            background: #f8f9fa;
-            border-radius: 16px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-        .bank-info .copy-btn {
-            background: transparent;
-            border: none;
-            color: #003399;
-            cursor: pointer;
-            padding: 5px 10px;
+            cursor: not-allowed;
+            opacity: 0.7;
             transition: all 0.3s ease;
         }
-        .bank-info .copy-btn:hover { color: #FFCC00; }
-        .bank-info .row > div { margin-bottom: 8px; }
-        .bank-info .d-flex {
-            background: white;
-            padding: 10px 15px;
-            border-radius: 10px;
-            border: 1px solid #e9ecef;
-        }
-
-        .payment-status {
-            padding: 15px 20px;
-            border-radius: 12px;
-            margin-top: 20px;
-            display: none;
-        }
-        .payment-status.success { display: block; background: #e8f5e9; border: 1px solid #4caf50; color: #2e7d32; }
-        .payment-status.error { display: block; background: #ffebee; border: 1px solid #ef5350; color: #c62828; }
-        .payment-status.loading { display: block; background: #e3f2fd; border: 1px solid #1a73e8; color: #0d47a1; }
+        .btn-pay-disabled:hover { opacity: 0.8; }
 
         .security-badge {
             background: #f8f9fa;
@@ -139,25 +104,29 @@
         }
         .security-badge i { color: #28a745; margin-right: 10px; }
 
+        .dev-notice {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 15px;
+        }
+        .dev-notice i { color: #ffc107; font-size: 1.5rem; margin-right: 10px; }
+        .dev-notice strong { color: #003399; }
+
         body.dark-mode .payment-card { background: #1a1f2e; }
         body.dark-mode .payment-card h3 { color: #FFCC00; }
         body.dark-mode .payment-method-btn { background: #1a1f2e; border-color: #333; color: #e0e0e0; }
         body.dark-mode .payment-method-btn:hover { border-color: #FFCC00; }
-        body.dark-mode .payment-method-btn.active { border-color: #FFCC00; background: rgba(255,204,0,0.1); }
-        body.dark-mode .bank-info { background: #151a28; }
-        body.dark-mode .bank-info h4 { color: #FFCC00; }
-        body.dark-mode .bank-info .d-flex { background: #1a1f2e; border-color: #333; }
         body.dark-mode .security-badge { background: #151a28; }
+        body.dark-mode .dev-notice { background: #2d2a1a; border-color: #ffc107; }
+        body.dark-mode .dev-notice strong { color: #FFCC00; }
 
         @media (max-width: 768px) {
             .payment-card { padding: 20px; }
             .price-display .amount { font-size: 2.5rem; }
             .payment-method-btn { font-size: 0.9rem; padding: 14px 15px; gap: 10px; }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -189,152 +158,69 @@
                     <div class="payment-card">
                         <h3><i class="fas fa-credit-card"></i> Moyens de paiement</h3>
 
-                        <div id="paymentMethods">
-                            <button class="payment-method-btn active" data-method="flutterwave">
-                                <i class="fas fa-credit-card"></i>
-                                <span>Carte bancaire</span>
-                                <span style="margin-left: auto; font-size: 0.7rem; color: #28a745;">
-                                    <i class="fas fa-check-circle"></i> Visa / Mastercard
-                                </span>
-                            </button>
+                        <!-- TOUS LES 3 MOYENS EN COURS DE DÉVELOPPEMENT -->
+                        <button class="payment-method-btn" data-method="card" style="opacity: 0.8;">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Carte bancaire</span>
+                            <span class="badge-coming" style="margin-left: auto;">En cours</span>
+                        </button>
 
-                            <button class="payment-method-btn" data-method="bank">
-                                <i class="fas fa-university"></i>
-                                <span>Virement bancaire</span>
-                            </button>
+                        <button class="payment-method-btn" data-method="bank" style="opacity: 0.8;">
+                            <i class="fas fa-university"></i>
+                            <span>Virement bancaire</span>
+                            <span class="badge-coming" style="margin-left: auto;">En cours</span>
+                        </button>
 
-                            <button class="payment-method-btn" data-method="mobile" style="opacity: 0.7;">
-                                <i class="fas fa-mobile-alt"></i>
-                                <span>Mobile Money</span>
-                                <span class="badge-coming">En cours</span>
-                            </button>
+                        <button class="payment-method-btn" data-method="mobile" style="opacity: 0.8;">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Mobile Money</span>
+                            <span class="badge-coming" style="margin-left: auto;">En cours</span>
+                        </button>
+
+                        <!-- Message d'information -->
+                        <div class="dev-notice mt-3">
+                            <i class="fas fa-code"></i>
+                            <strong>🚧 Tous les moyens de paiement sont en cours de développement</strong>
+                            <p class="mb-0 mt-1" style="font-size: 0.9rem;">
+                                Nous mettons tout en œuvre pour vous offrir ces options de paiement très prochainement.
+                                Pour toute question, contactez notre service client.
+                            </p>
                         </div>
 
-                        <form id="paymentForm">
-
-                            <div id="flutterwaveSection">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Email *</label>
-                                        <input type="email" id="fwEmail" class="form-control" placeholder="votre@email.com" required>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Nom complet *</label>
-                                        <input type="text" id="fwName" class="form-control" placeholder="Nom et prénom" required>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Téléphone</label>
-                                        <input type="tel" id="fwPhone" class="form-control" placeholder="+243 XXX XXX XXX">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Société</label>
-                                        <input type="text" id="fwCompany" class="form-control" placeholder="Nom de votre société">
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label class="form-label fw-bold">Numéro FERI</label>
-                                        <input type="text" id="fwFeri" class="form-control" placeholder="FERI-XXXXX">
-                                    </div>
+                        <!-- Formulaire désactivé -->
+                        <form id="paymentForm" onsubmit="return false;">
+                            <div class="row g-3 mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Email *</label>
+                                    <input type="email" class="form-control" placeholder="votre@email.com" disabled>
                                 </div>
 
-                                <button type="button" class="btn-pay mt-4" onclick="payWithFlutterwave()">
-                                    <i class="fas fa-credit-card"></i> Payer par carte bancaire
-                                </button>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Nom complet *</label>
+                                    <input type="text" class="form-control" placeholder="Nom et prénom" disabled>
+                                </div>
 
-                                <p class="text-muted small text-center mt-2">
-                                    <i class="fas fa-lock"></i> Paiement sécurisé par Flutterwave
-                                </p>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Téléphone</label>
+                                    <input type="tel" class="form-control" placeholder="+243 XXX XXX XXX" disabled>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Société</label>
+                                    <input type="text" class="form-control" placeholder="Nom de votre société" disabled>
+                                </div>
+
                             </div>
 
-                            <div id="bankSection" style="display: none;">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Email *</label>
-                                        <input type="email" id="bankEmail" class="form-control" placeholder="votre@email.com" required>
-                                    </div>
+                            <!-- Bouton désactivé -->
+                            <button type="button" class="btn-pay-disabled mt-4" disabled>
+                                <i class="fas fa-clock"></i> Paiement indisponible - En développement
+                            </button>
 
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Nom complet *</label>
-                                        <input type="text" id="bankName" class="form-control" placeholder="Nom et prénom" required>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Société</label>
-                                        <input type="text" id="bankCompany" class="form-control" placeholder="Nom de votre société">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Numéro FERI</label>
-                                        <input type="text" id="bankFeri" class="form-control" placeholder="FERI-XXXXX">
-                                    </div>
-                                </div>
-
-                                <div class="bank-info mt-3">
-                                    <h4><i class="fas fa-university"></i> Coordonnées bancaires</h4>
-
-                                    <div class="row g-2">
-                                        <div class="col-12">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span><strong>Banque :</strong> RAWBANK RDC</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span><strong>Compte :</strong> 12345-67890-00</span>
-                                                <button type="button" class="copy-btn" onclick="copyText('12345-67890-00')">
-                                                    <i class="fas fa-copy"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span><strong>IBAN :</strong> CD12 3456 7890 1234 5678</span>
-                                                <button type="button" class="copy-btn" onclick="copyText('CD12 3456 7890 1234 5678')">
-                                                    <i class="fas fa-copy"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span><strong>Swift :</strong> RAWBCD</span>
-                                                <button type="button" class="copy-btn" onclick="copyText('RAWBCD')">
-                                                    <i class="fas fa-copy"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span><strong>Référence :</strong> ABONNEMENT + VOTRE NOM</span>
-                                                <button type="button" class="copy-btn" onclick="copyText('ABONNEMENT + VOTRE NOM')">
-                                                    <i class="fas fa-copy"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-check mt-3">
-                                    <input class="form-check-input" type="checkbox" id="bankConfirm">
-                                    <label class="form-check-label" for="bankConfirm">
-                                        Je confirme avoir effectué le virement de <strong>50 USD</strong> sur le compte OGEFREM
-                                    </label>
-                                </div>
-
-                                <button type="submit" class="btn-pay mt-3" id="bankPayButton">
-                                    <i class="fas fa-university"></i> Confirmer le virement
-                                </button>
-                            </div>
-
+                            <p class="text-muted small text-center mt-2">
+                                <i class="fas fa-lock"></i> Paiement sécurisé - Disponible prochainement
+                            </p>
                         </form>
-
-                        <div id="paymentStatus" class="payment-status"></div>
 
                         <div class="security-badge">
                             <i class="fas fa-shield-alt"></i>
@@ -350,7 +236,7 @@
                         <ul class="list-unstyled">
                             <li class="mb-3">
                                 <i class="fas fa-check-circle text-success"></i>
-                                <strong>Accès FERI/FERE</strong>
+                                <strong>Accès FERI/AD/FERE</strong>
                                 <br><small class="text-muted">Plateforme complète de gestion</small>
                             </li>
 
@@ -368,8 +254,8 @@
 
                             <li class="mb-3">
                                 <i class="fas fa-check-circle text-success"></i>
-                                <strong>Valable 2025</strong>
-                                <br><small class="text-muted">01/01/2025 - 31/12/2025</small>
+                                <strong>Valable durant l'année en cours</strong>
+                                <br><small class="text-muted">Valable du 1er janvier au 31 décembre</small>
                             </li>
 
                             <li class="mb-3">
@@ -384,8 +270,8 @@
                         <h3><i class="fas fa-headset"></i> Assistance</h3>
 
                         <div class="d-flex flex-column gap-2">
-                            <p><i class="fas fa-phone" style="color: #003399;"></i> <strong>+243 81 641 85 65</strong></p>
-                            <p><i class="fas fa-envelope" style="color: #003399;"></i> <strong>abonnement@ogefrem.cd</strong></p>
+                            <p><i class="fas fa-phone" style="color: #003399;"></i> <strong>+243 XX XXX XXX</strong></p>
+                            <p><i class="fas fa-envelope" style="color: #003399;"></i> <strong>dfac@ogefrem.cd</strong></p>
                             <p><i class="fas fa-clock" style="color: #003399;"></i> Lun-Ven : 8h30 - 16h30</p>
                         </div>
                     </div>
@@ -408,258 +294,12 @@
     document.addEventListener('DOMContentLoaded', function () {
         AOS.init({ duration: 800, once: true });
 
-        const methodButtons = document.querySelectorAll('.payment-method-btn');
-        const flutterwaveSection = document.getElementById('flutterwaveSection');
-        const bankSection = document.getElementById('bankSection');
-        const bankPayButton = document.getElementById('bankPayButton');
-        const form = document.getElementById('paymentForm');
-
-        methodButtons.forEach(btn => {
-            btn.addEventListener('click', function () {
-                const method = this.dataset.method;
-
-                if (method === 'mobile') {
-                    alert('⚠️ Le paiement par Mobile Money est en cours de développement. Veuillez utiliser la carte bancaire ou le virement bancaire.');
-                    return;
-                }
-
-                methodButtons.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-
-                if (method === 'flutterwave') {
-                    flutterwaveSection.style.display = 'block';
-                    bankSection.style.display = 'none';
-                }
-
-                if (method === 'bank') {
-                    flutterwaveSection.style.display = 'none';
-                    bankSection.style.display = 'block';
-                }
+        // Petite interaction pour montrer que les boutons sont cliquables mais inactifs
+        document.querySelectorAll('.payment-method-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('⚠️ Ce moyen de paiement est en cours de développement. Veuillez réessayer ultérieurement ou contacter notre service client.');
             });
         });
-
-        window.payWithFlutterwave = function () {
-            const email = document.getElementById('fwEmail').value.trim();
-            const name = document.getElementById('fwName').value.trim();
-            const phone = document.getElementById('fwPhone').value.trim();
-            const company = document.getElementById('fwCompany').value.trim();
-            const feri = document.getElementById('fwFeri').value.trim();
-
-            if (!email || !name) {
-                showStatus('error', '⚠️ Veuillez remplir les champs Email et Nom.');
-                return;
-            }
-
-            if (!email.includes('@') || !email.includes('.')) {
-                showStatus('error', '⚠️ Veuillez entrer une adresse email valide.');
-                return;
-            }
-
-            FlutterwaveCheckout({
-                public_key: "FLWPUBK_TEST-xxxxxxxxxxxxxxxxxxxxx-X",
-                tx_ref: "OGEFREM-ABONNEMENT-" + Date.now(),
-                amount: 50,
-                currency: "USD",
-                payment_options: "card",
-                customer: {
-                    email: email,
-                    phone_number: phone,
-                    name: name
-                },
-                meta: {
-                    company: company,
-                    feri: feri,
-                    service: "Paiement abonnement chargeur",
-                    year: 2025
-                },
-                customizations: {
-                    title: "OGEFREM",
-                    description: "Paiement abonnement chargeur 2025",
-                    logo: "https://ogefrem.cd/assets/images/ogefrem_logo2.png"
-                },
-                callback: function (response) {
-                    console.log("Réponse Flutterwave :", response);
-
-                    if (response.status === "successful" || response.status === "completed") {
-                        showStatus('success', '✅ Paiement réussi. Votre abonnement a été enregistré.');
-
-                        saveSubscription(email, name, phone, company, feri, 'active', 'Flutterwave - Carte bancaire', response.transaction_id || response.tx_ref);
-                        sendAdminNotification(name, email, phone, company, feri, 'Flutterwave - Carte bancaire');
-
-                        document.getElementById('paymentForm').reset();
-                    } else {
-                        showStatus('error', '❌ Paiement non finalisé.');
-                    }
-                },
-                onclose: function () {
-                    console.log("Fenêtre Flutterwave fermée");
-                }
-            });
-        };
-
-        form.addEventListener('submit', async function (e) {
-            const activeMethod = document.querySelector('.payment-method-btn.active');
-            const method = activeMethod ? activeMethod.dataset.method : 'flutterwave';
-
-            if (method === 'bank') {
-                e.preventDefault();
-                await processBankPayment();
-            }
-        });
-
-        async function processBankPayment() {
-            const email = document.getElementById('bankEmail').value.trim();
-            const name = document.getElementById('bankName').value.trim();
-            const company = document.getElementById('bankCompany').value.trim();
-            const feri = document.getElementById('bankFeri').value.trim();
-            const confirmed = document.getElementById('bankConfirm').checked;
-
-            if (!email || !name) {
-                showStatus('error', '⚠️ Veuillez remplir les champs Email et Nom.');
-                return;
-            }
-
-            if (!email.includes('@') || !email.includes('.')) {
-                showStatus('error', '⚠️ Veuillez entrer une adresse email valide.');
-                return;
-            }
-
-            if (!confirmed) {
-                showStatus('error', '⚠️ Veuillez confirmer que vous avez effectué le virement.');
-                return;
-            }
-
-            showStatus('loading', '⏳ Envoi de votre confirmation...');
-            bankPayButton.disabled = true;
-            bankPayButton.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Envoi...';
-
-            try {
-                saveSubscription(email, name, '', company, feri, 'pending', 'Virement bancaire', '');
-                sendAdminNotification(name, email, '', company, feri, 'Virement bancaire');
-
-                showStatus('success',
-                    '✅ Votre virement a été enregistré. ' +
-                    'L’abonnement sera activé après vérification du paiement. ' +
-                    'Un email de confirmation vous sera envoyé.'
-                );
-
-                document.getElementById('bankConfirm').checked = false;
-
-            } catch (error) {
-                console.error('Erreur :', error);
-                showStatus('error', '❌ Erreur de connexion. Veuillez réessayer ou nous contacter.');
-            }
-
-            bankPayButton.disabled = false;
-            bankPayButton.innerHTML = '<i class="fas fa-university"></i> Confirmer le virement';
-        }
-
-        function showStatus(type, message) {
-            const statusDiv = document.getElementById('paymentStatus');
-            statusDiv.className = 'payment-status ' + type;
-            statusDiv.innerHTML = message;
-            statusDiv.style.display = 'block';
-
-            if (type === 'success') {
-                setTimeout(() => {
-                    statusDiv.style.display = 'none';
-                }, 15000);
-            }
-        }
-
-        function saveSubscription(email, name, phone, company, feri, status, method, transactionId) {
-            const subscriptions = JSON.parse(localStorage.getItem('ogefrem_subscriptions') || '[]');
-
-            const data = {
-                id: Date.now(),
-                email: email,
-                name: name,
-                phone: phone || '',
-                company: company || '',
-                feri: feri || '',
-                status: status,
-                method: method || '',
-                transactionId: transactionId || '',
-                date: new Date().toISOString(),
-                amount: 50,
-                currency: 'USD',
-                year: 2025
-            };
-
-            subscriptions.push(data);
-            localStorage.setItem('ogefrem_subscriptions', JSON.stringify(subscriptions));
-            console.log('Abonnement sauvegardé :', data);
-        }
-
-        function sendAdminNotification(name, email, phone, company, feri, method) {
-            try {
-                fetch('../assets/php/send-mail.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        type: 'subscription_notification',
-                        name: name,
-                        email: email,
-                        phone: phone || '',
-                        company: company || '',
-                        feri: feri || '',
-                        method: method,
-                        amount: 50,
-                        currency: 'USD',
-                        year: 2025
-                    })
-                })
-                .then(response => response.json())
-                .then(data => console.log('Notification admin :', data))
-                .catch(err => console.log('Erreur notification admin :', err));
-            } catch (e) {
-                console.log('Erreur notification admin :', e);
-            }
-        }
-
-        function copyText(text) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(() => showCopyAlert()).catch(() => fallbackCopy(text));
-            } else {
-                fallbackCopy(text);
-            }
-        }
-
-        function fallbackCopy(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-
-            try {
-                document.execCommand('copy');
-                showCopyAlert();
-            } catch (e) {
-                alert('Copie manuelle : ' + text);
-            }
-
-            document.body.removeChild(textarea);
-        }
-
-        function showCopyAlert() {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3';
-            alertDiv.style.zIndex = '9999';
-            alertDiv.style.animation = 'fadeInUp 0.3s ease';
-            alertDiv.innerHTML = '<i class="fas fa-check-circle"></i> Copié dans le presse-papier';
-            document.body.appendChild(alertDiv);
-
-            setTimeout(() => {
-                alertDiv.style.opacity = '0';
-                alertDiv.style.transition = 'opacity 0.3s ease';
-                setTimeout(() => alertDiv.remove(), 300);
-            }, 2500);
-        }
-
-        window.copyText = copyText;
-        window.showStatus = showStatus;
     });
 </script>
 
