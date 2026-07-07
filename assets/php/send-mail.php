@@ -7,7 +7,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 
 // ==================== CONFIGURATION ====================
 // EMAIL DE LA DIRECTION GÉNÉRALE - À MODIFIER AVEC LE VRAI EMAIL
-$ADMIN_EMAIL = "direction@ogefrem.cd";
+$ADMIN_EMAIL = "dg@ogefrem.cd";
 $ADMIN_NAME = "Direction Générale OGEFREM";
 
 // ==================== FONCTIONS ====================
