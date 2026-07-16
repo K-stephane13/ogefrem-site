@@ -1,10 +1,10 @@
-// assets/js/admin-data.js - VERSION SIMPLIFIÉE AVEC LES 11 NOUVELLES ACTUALITÉS
+// assets/js/admin-data.js - VERSION SIMPLIFIÉE AVEC LES 14 NOUVELLES ACTUALITÉS
 // Gère UNIQUEMENT : Actualités, Demandes, Offres, Comité (photos)
 
 const AdminData = {
     
     // ============================================================
-    // 1. ACTUALITÉS - 11 ARTICLES RÉELS (du plus récent au plus ancien)
+    // 1. ACTUALITÉS - 14 ARTICLES RÉELS (du plus récent au plus ancien)
     // ============================================================
     getActualites: function() {
         const saved = localStorage.getItem('ogefrem_actualites');
@@ -17,7 +17,52 @@ const AdminData = {
     getDefaultActualites: function() {
         // Classées du plus récent au plus ancien
         return [
-            // 1. 26 JUIN 2026 - Conseil d'administration fixe les grandes priorités
+            // 1. 09 JUILLET 2026 - Clôture des travaux du Comité Directeur de l'UCCA
+            // IMAGES : 48.jpeg,49.jpeg,50.jpeg
+            {
+                id: 12,
+                titre: "UCCA : Rideaux sur les travaux du Comité Directeur à Douala",
+                date: "2026-07-09",
+                categorie: "evenement",
+                description: "Les travaux de la session ordinaire du Comité Directeur de l'Union des Conseils des Chargeurs Africains (UCCA) se sont officiellement achevés ce jeudi 9 juillet 2026 à Douala, en République du Cameroun, après deux jours d'intenses échanges consacrés aux enjeux du transport et de la logistique en Afrique.\n\nDans son discours de clôture, le Président en exercice de l'UCCA, M. Candide Koumou Goulas, a salué la participation active des délégations présentes et a, une fois de plus, félicité les Directeurs généraux récemment nommés à la tête de leurs Conseils des Chargeurs respectifs.\n\nLe Président de l'UCCA a souligné le caractère stratégique de cette session, organisée dans un contexte mondial marqué par les perturbations du commerce maritime international, lesquelles entraînent une hausse des coûts du fret et ont un impact direct sur le prix des biens de consommation.\n\n« Nous avons pris des engagements importants et formulé des recommandations pertinentes. Il nous appartient désormais de veiller à leur mise en œuvre effective », a-t-il déclaré, tout en réaffirmant sa confiance envers le Secrétariat général de l'organisation.\n\nM. Candide Koumou Goulas a également adressé ses remerciements au Conseil National des Chargeurs du Cameroun (CNCC), hôte de cette rencontre, pour son engagement constant en faveur du renforcement de la coopération entre les Conseils des Chargeurs africains.\n\nIl a, par ailleurs, salué l'arrivée de nouveaux membres au sein de l'UCCA, estimant que cette dynamique contribue à consolider davantage l'unité et la solidarité entre les institutions africaines chargées de la promotion et de la défense des intérêts des chargeurs.\n\nAvant la clôture officielle des travaux, le Secrétariat technique a procédé à la lecture du rapport final, des résolutions, des recommandations et des motions adoptées au cours de cette session.\n\nLa session ordinaire du Comité Directeur de l'UCCA s'est ainsi achevée sur une note de satisfaction générale, avec un engagement renouvelé des États membres à œuvrer pour une meilleure compétitivité logistique et un développement harmonieux du commerce africain.",
+                images: ["assets/images/actualites/48.jpeg", "assets/images/actualites/49.jpeg", "assets/images/actualites/50.jpeg"],
+                facebookUrl: "",
+                instagramUrl: "",
+                twitterUrl: "",
+                likes: 441
+            },
+            
+            // 2. 09 JUILLET 2026 - Le DG Olivier Tshibola échange avec ses homologues africains
+            // IMAGES : 55.jpeg,56.jpeg,57.jpeg,58.jpeg
+            {
+                id: 14,
+                titre: "OGEFREM : En marge des assises de l'UCCA, le DG Olivier Tshibola échange avec ses homologues africains",
+                date: "2026-07-09",
+                categorie: "partenariat",
+                description: "Douala, 09 juillet 2026.\n\nLe Directeur Général de l'OGEFREM, M. Olivier Tshibola, a multiplié les rencontres de travail avec ses homologues africains, notamment ceux du Cameroun et de l'Angola, en marge de la clôture de la session ordinaire du Comité Directeur de l'Union des Conseils des Chargeurs Africains (UCCA).\n\nAu cours de son entretien avec le Directeur Général du Conseil National des Chargeurs du Cameroun (CNCC), M. Auguste Mbappé, également Trésorier de l'UCCA, les discussions ont porté sur plusieurs sujets d'intérêt commun, notamment l'ouverture d'une représentation de l'OGEFREM à Douala, le développement des plateformes logistiques ainsi que le renforcement des mécanismes de facilitation et de traçabilité du fret.\n\nCes initiatives visent à renforcer la facilitation du commerce, à améliorer la fluidité des échanges et à offrir de meilleurs services aux chargeurs d'Afrique centrale en particulier et du continent africain en général.\n\nÀ cette occasion, M. Auguste Mbappé a adressé ses sincères félicitations à M. Olivier Tshibola pour sa nomination à la tête de l'OGEFREM, saluant la confiance placée en lui par le Président de la République démocratique du Congo, Son Excellence Félix Antoine Tshisekedi Tshilombo.\n\nLe Directeur Général du CNCC a également accueilli favorablement le projet de l'OGEFREM d'ouvrir une représentation permanente au Cameroun, pays qui abrite le siège de l'UCCA, tout en réaffirmant son entière disponibilité à accompagner cette initiative. Il a en outre plaidé pour le renforcement d'une collaboration franche, dynamique et durable entre les deux Conseils des Chargeurs.\n\nAprès sa rencontre avec son homologue camerounais, le Directeur Général de l'OGEFREM a tenu une importante séance de travail avec M. Mateus Simão, administrateur de l'ARCCLA, représentant le Directeur Général de cette institution, M. Catarino Fontes.\n\nLes échanges ont porté sur le renforcement de la coopération transfrontalière entre la RDC et l'Angola, avec un accent particulier sur la modernisation du Corridor de Lobito, l'amélioration des infrastructures ferroviaires, la réduction des délais de transport des marchandises ainsi que le renforcement de la compétitivité logistique.\n\nLes deux parties ont également évoqué le mémorandum d'entente relatif au suivi élargi du fret et confirmé l'aboutissement des négociations en vue de la signature prochaine d'un accord de collaboration à Luanda.\n\nM. Mateus Simão a exprimé son intérêt pour l'expérience de l'OGEFREM dans la gestion du fret terrestre et aérien. En réponse, le Directeur Général de l'OGEFREM a marqué son accord pour la mise en œuvre d'un programme d'échange d'expériences entre les experts des deux institutions dès la signature de l'accord.\n\nCette rencontre s'est achevée par une photo de famille, symbole de fraternité, de dialogue et de coopération entre les deux institutions.",
+                images: ["assets/images/actualites/55.jpeg", "assets/images/actualites/56.jpeg", "assets/images/actualites/57.jpeg", "assets/images/actualites/58.jpeg"],
+                facebookUrl: "",
+                instagramUrl: "",
+                twitterUrl: "",
+                likes: 745
+            },
+            
+            // 3. 08 JUILLET 2026 - Ouverture de la session ordinaire du Comité Directeur de l'UCCA
+            // IMAGES : 51.jpeg,52.jpeg,53.jpeg,54.jpeg
+            {
+                id: 13,
+                titre: "UCCA : Levée des rideaux sur les travaux de la session ordinaire du Comité Directeur",
+                date: "2026-07-08",
+                categorie: "evenement",
+                description: "Douala, 08 juillet 2026.\n\nCe mercredi 8 juillet 2026, la ville de Douala, capitale économique de la République du Cameroun, a accueilli l'ouverture des travaux de la session ordinaire du Comité Directeur de l'Union des Conseils des Chargeurs Africains (UCCA).\n\nCette rencontre, qui réunit les responsables des Conseils des Chargeurs du continent, examine sept points inscrits à l'ordre du jour, ainsi que plusieurs communications présentées par les Directeurs généraux des institutions membres.\n\nIntervenant à cette occasion, le Directeur Général de l'OGEFREM, Monsieur Olivier Tshibola Mukuma, est revenu sur le projet d'organisation à Kinshasa d'un forum international consacré à l'impact des taux de fret, des coûts et délais de passage portuaire ainsi que des surcharges sur le commerce international en Afrique.\n\nTenant compte de la récente restructuration des organes dirigeants de l'OGEFREM, il a sollicité le report de cette importante activité afin de permettre une meilleure préparation en concertation avec les autorités de tutelle.\n\nLe Directeur Général a, par ailleurs, réaffirmé l'engagement de l'OGEFREM à œuvrer, suivant la vision de Son Excellence Monsieur le Président de la République Félix Antoine Tshisekedi Tshilombo, mise en œuvre par le Ministre de Tutelle, Son Excellence le Vice-Premier Ministre Jean-Pierre Bemba, au renforcement de la collaboration entre les Conseils des Chargeurs africains, dans le but de promouvoir le commerce intra-africain, d'améliorer la compétitivité logistique du continent et de contribuer à l'intégration économique de l'Afrique.",
+                images: ["assets/images/actualites/51.jpeg", "assets/images/actualites/52.jpeg", "assets/images/actualites/53.jpeg", "assets/images/actualites/54.jpeg"],
+                facebookUrl: "",
+                instagramUrl: "",
+                twitterUrl: "",
+                likes: 432
+            },
+            
+            // 4. 26 JUIN 2026 - Conseil d'administration fixe les grandes priorités
             // IMAGES : 1.jpeg,2.jpeg,3.jpeg,4.jpeg
             {
                 id: 1,
@@ -32,7 +77,7 @@ const AdminData = {
                 likes: 975
             },
             
-            // 2. 24 JUIN 2026 - OGEFREM présent aux assises B-Ready
+            // 5. 24 JUIN 2026 - OGEFREM présent aux assises B-Ready
             // IMAGES : 5.jpeg,6.jpeg,7.jpeg
             {
                 id: 2,
@@ -47,7 +92,7 @@ const AdminData = {
                 likes: 543
             },
             
-            // 3. 23 JUIN 2026 - DG échange avec le banc syndical
+            // 6. 23 JUIN 2026 - DG échange avec le banc syndical
             // IMAGES : 8.jpeg,9.jpeg,10.jpeg,11.jpeg,12.jpeg,13.jpeg
             {
                 id: 3,
@@ -62,7 +107,7 @@ const AdminData = {
                 likes: 671
             },
             
-            // 4. 16 JUIN 2026 - Conseil d'administration ouvre un nouveau chapitre
+            // 7. 16 JUIN 2026 - Conseil d'administration ouvre un nouveau chapitre
             // IMAGES : 14.jpeg,15.jpeg,16.jpeg,17.jpeg
             {
                 id: 4,
@@ -77,7 +122,7 @@ const AdminData = {
                 likes: 865
             },
             
-            // 5. 15 JUIN 2026 - DG préside sa première réunion de Directions opérationnelles
+            // 8. 15 JUIN 2026 - DG préside sa première réunion de Directions opérationnelles
             // IMAGES : 18.jpeg,19.jpeg,20.jpeg,21.jpeg
             {
                 id: 5,
@@ -92,7 +137,7 @@ const AdminData = {
                 likes: 729
             },
             
-            // 6. 11 JUIN 2026 - Ronde du nouveau DG
+            // 9. 11 JUIN 2026 - Ronde du nouveau DG
             // IMAGES : 24.jpeg,25.jpeg,26.jpeg,27.jpeg,28.jpeg,29.jpeg
             {
                 id: 6,
@@ -107,7 +152,7 @@ const AdminData = {
                 likes: 452
             },
             
-            // 7. 10 JUIN 2026 - Passation de pouvoir DG
+            // 10. 10 JUIN 2026 - Passation de pouvoir DG
             // IMAGES : 30.jpeg,31.jpeg,32.jpeg,33.jpeg,34.jpeg
             {
                 id: 7,
@@ -122,7 +167,7 @@ const AdminData = {
                 likes: 943
             },
             
-            // 8. 08 JUIN 2026 - Délégation OGEFREM en Angola
+            // 11. 08 JUIN 2026 - Délégation OGEFREM en Angola
             // IMAGES : 35.jpeg,36.jpeg,37.jpeg,38.jpeg
             {
                 id: 8,
@@ -137,7 +182,7 @@ const AdminData = {
                 likes: 245
             },
             
-            // 9. 02 JUIN 2026 - Visites de réconfort DG a.i.
+            // 12. 02 JUIN 2026 - Visites de réconfort DG a.i.
             // IMAGES : 39.jpeg,40.jpeg,41.jpeg,42.jpeg
             {
                 id: 9,
@@ -152,9 +197,8 @@ const AdminData = {
                 likes: 692
             },
             
-            // 10. 25 MAI 2026 - Construction académie du transport multimodal à Muanda
+            // 13. 25 MAI 2026 - Construction académie du transport multimodal à Muanda
             // IMAGES : 22.jpeg,23.jpeg
-            // Je garde les images telles que vous les avez indiquées
             {
                 id: 10,
                 titre: "Ogefrem: vers la construction d'une académie du transport multimodal à Muanda",
@@ -168,7 +212,7 @@ const AdminData = {
                 likes: 534
             },
             
-            // 11. 18 MAI 2026 - Conseil d'administration en mission au Kongo Central
+            // 14. 18 MAI 2026 - Conseil d'administration en mission au Kongo Central
             // IMAGES : 43.jpeg,44.jpeg,45.jpeg,46.jpeg
             {
                 id: 11,

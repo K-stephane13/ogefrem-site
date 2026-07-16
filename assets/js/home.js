@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h3 class="actualite-titre">${actu.titre}</h3>
                     <p class="actualite-resume">${actu.description.substring(0, 120)}${actu.description.length > 120 ? '...' : ''}</p>
                     <div class="actualite-footer">
-                        <button class="btn-actualite" onclick="window.openPostModal ? window.openPostModal(${actu.id}) : alert('Ouvrir article complet')">
+                        <button class="btn-actualite" onclick="window.openPostModal ? window.openPostModal(${actu.id}) : alert('Ouvrir actualité.');">
                             <i class="fas fa-newspaper"></i> Lire l'article
                         </button>
                     </div>
