@@ -1,4 +1,4 @@
-<!-- presentation.html - VERSION COMPLÈTE AVEC ORDRE CORRIGÉ -->
+<!-- presentation.html - VERSION COMPLÈTE AVEC COMITÉ DE GESTION (DG + DGA SEULEMENT) -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,6 +7,7 @@
     <title>OGEFREM | Présentation - Historique, Missions, Organigramme</title>
     <meta name="description" content="Découvrez l'histoire, les missions, l'organigramme et les réalisations de l'OGEFREM, l'Office de Gestion du Fret Multimodal de la RDC.">
     
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,6 +22,7 @@
         .comite-section .row {
             display: flex;
             flex-wrap: wrap;
+            justify-content: center;
         }
         
         .comite-card {
@@ -33,6 +35,7 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            align-items: center;
         }
         
         .comite-card:hover {
@@ -41,8 +44,8 @@
         }
         
         .comite-photo {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             margin: 0 auto 15px;
             border-radius: 50%;
             overflow: hidden;
@@ -58,14 +61,14 @@
         }
         
         .comite-card h4 {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 700;
             margin: 10px 0 5px;
             color: #003399;
         }
         
         .comite-card .comite-title {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #FFCC00;
             font-weight: 600;
             margin-bottom: 10px;
@@ -74,33 +77,177 @@
         }
         
         .comite-card .comite-message {
-            font-size: 0.75rem;
-            line-height: 1.4;
+            font-size: 0.85rem;
+            line-height: 1.5;
             color: #666;
             margin: 0;
             padding: 0 5px;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
             font-style: italic;
         }
         
         @media (max-width: 768px) {
             .comite-photo {
-                width: 100px;
-                height: 100px;
+                width: 110px;
+                height: 110px;
             }
             .comite-card h4 {
                 font-size: 1rem;
             }
             .comite-card .comite-title {
-                font-size: 0.7rem;
+                font-size: 0.75rem;
             }
             .comite-card .comite-message {
-                font-size: 0.7rem;
-                -webkit-line-clamp: 2;
+                font-size: 0.75rem;
             }
+        }
+
+        body.dark-mode .comite-card {
+            background: #1a1f2e;
+        }
+
+        body.dark-mode .comite-card h4 {
+            color: #FFCC00;
+        }
+
+        body.dark-mode .comite-card .comite-message {
+            color: #bbb;
+        }
+
+        /* ===== STYLES POUR LES REPRÉSENTATIONS INTERNATIONALES ===== */
+        .representations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .representation-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            padding: 18px 10px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #f0f0f0;
+            min-height: 100px;
+        }
+
+        .representation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+            border-color: #FFCC00;
+        }
+
+        .representation-drapeau {
+            width: 48px;
+            height: 32px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .representation-card span {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #003399;
+            text-align: center;
+        }
+
+        /* Tooltip */
+        .representation-tooltip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 15px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #003399;
+            color: white;
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-size: 0.8rem;
+            min-width: 280px;
+            max-width: 340px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            z-index: 100;
+            text-align: left;
+            line-height: 1.7;
+        }
+
+        .representation-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 10px solid transparent;
+            border-top-color: #003399;
+        }
+
+        .representation-tooltip h5 {
+            color: #FFCC00;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+
+        .representation-tooltip p {
+            margin: 4px 0;
+            font-size: 0.78rem;
+            color: #e8e8e8;
+        }
+
+        .representation-tooltip i {
+            color: #FFCC00;
+            width: 20px;
+            margin-right: 4px;
+        }
+
+        .representation-card:hover .representation-tooltip {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .representations-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 15px;
+            }
+            .representation-tooltip {
+                min-width: 200px;
+                max-width: 240px;
+                font-size: 0.7rem;
+                padding: 12px 16px;
+                bottom: calc(100% + 12px);
+            }
+            .representation-card {
+                min-height: 80px;
+                padding: 12px 8px;
+            }
+            .representation-drapeau {
+                width: 36px;
+                height: 24px;
+            }
+            .representation-card span {
+                font-size: 0.7rem;
+            }
+        }
+
+        body.dark-mode .representation-card {
+            background: #1a1f2e;
+            border-color: #2a2f3e;
+        }
+
+        body.dark-mode .representation-card span {
+            color: #FFCC00;
+        }
+
+        body.dark-mode .representation-card:hover {
+            border-color: #FFCC00;
         }
     </style>
 </head>
@@ -119,51 +266,50 @@
         </section>
 
         <!-- SECTION 1 : HISTORIQUE AVEC LIENS PDF -->
-<section class="content-section historique-section">
-    <div class="container">
-        <div class="section-header" data-aos="fade-up">
-            <h2>Notre <span class="highlight">Histoire</span></h2>
-            <div class="header-decoration"></div>
-        </div>
-        <div class="row align-items-center g-5">
-            <div class="col-lg-6" data-aos="fade-right">
-                <div class="historique-texte">
-                    <p><strong>OGEFREM</strong>, alors Office de Gestion du Fret Maritime, est né de la volonté de l'État Congolais de se conformer aux recommandations et dispositions du Code de conduite des conférences maritimes adopté par la CNUCED en 1974, ainsi que celles de la Charte des transports maritimes en Afrique de l'Ouest et du Centre appelée <strong>« Charte d'Abidjan »</strong>.</p>
-                    <p>Il est créé par l'ordonnance présidentielle <strong>n°80/256 du 12 novembre 1980</strong>. Par le décret <strong>n°09/63 du 03/12/2009</strong>, ses attributions sont étendues à tous les modes de transport et s'appelle désormais <strong>Office de Gestion du Fret Multimodal</strong>.</p>
-                    <p>Il est membre de l'<strong>Union des Conseils des Chargeurs Africains (UCCA)</strong>, organe spécialisé de l'Organisation Maritime des Etats de l'Ouest et du Centre (OMAOC).</p>
-                    
-                    <!-- DOCUMENTS À TÉLÉCHARGER - DESIGN AMÉLIORÉ -->
-                    <div class="documents-download-section mt-4">
-                        <h4 class="mb-3" style="font-size: 1.1rem; font-weight: 600; color: var(--primary-blue);">
-                            <i class="fas fa-file-pdf" style="color: #e74c3c; margin-right: 8px;"></i> Document officiel
-                        </h4>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <a href="assets/pdfs/decret_creation_ogefrem_multimodal.pdf" class="pdf-download-card" target="_blank">
-                                    <div class="pdf-icon">
-                                        <i class="fas fa-file-pdf"></i>
+        <section class="content-section historique-section">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <h2>Notre <span class="highlight">Histoire</span></h2>
+                    <div class="header-decoration"></div>
+                </div>
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6" data-aos="fade-right">
+                        <div class="historique-texte">
+                            <p><strong>OGEFREM</strong>, alors Office de Gestion du Fret Maritime, est né de la volonté de l'État Congolais de se conformer aux recommandations et dispositions du Code de conduite des conférences maritimes adopté par la CNUCED en 1974, ainsi que celles de la Charte des transports maritimes en Afrique de l'Ouest et du Centre appelée <strong>« Charte d'Abidjan »</strong>.</p>
+                            <p>Il est créé par l'ordonnance présidentielle <strong>n°80/256 du 12 novembre 1980</strong>. Par le décret <strong>n°09/63 du 03/12/2009</strong>, ses attributions sont étendues à tous les modes de transport et s'appelle désormais <strong>Office de Gestion du Fret Multimodal</strong>.</p>
+                            <p>Il est membre de l'<strong>Union des Conseils des Chargeurs Africains (UCCA)</strong>, organe spécialisé de l'Organisation Maritime des Etats de l'Ouest et du Centre (OMAOC).</p>
+                            
+                            <div class="documents-download-section mt-4">
+                                <h4 class="mb-3" style="font-size: 1.1rem; font-weight: 600; color: var(--primary-blue);">
+                                    <i class="fas fa-file-pdf" style="color: #e74c3c; margin-right: 8px;"></i> Document officiel
+                                </h4>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <a href="assets/pdfs/decret_creation_ogefrem_multimodal.pdf" class="pdf-download-card" target="_blank">
+                                            <div class="pdf-icon">
+                                                <i class="fas fa-file-pdf"></i>
+                                            </div>
+                                            <div class="pdf-info">
+                                                <strong>Decret fixant les statuts d'un établissement public dénommé OGEFREM</strong>
+                                                <small>n°09/63 du 03 déc 2009</small>
+                                            </div>
+                                            <div class="pdf-download-icon">
+                                                <i class="fas fa-download"></i>
+                                            </div>
+                                        </a>
                                     </div>
-                                    <div class="pdf-info">
-                                        <strong>Decret fixant les statuts d'un établissement public dénommé OGEFREM</strong>
-                                        <small>n°09/63 du 03 déc 2009</small>
-                                    </div>
-                                    <div class="pdf-download-icon">
-                                        <i class="fas fa-download"></i>
-                                    </div>
-                                </a>
+                                </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6" data-aos="fade-left">
+                        <div class="historique-image">
+                            <img src="assets/images/ogefrem batiment.jpeg" alt="Histoire OGEFREM" onerror="this.src='https://placehold.co/600x400/003399/white?text=OGEFREM+1980'">
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6" data-aos="fade-left">
-                <div class="historique-image">
-                    <img src="assets/images/ogefrem batiment.jpeg" alt="Histoire OGEFREM" onerror="this.src='https://placehold.co/600x400/003399/white?text=OGEFREM+1980'">
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
 
         <!-- SECTION 2 : HISTORIQUE EN BREF (TIMELINE) -->
         <section class="content-section historique-bref-section bg-light">
@@ -198,7 +344,6 @@
                     </div>
                 </div>
                 
-                <!-- Arrêtés importants de 2019 -->
                 <div class="row mt-5" data-aos="fade-up">
                     <div class="col-12">
                         <h3 class="text-center mb-4">Les arrêtés fondateurs de <span class="highlight">2019</span></h3>
@@ -311,7 +456,7 @@
             </div>
         </section>
 
-        <!-- SECTION 5 : OBSERVATOIRE NATIONAL DES TRANSPORTS - STATUT "EN COURS" -->
+        <!-- SECTION 5 : OBSERVATOIRE NATIONAL DES TRANSPORTS -->
         <section class="content-section observatoire-section">
             <div class="container">
                 <div class="row align-items-center g-5">
@@ -408,23 +553,133 @@
                     
                     <h4 class="text-center mt-4 mb-3">Représentations internationales</h4>
                     <div class="representations-grid">
-                        <div class="representation-card"><img src="assets/images/drapeaux/afrique du sud.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=ZA'"><span>Afrique du Sud</span></div>
-                        <div class="representation-card"><img src="assets/images/drapeaux/angola.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=AO'"><span>Angola</span></div>
-                        <div class="representation-card"><img src="assets/images/drapeaux/europe.png" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=EU'"><span>Europe</span></div>
-                        <div class="representation-card"><img src="assets/images/drapeaux/kenya.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=KE'"><span>Kenya</span></div>
-                        <div class="representation-card"><img src="assets/images/drapeaux/tanzanie.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=TZ'"><span>Tanzanie</span></div>
-                        <div class="representation-card"><img src="assets/images/drapeaux/chine.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=CN'"><span>Chine</span></div>
-                        <div class="representation-card"><img src="assets/images/drapeaux/mozambique.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=MZ'"><span>Mozambique</span></div>
-                        <div class="representation-card"><img src="assets/images/drapeaux/emirats-arabes-unis.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=AE'"><span>Émirats Arabes Unis</span></div>
-                        <div class="representation-card"><img src="assets/images/drapeaux/Namibie.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=NA'"><span>Namibie</span></div>
-                        <div class="representation-card"><img src="assets/images/drapeaux/Congo.png" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=CG'"><span>Congo</span></div>
-                        <div class="representation-card"><img src="assets/images/drapeaux/togo.png" class="representation-drapeau" onerror="this.src='https://placehold.co/40x40/003399/white?text=TG'"><span>Togo</span></div>
+                        <!-- Afrique du Sud -->
+                        <div class="representation-card">
+                            <img src="assets/images/drapeaux/afrique du sud.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=ZA'">
+                            <span>Afrique du Sud</span>
+                            <div class="representation-tooltip">
+                                <h5>🇿🇦 Afrique du Sud</h5>
+                                <p><i class="fas fa-envelope"></i> ras@ogefrem.cd</p>
+                                <p><i class="fas fa-map-marker-alt"></i> 284 Oak Avenue, Ferndale, Randburg 2194, Johannesburg</p>
+                                <p><i class="fas fa-phone"></i> +27 82 604 6704</p>
+                            </div>
+                        </div>
+
+                        <!-- Angola -->
+                        <div class="representation-card">
+                            <img src="assets/images/drapeaux/angola.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=AO'">
+                            <span>Angola</span>
+                            <div class="representation-tooltip">
+                                <h5>🇦🇴 Angola</h5>
+                                <p><i class="fas fa-envelope"></i> rang@ogefrem.cd</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Rua Musseque Cayete - Traversa da missão de São Paulo, Bairro São Paulo, casa n°62, Municipio do Sambizanga, Luanda</p>
+                                <p><i class="fas fa-phone"></i> +244 928 922 172 / +244 928 919 094</p>
+                            </div>
+                        </div>
+
+                        <!-- Europe -->
+                        <div class="representation-card">
+                            <img src="assets/images/drapeaux/europe.png" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=EU'">
+                            <span>Europe</span>
+                            <div class="representation-tooltip">
+                                <h5>🇪🇺 Europe (Belgique)</h5>
+                                <p><i class="fas fa-envelope"></i> ran@ogefrem.cd</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Justitiestraat 6 B, 2018 Antwerpen, Belgique</p>
+                                <p><i class="fas fa-phone"></i> +32 3 232 91 15 / +32 465 41 87 78</p>
+                            </div>
+                        </div>
+
+                        <!-- Kenya -->
+                        <div class="representation-card">
+                            <img src="assets/images/drapeaux/kenya.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=KE'">
+                            <span>Kenya</span>
+                            <div class="representation-tooltip">
+                                <h5>🇰🇪 Kenya</h5>
+                                <p><i class="fas fa-envelope"></i> rken@ogefrem.cd</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Mombasa, Kenya</p>
+                                <p><i class="fas fa-phone"></i> +254 742 372 322</p>
+                            </div>
+                        </div>
+
+                        <!-- Tanzanie -->
+                        <div class="representation-card">
+                            <img src="assets/images/drapeaux/tanzanie.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=TZ'">
+                            <span>Tanzanie</span>
+                            <div class="representation-tooltip">
+                                <h5>🇹🇿 Tanzanie</h5>
+                                <p><i class="fas fa-envelope"></i> rtan@ogefrem.cd</p>
+                            </div>
+                        </div>
+
+                        <!-- Chine -->
+                        <div class="representation-card">
+                            <img src="assets/images/drapeaux/chine.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=CN'">
+                            <span>Chine</span>
+                            <div class="representation-tooltip">
+                                <h5>🇨🇳 Chine</h5>
+                                <p><i class="fas fa-envelope"></i> rchi@ogefrem.cd</p>
+                            </div>
+                        </div>
+
+                        <!-- Mozambique -->
+                        <div class="representation-card">
+                            <img src="assets/images/drapeaux/mozambique.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=MZ'">
+                            <span>Mozambique</span>
+                            <div class="representation-tooltip">
+                                <h5>🇲🇿 Mozambique</h5>
+                                <p><i class="fas fa-envelope"></i> rmo@ogefrem.cd</p>
+                            </div>
+                        </div>
+
+                        <!-- Émirats Arabes Unis -->
+                        <div class="representation-card">
+                            <img src="assets/images/drapeaux/emirats-arabes-unis.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=AE'">
+                            <span>Émirats Arabes Unis</span>
+                            <div class="representation-tooltip">
+                                <h5>🇦🇪 Émirats Arabes Unis</h5>
+                                <p><i class="fas fa-envelope"></i> rea@ogefrem.cd</p>
+                            </div>
+                        </div>
+
+                        <!-- Namibie -->
+                        <div class="representation-card">
+                            <img src="assets/images/drapeaux/Namibie.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=NA'">
+                            <span>Namibie</span>
+                            <div class="representation-tooltip">
+                                <h5>🇳🇦 Namibie</h5>
+                                <p><i class="fas fa-envelope"></i> rnam@ogefrem.cd</p>
+                                <p><i class="fas fa-map-marker-alt"></i> 113, Theo Gurirab Street, Walvis Bay, Namibia</p>
+                                <p><i class="fas fa-phone"></i> +264 81 482 7747</p>
+                            </div>
+                        </div>
+
+                        <!-- Congo Brazzaville -->
+                        <div class="representation-card">
+                            <img src="assets/images/drapeaux/Congo.png" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=CG'">
+                            <span>Congo</span>
+                            <div class="representation-tooltip">
+                                <h5>🇨🇬 Congo Brazzaville</h5>
+                                <p><i class="fas fa-envelope"></i> rcon@ogefrem.cd</p>
+                                <p><i class="fas fa-phone"></i> +242 05 394 2324</p>
+                            </div>
+                        </div>
+
+                        <!-- Togo -->
+                        <div class="representation-card">
+                            <img src="assets/images/drapeaux/togo.png" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=TG'">
+                            <span>Togo</span>
+                            <div class="representation-tooltip">
+                                <h5>🇹🇬 Togo</h5>
+                                <p><i class="fas fa-envelope"></i> rtog@ogefrem.cd</p>
+                                <p><i class="fas fa-phone"></i> +228 79 084 559</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-                <!-- SECTION 7 : COMITÉ DE GESTION - 2 MEMBRES CENTRÉS -->
+        <!-- SECTION 7 : COMITÉ DE GESTION - UNIQUEMENT DG ET DGA -->
         <section class="content-section comite-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
@@ -433,10 +688,10 @@
                 </div>
                 <div class="row g-4 justify-content-center">
                     <!-- DG -->
-                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                         <div class="comite-card">
                             <div class="comite-photo">
-                                <img src="assets/images/DG.jpeg" alt="Directeur Général" onerror="this.src='https://placehold.co/120x120/003399/white?text=DG'">
+                                <img src="assets/images/DG.jpeg" alt="Directeur Général" onerror="this.src='https://placehold.co/140x140/003399/white?text=DG'">
                             </div>
                             <h4>Directeur Général</h4>
                             <p class="comite-title">Directeur Général</p>
@@ -444,10 +699,10 @@
                         </div>
                     </div>
                     <!-- DGA -->
-                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
                         <div class="comite-card">
                             <div class="comite-photo">
-                                <img src="assets/images/DG-MAYELE.jpeg" alt="Directeur Général Adjoint" onerror="this.src='https://placehold.co/120x120/003399/white?text=DGA'">
+                                <img src="assets/images/DG-MAYELE.jpeg" alt="Directeur Général Adjoint" onerror="this.src='https://placehold.co/140x140/003399/white?text=DGA'">
                             </div>
                             <h4>Directeur Général Adjoint</h4>
                             <p class="comite-title">Directeur Général Adjoint</p>
@@ -518,7 +773,7 @@
                     </div>
                 </div>
                 
-                                <h3 class="text-center mb-4 mt-5" data-aos="fade-up">Projets en perspective</h3>
+                <h3 class="text-center mb-4 mt-5" data-aos="fade-up">Projets en perspective</h3>
                 <div class="row g-4">
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                         <div class="projet-card">
@@ -583,49 +838,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             AOS.init({ duration: 800, once: true });
-            
-            // ===== CHARGEMENT DES LEADERS POUR COMITÉ DE GESTION - ORDRE: MINISTRE, PCA, DG, DGA =====
-            const leaders = AdminData.getLeaders();
-            const comiteContainer = document.getElementById('comiteContainer');
-            
-            if (comiteContainer && leaders.length > 0) {
-                // Définir l'ordre souhaité: Ministre, PCA, DG, DGA
-                const ordreSouhaite = [
-                    { nom: "Ministre des Transports", titre: "Ministre des Transports" },
-                    { nom: "Président du CA", titre: "Président du Conseil d'Administration" },
-                    { nom: "Directeur Général", titre: "Directeur Général" },
-                    { nom: "Directeur Général Adjoint", titre: "Directeur Général Adjoint" }
-                ];
-                
-                // Reconstruire le tableau dans l'ordre souhaité
-                const leadersOrdonnes = [];
-                for (const ordre of ordreSouhaite) {
-                    const leader = leaders.find(l => l.titre === ordre.titre);
-                    if (leader) {
-                        leadersOrdonnes.push(leader);
-                    }
-                }
-                
-                // Ajouter les leaders qui ne sont pas dans l'ordre (au cas où)
-                for (const leader of leaders) {
-                    if (!leadersOrdonnes.find(l => l.id === leader.id)) {
-                        leadersOrdonnes.push(leader);
-                    }
-                }
-                
-                comiteContainer.innerHTML = leadersOrdonnes.map((leader, index) => `
-                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
-                        <div class="comite-card">
-                            <div class="comite-photo">
-                                <img src="${leader.photo || 'https://placehold.co/120x120/003399/white?text=' + leader.nom.charAt(0)}" alt="${leader.nom}" onerror="this.src='https://placehold.co/120x120/003399/white?text=${leader.nom.charAt(0)}'">
-                            </div>
-                            <h4>${leader.nom}</h4>
-                            <p class="comite-title">${leader.titre}</p>
-                            <p class="comite-message">"${leader.message.length > 80 ? leader.message.substring(0, 80) + '...' : leader.message}"</p>
-                        </div>
-                    </div>
-                `).join('');
-            }
         });
     </script>
 </body>

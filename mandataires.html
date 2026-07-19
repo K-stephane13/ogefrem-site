@@ -1,4 +1,4 @@
-<!-- mandataires.html - VERSION COMPLÈTE AVEC ADMIN-DATA.JS -->
+<!-- mandataires.html - VERSION COMPLÈTE AVEC MANDATAIRES MIS À JOUR -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,6 +7,7 @@
     <title>OGEFREM | Mandataires & Transitaires - Guide complet</title>
     <meta name="description" content="Liste officielle des mandataires et transitaires agréés OGEFREM. Informations pratiques, contacts et procédures pour les opérateurs du fret congolais.">
     
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,6 +16,106 @@
     <link rel="stylesheet" href="assets/css/dark-mode.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
     <link rel="stylesheet" href="assets/css/animations.css">
+    
+    <style>
+        /* Styles pour les mandataires avec informations */
+        .mandataires-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .mandataire-item {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+            border-left: 4px solid #FFCC00;
+            transition: all 0.3s ease;
+        }
+
+        .mandataire-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.10);
+        }
+
+        .mandataire-item .mandataire-nom {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #003399;
+            margin-bottom: 6px;
+        }
+
+        .mandataire-item .mandataire-info {
+            font-size: 0.78rem;
+            color: #555;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .mandataire-item .mandataire-info i {
+            color: #003399;
+            width: 18px;
+            margin-right: 4px;
+        }
+
+        .mandataire-item .mandataire-info .has-info {
+            color: #2d7d46;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .mandataire-item .mandataire-info .no-info {
+            color: #999;
+            font-style: italic;
+            font-size: 0.7rem;
+        }
+
+        body.dark-mode .mandataire-item {
+            background: #1a1f2e;
+            border-left-color: #FFCC00;
+        }
+
+        body.dark-mode .mandataire-item .mandataire-nom {
+            color: #FFCC00;
+        }
+
+        body.dark-mode .mandataire-item .mandataire-info {
+            color: #bbb;
+        }
+
+        body.dark-mode .mandataire-item .mandataire-info i {
+            color: #FFCC00;
+        }
+
+        /* Badge pour informations disponibles */
+        .info-badge {
+            display: inline-block;
+            background: #d4edda;
+            color: #155724;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+
+        body.dark-mode .info-badge {
+            background: #1a3a2a;
+            color: #8fdfa8;
+        }
+
+        @media (max-width: 768px) {
+            .mandataires-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -91,22 +192,160 @@
                 <div class="mandataires-list-wrapper" data-aos="fade-up">
                     <h3 class="section-subtitle">Liste officielle des mandataires et agents portuaires</h3>
                     <div class="mandataires-grid">
-                        <div class="mandataire-item">AGENZIA GENOVESE SARL</div>
-                        <div class="mandataire-item">K-POLYGONE</div>
-                        <div class="mandataire-item">TRANSCOM SERVICES</div>
-                        <div class="mandataire-item">WAB CORPORATION SARL</div>
-                        <div class="mandataire-item">AFRICAN GLOBAL LOGISTICS</div>
-                        <div class="mandataire-item">AFRICA UNION CARGO</div>
-                        <div class="mandataire-item">MAERSK CONGO</div>
-                        <div class="mandataire-item">FRABEMAR SRL</div>
-                        <div class="mandataire-item">QINGDAO HIGHROAD INTERNATIONAL LOGISTICS CO LTD</div>
-                        <div class="mandataire-item">TRADESMART SUPPLIES LIMITED</div>
-                        <div class="mandataire-item">JIANGSU GOLDEN COAST</div>
-                        <div class="mandataire-item">AGENCE MARITIME INTERNATIONALE DU CONGO</div>
-                        <div class="mandataire-item">MAERSK</div>
-                        <div class="mandataire-item">MARITI GESTION</div>
-                        <div class="mandataire-item">POWER PEOPLE COMPAGNY SARL</div>
-                        <div class="mandataire-item">GREEN ROAD</div>
+                        <!-- AGENZIA GENOVESE SARL -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">AGENZIA GENOVESE SARL <span class="info-badge">Info</span></span>
+                            <div class="mandataire-info">
+                                <span><i class="fas fa-phone"></i> +39 348 788 1078 / +39 081 551 2109</span>
+                                <span><i class="fas fa-envelope"></i> waiver@agenziagenovese.it</span>
+                                <span><i class="fas fa-map-marker-alt"></i> 55-80133, rue via Alcide de Gasperi, Napoli</span>
+                            </div>
+                        </div>
+
+                        <!-- K-POLYGONE -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">K-POLYGONE <span class="info-badge">Info</span></span>
+                            <div class="mandataire-info">
+                                <span><i class="fas fa-phone"></i> +33 7 54 00 15 84</span>
+                                <span><i class="fas fa-envelope"></i> contact@K-polygone.com</span>
+                                <span><i class="fas fa-map-marker-alt"></i> 68, rue de Faubourg Saint-Honoré 75008, Paris</span>
+                            </div>
+                        </div>
+
+                        <!-- TRANSCOM SERVICES -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">TRANSCOM SERVICES <span class="info-badge">Info</span></span>
+                            <div class="mandataire-info">
+                                <span><i class="fas fa-phone"></i> +27 11 907 1205 / +27 86 522 0829</span>
+                                <span><i class="fas fa-envelope"></i> certification@transcomservice.co.za</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Unit143, cultiverwal Park, Houtbaii street, Elandshaven, Ext4 Johannesburg</span>
+                            </div>
+                        </div>
+
+                        <!-- WAB CORPORATION SARL -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">WAB CORPORATION SARL <span class="info-badge">Info</span></span>
+                            <div class="mandataire-info">
+                                <span><i class="fas fa-phone"></i> +961-5-952548</span>
+                                <span><i class="fas fa-envelope"></i> wab@wab-ogefrem.com</span>
+                                <span><i class="fas fa-map-marker-alt"></i> 382, notre dame AL Karmel Beyrouth</span>
+                            </div>
+                        </div>
+
+                        <!-- AFRICAN GLOBAL LOGISTICS -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">AFRICAN GLOBAL LOGISTICS</span>
+                            <div class="mandataire-info">
+                                <span class="no-info">Informations à venir</span>
+                            </div>
+                        </div>
+
+                        <!-- AFRICA UNION CARGO -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">AFRICA UNION CARGO <span class="info-badge">Info</span></span>
+                            <div class="mandataire-info">
+                                <span><i class="fas fa-phone"></i> +264 81 881 6032 / +27 11 907 1205</span>
+                                <span><i class="fas fa-envelope"></i> info@africaunioncargo.com</span>
+                                <span><i class="fas fa-map-marker-alt"></i> 31, Twelth road, Walvis-Bay, Namibia</span>
+                            </div>
+                        </div>
+
+                        <!-- BOLLORE TRANSPORT & LOGISTIQUE RWANDA -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">BOLLORE TRANSPORT & LOGISTIQUE RWANDA <span class="info-badge">Info</span></span>
+                            <div class="mandataire-info">
+                                <span><i class="fas fa-phone"></i> +25 025 257 3374 / +25 078 734 0884</span>
+                                <span><i class="fas fa-envelope"></i> prince.BITEGETSIMANA@bollore.com</span>
+                                <span><i class="fas fa-globe"></i> www.bollore-logistics.com</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Kigali Prime Economic, Zone Phase 2 Masoro, Gasabo District, Plot 2150</span>
+                            </div>
+                        </div>
+
+                        <!-- MAERSK CONGO -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">MAERSK CONGO <span class="info-badge">Info</span></span>
+                            <div class="mandataire-info">
+                                <span><i class="fas fa-phone"></i> +243 81 556 5867 / +243 81 711 0395</span>
+                                <span><i class="fas fa-envelope"></i> diane.Tshama@maersk.com</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Concession RAFI, av.Kalemie n°1, Kinshasa/Gombe</span>
+                            </div>
+                        </div>
+
+                        <!-- FRABEMAR SRL -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">FRABEMAR SRL <span class="info-badge">Info</span></span>
+                            <div class="mandataire-info">
+                                <span><i class="fas fa-phone"></i> +39 340 494 2590 / +39 010 553 3011</span>
+                                <span><i class="fas fa-envelope"></i> mbernardini@frabemar.it</span>
+                                <span><i class="fas fa-map-marker-alt"></i> 12, Colombo Genes/Italie</span>
+                            </div>
+                        </div>
+
+                        <!-- QINGDAO HIGHROAD INTERNATIONAL LOGISTICS CO LTD -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">QINGDAO HIGHROAD INTERNATIONAL LOGISTICS CO LTD</span>
+                            <div class="mandataire-info">
+                                <span class="no-info">Informations à venir</span>
+                            </div>
+                        </div>
+
+                        <!-- TRADESMART SUPPLIES LIMITED -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">TRADESMART SUPPLIES LIMITED <span class="info-badge">Info</span></span>
+                            <div class="mandataire-info">
+                                <span><i class="fas fa-phone"></i> +256 780 262 194</span>
+                                <span><i class="fas fa-envelope"></i> info@tradesmartzm.com</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Block 640 KYEYITABYA ROAD, MAKINDYE DIVISION EAST, MUYENGA, KAMPALA</span>
+                            </div>
+                        </div>
+
+                        <!-- JIANGSU GOLDEN COAST -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">JIANGSU GOLDEN COAST</span>
+                            <div class="mandataire-info">
+                                <span class="no-info">Informations à venir</span>
+                            </div>
+                        </div>
+
+                        <!-- AGENCE MARITIME INTERNATIONALE DU CONGO -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">AGENCE MARITIME INTERNATIONALE DU CONGO</span>
+                            <div class="mandataire-info">
+                                <span class="no-info">Informations à venir</span>
+                            </div>
+                        </div>
+
+                        <!-- MAERSK -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">MAERSK</span>
+                            <div class="mandataire-info">
+                                <span class="no-info">Informations à venir</span>
+                            </div>
+                        </div>
+
+                        <!-- MARITI GESTION -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">MARITI GESTION</span>
+                            <div class="mandataire-info">
+                                <span class="no-info">Informations à venir</span>
+                            </div>
+                        </div>
+
+                        <!-- POWER PEOPLE COMPAGNY SARL -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">POWER PEOPLE COMPAGNY SARL</span>
+                            <div class="mandataire-info">
+                                <span class="no-info">Informations à venir</span>
+                            </div>
+                        </div>
+
+                        <!-- GREEN ROAD -->
+                        <div class="mandataire-item">
+                            <span class="mandataire-nom">GREEN ROAD</span>
+                            <div class="mandataire-info">
+                                <span class="no-info">Informations à venir</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -134,12 +373,48 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td><strong>AFRICAN LOGISTICS SPRL</strong></td><td>+243970010780<br>+243997040076</td><td>info@chemaf.com</td><td>AV USOKE N° 144, C/KAMPEMBA, LUBUMBASHI</td></tr>
-                                <tr><td><strong>CARGO CONGO</strong></td><td>+243858008385</td><td>-</td><td>ROUTE LIKASI, PC19211, LUBUMBASHI</td></tr>
-                                <tr><td><strong>CONNEXAFRICA</strong></td><td>+243995577192</td><td>www.connexafrica.com</td><td>COLONEL EBEYA KINSHASA-RDC AV 15-17</td></tr>
-                                <tr><td><strong>COPPERLINE</strong></td><td>+243997290304</td><td>info@copperline.com</td><td>26 AV LOFOI, QUARTIER GOLF</td></tr>
-                                <tr><td><strong>DOUANE EXPRESS CUSTOMS</strong></td><td>+243841192682</td><td>jpkamona@douanexpresscustoms.com</td><td>2573, AV. LUMUMBA QUARTIER INDUSTRIEL</td></tr>
-                                <tr><td><strong>GLOBAL LOGISTICS SPRL</strong></td><td>+243995333806</td><td>jhonny.globallogisticsS@gmail.com</td><td>1346, AV KILELA BALANDA, LUBUMBASHI</td></tr>
+                                <tr>
+                                    <td><strong>AFRICAN LOGISTICS SPRL</strong></td>
+                                    <td>+243 970 010 780<br>+243 997 040 076</td>
+                                    <td>info@chemaf.com</td>
+                                    <td>AV USOKE N° 144, C/KAMPEMBA, LUBUMBASHI</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>BOLLORE TRANSPORT ET LOGISTICS</strong></td>
+                                    <td>-</td>
+                                    <td>sales.drc-kinshasa@bollore.com</td>
+                                    <td>4200, AV. GENERAL BOBOZO ADRUMA, C/GOMBE</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CARGO CONGO</strong></td>
+                                    <td>+243 858 008 385</td>
+                                    <td>-</td>
+                                    <td>ROUTE LIKASI, PC19211, LUBUMBASHI</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CONNEXAFRICA</strong></td>
+                                    <td>+243 995 577 192</td>
+                                    <td>www.connexafrica.com</td>
+                                    <td>COLONEL EBEYA KINSHASA-RDC AV 15-17</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>COPPERLINE</strong></td>
+                                    <td>+243 997 290 304</td>
+                                    <td>info@copperline.com</td>
+                                    <td>26 AV LOFOI, QUARTIER GOLF</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>DOUANE EXPRESS CUSTOMS</strong></td>
+                                    <td>+243 841 192 682</td>
+                                    <td>jpkamona@douanexpresscustoms.com</td>
+                                    <td>2573, AV. LUMUMBA QUARTIER INDUSTRIEL</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>GLOBAL LOGISTICS SPRL</strong></td>
+                                    <td>+243 995 333 806</td>
+                                    <td>jhonny.globallogisticsS@gmail.com</td>
+                                    <td>1346, AV KILELA BALANDA, LUBUMBASHI</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
