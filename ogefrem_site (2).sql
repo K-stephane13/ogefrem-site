@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : ven. 10 juil. 2026 à 23:41
+-- Généré le : lun. 20 juil. 2026 à 11:08
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -201,26 +201,86 @@ INSERT INTO `actualite_images` (`id`, `actualite_id`, `nom_fichier`, `type_mime`
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `appels_offres`
+--
+
+CREATE TABLE `appels_offres` (
+  `id` int(11) NOT NULL,
+  `titre` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `date_publication` date NOT NULL,
+  `date_cloture` date NOT NULL,
+  `urgent` tinyint(1) DEFAULT 0,
+  `statut` enum('en_cours','termine','annule') DEFAULT 'en_cours',
+  `pdf_url` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `appels_offres`
+--
+
+INSERT INTO `appels_offres` (`id`, `titre`, `description`, `date_publication`, `date_cloture`, `urgent`, `statut`, `pdf_url`, `created_at`, `updated_at`) VALUES
+(1, 'Modernisation du Port Sec de Kasumbalesa', 'Consultation internationale pour la concession et la modernisation du Port Sec de Kasumbalesa.', '2026-07-01', '2026-09-30', 1, 'en_cours', NULL, '2026-07-16 10:39:49', '2026-07-16 10:39:49'),
+(2, 'Fourniture d\'équipements informatiques', 'Acquisition de serveurs et équipements réseau pour la modernisation de la plateforme FERI.', '2026-06-15', '2026-07-15', 0, 'en_cours', NULL, '2026-07-16 10:39:49', '2026-07-16 10:39:49'),
+(3, 'Construction de l\'Académie du transport multimodal de Muanda', 'Appel d\'offres pour la construction du centre de formation à Muanda.', '2026-05-01', '2026-08-30', 0, 'en_cours', NULL, '2026-07-16 10:39:49', '2026-07-16 10:39:49');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `comite_gestion`
 --
 
 CREATE TABLE `comite_gestion` (
   `id` int(11) NOT NULL,
-  `nom` varchar(150) NOT NULL,
-  `titre` varchar(150) NOT NULL,
-  `photo` varchar(255) NOT NULL,
-  `message` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `nom` varchar(255) NOT NULL,
+  `titre` varchar(255) NOT NULL,
+  `photo` longblob DEFAULT NULL,
+  `photo_type` varchar(50) DEFAULT NULL,
+  `photo_nom` varchar(255) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `message_court` text DEFAULT NULL,
+  `ordre_display` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `comite_gestion`
 --
 
-INSERT INTO `comite_gestion` (`id`, `nom`, `titre`, `photo`, `message`) VALUES
-(1, 'Ministre des Transports', 'Ministre des Transports', 'assets/images/MINISTRE.png', 'Partenariat stratégique avec l\'OGEFREM'),
-(2, 'Président du CA', 'Président du Conseil d\'Administration', 'assets/images/PCA.png', 'Une gouvernance transparente et efficace'),
-(3, 'Directeur Général', 'Directeur Général', 'assets/images/DG.jpeg', 'Moderniser le fret congolais pour une meilleure compétitivité'),
-(4, 'Directeur Général Adjoint', 'Directeur Général Adjoint', 'assets/images/DG-MAYELE.jpeg', 'L\'innovation au service des chargeurs');
+INSERT INTO `comite_gestion` (`id`, `nom`, `titre`, `photo`, `photo_type`, `photo_nom`, `message`, `message_court`, `ordre_display`, `created_at`, `updated_at`) VALUES
+(1, 'Directeur Général', 'Directeur Général', NULL, 'image/jpeg', 'DG.jpeg', 'Moderniser le fret congolais pour une meilleure compétitivité', 'Moderniser le fret congolais pour une meilleure compétitivité', 1, '2026-07-20 07:17:12', '2026-07-20 07:53:00'),
+(2, 'Directeur Général Adjoint', 'Directeur Général Adjoint', NULL, 'image/jpeg', 'DG-MAYELE.jpeg', 'L\'innovation au service des chargeurs', NULL, 2, '2026-07-20 07:17:12', '2026-07-20 07:17:12');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `conseil_administration`
+--
+
+CREATE TABLE `conseil_administration` (
+  `id` int(11) NOT NULL,
+  `nom` varchar(255) NOT NULL,
+  `titre` varchar(255) NOT NULL,
+  `photo` varchar(500) NOT NULL,
+  `message` text DEFAULT NULL,
+  `ordre_display` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `conseil_administration`
+--
+
+INSERT INTO `conseil_administration` (`id`, `nom`, `titre`, `photo`, `message`, `ordre_display`, `created_at`, `updated_at`) VALUES
+(1, 'Adolphe Amisi Makutano', 'Président du Conseil d\'Administration', 'assets/images/PCA.png', 'Une gouvernance transparente et efficace', 0, '2026-07-20 08:18:27', '2026-07-20 08:18:27'),
+(2, 'Anny Mombunza Libotolo', 'Représentante de la Tutelle', 'assets/images/tutelle.png', 'Accompagner l\'OGEFREM dans sa mission de service public', 0, '2026-07-20 08:18:27', '2026-07-20 08:18:27'),
+(3, 'Alengo Lohongo', 'Administrateur', 'assets/images/admin1.png', 'Œuvrer pour une gouvernance exemplaire et transparente au service du développement du fret congolais.', 0, '2026-07-20 08:18:27', '2026-07-20 08:33:33'),
+(4, 'Irenge Mukabene', 'Administrateur', 'assets/images/admin2.png', 'Promouvoir l\'efficacité et la modernisation des services de l\'OGEFREM pour une meilleure compétitivité.', 0, '2026-07-20 08:18:27', '2026-07-20 08:33:33'),
+(5, 'Shafali Bihanze', 'Administrateur', 'assets/images/admin3.png', 'Contribuer activement à la réalisation des objectifs stratégiques de l\'OGEFREM.', 0, '2026-07-20 08:18:27', '2026-07-20 08:33:33');
 
 -- --------------------------------------------------------
 
@@ -284,7 +344,15 @@ INSERT INTO `logs` (`id`, `user_id`, `action`, `module`, `item_id`, `details`, `
 (9, 3, 'LOGIN', 'auth', 3, 'Connexion utilisateur', '::1', '2026-07-07 08:56:41'),
 (10, 3, 'LOGOUT', 'auth', 3, 'Déconnexion utilisateur', '::1', '2026-07-07 08:57:03'),
 (11, 2, 'LOGIN', 'auth', 2, 'Connexion utilisateur', '::1', '2026-07-10 21:36:30'),
-(12, 2, 'LOGOUT', 'auth', 2, 'Déconnexion utilisateur', '::1', '2026-07-10 21:38:26');
+(12, 2, 'LOGOUT', 'auth', 2, 'Déconnexion utilisateur', '::1', '2026-07-10 21:38:26'),
+(13, 1, 'LOGIN', 'auth', 1, 'Connexion utilisateur', '::1', '2026-07-19 21:37:10'),
+(14, 1, 'LOGOUT', 'auth', 1, 'Déconnexion utilisateur', '::1', '2026-07-19 21:38:48'),
+(15, 1, 'LOGIN', 'auth', 1, 'Connexion utilisateur', '::1', '2026-07-20 07:13:50'),
+(16, 1, 'LOGOUT', 'auth', 1, 'Déconnexion utilisateur', '::1', '2026-07-20 07:18:13'),
+(17, 1, 'LOGIN', 'auth', 1, 'Connexion utilisateur', '::1', '2026-07-20 07:46:06'),
+(18, 1, 'LOGIN', 'auth', 1, 'Connexion utilisateur', '::1', '2026-07-20 08:08:00'),
+(19, 1, 'LOGOUT', 'auth', 1, 'Déconnexion utilisateur', '::1', '2026-07-20 08:10:38'),
+(20, 1, 'LOGIN', 'auth', 1, 'Connexion utilisateur', '::1', '2026-07-20 08:11:53');
 
 -- --------------------------------------------------------
 
@@ -359,9 +427,21 @@ ALTER TABLE `actualite_images`
   ADD KEY `idx_actualite_id` (`actualite_id`);
 
 --
+-- Index pour la table `appels_offres`
+--
+ALTER TABLE `appels_offres`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Index pour la table `comite_gestion`
 --
 ALTER TABLE `comite_gestion`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `conseil_administration`
+--
+ALTER TABLE `conseil_administration`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -407,10 +487,22 @@ ALTER TABLE `actualite_images`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
+-- AUTO_INCREMENT pour la table `appels_offres`
+--
+ALTER TABLE `appels_offres`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT pour la table `comite_gestion`
 --
 ALTER TABLE `comite_gestion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT pour la table `conseil_administration`
+--
+ALTER TABLE `conseil_administration`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT pour la table `demandes_transport`
@@ -422,7 +514,7 @@ ALTER TABLE `demandes_transport`
 -- AUTO_INCREMENT pour la table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT pour la table `offres_transport`

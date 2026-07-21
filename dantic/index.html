@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OGEFREM - Administration</title>
+    <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -107,6 +108,7 @@
                 <div class="nav-item" data-section="demandes"><i class="fas fa-file-signature"></i> Demandes de transport</div>
                 <div class="nav-item" data-section="offres"><i class="fas fa-tags"></i> Offres de transport</div>
                 <div class="nav-item" data-section="comite"><i class="fas fa-users"></i> Comité de Gestion</div>
+                <div class="nav-item" data-section="conseil"><i class="fas fa-user-tie"></i> Conseil d'Administration</div>
                 <div class="nav-item super-only" data-section="users"><i class="fas fa-user-shield"></i> Utilisateurs</div>
                 <div class="nav-item super-only" data-section="logs"><i class="fas fa-history"></i> Logs</div>
             </div>
@@ -138,14 +140,15 @@
     let currentPageDemandes = 1;
     let currentPageOffres = 1;
     const itemsPerPage = 10;
-    const cache = { actualites: [], demandes: [], offres: [], comite: [], users: [], logs: [] };
+    const cache = { actualites: [], demandes: [], offres: [], comite: [], conseil: [], users: [], logs: [] };
 
     const sectionTitles = {
         dashboard: 'Dashboard',
         actualites: 'Gestion des Actualités',
         demandes: 'Demandes de Transport',
         offres: 'Offres de Transport',
-        comite: 'Comité de Gestion - Photos',
+        comite: 'Comité de Gestion',
+        conseil: 'Conseil d\'Administration',
         users: 'Gestion des utilisateurs',
         logs: 'Journal des modifications'
     };
@@ -274,6 +277,7 @@
             if (section === 'demandes') await renderDemandes();
             if (section === 'offres') await renderOffres();
             if (section === 'comite') await renderComite();
+            if (section === 'conseil') await renderConseil();
             if (section === 'users') await renderUsers();
             if (section === 'logs') await renderLogs();
         } catch (error) {
@@ -282,26 +286,33 @@
     }
 
     async function loadPublicData() {
-        const [actualites, demandes, offres, comite] = await Promise.all([
+        const [actualites, demandes, offres, comite, conseil] = await Promise.all([
             api(`${API_BASE}/data.php?module=actualites`),
             api(`${API_BASE}/data.php?module=demandes`),
             api(`${API_BASE}/data.php?module=offres`),
-            api(`${API_BASE}/data.php?module=comite`)
+            api(`${API_BASE}/data.php?module=comite`),
+            api(`${API_BASE}/data.php?module=conseil`)
         ]);
         cache.actualites = actualites;
         cache.demandes = demandes;
         cache.offres = offres;
         cache.comite = comite;
+        cache.conseil = conseil;
     }
 
     async function renderDashboard() {
         await loadPublicData();
+        const membresComite = cache.comite.filter(m => 
+            m.titre === 'Directeur Général' || 
+            m.titre === 'Directeur Général Adjoint'
+        );
+        const totalMembres = membresComite.length + (cache.conseil?.length || 0);
         document.getElementById('contentArea').innerHTML = `
             <div class="stats-grid">
                 <div class="stat-card-admin"><div class="stat-number-admin">${cache.actualites.length}</div><div>Actualités</div></div>
                 <div class="stat-card-admin"><div class="stat-number-admin">${cache.demandes.length}</div><div>Demandes</div></div>
                 <div class="stat-card-admin"><div class="stat-number-admin">${cache.offres.length}</div><div>Offres</div></div>
-                <div class="stat-card-admin"><div class="stat-number-admin">${cache.comite.length}</div><div>Membres du Comité</div></div>
+                <div class="stat-card-admin"><div class="stat-number-admin">${totalMembres}</div><div>Membres (Comité + CA)</div></div>
             </div>
             <div class="content-card">
                 <div class="card-header-custom"><h3><i class="fas fa-newspaper"></i> Dernières actualités</h3><button class="btn-add" onclick="loadSection('actualites')">Gérer tout</button></div>
@@ -378,24 +389,60 @@
             </div>`;
     }
 
+    // ===== COMITÉ DE GESTION : FILTRER POUR GARDER UNIQUEMENT DG ET DGA =====
     async function renderComite() {
         cache.comite = await api(`${API_BASE}/data.php?module=comite`);
+        
+        // Filtrer : garder uniquement DG et DGA
+        const membresFiltres = cache.comite.filter(m => 
+            m.titre === 'Directeur Général' || 
+            m.titre === 'Directeur Général Adjoint'
+        );
+        
         document.getElementById('contentArea').innerHTML = `
             <div class="content-card">
                 <div class="card-header-custom">
-                    <h3><i class="fas fa-users"></i> Comité de Gestion</h3>
+                    <h3><i class="fas fa-users"></i> Comité de Gestion <span class="badge badge-primary">${membresFiltres.length}</span></h3>
                     <button class="btn-add" onclick="openModal('comite')"><i class="fas fa-plus"></i> Ajouter</button>
                 </div>
                 <div class="row">
-                    ${cache.comite.map(m => `
+                    ${membresFiltres.map(m => `
                         <div class="col-md-4 mb-4">
                             <div class="card h-100">
                                 <img src="../${escapeHtml(m.photo)}" class="card-img-top" style="height:260px; object-fit:cover;" onerror="this.src='https://placehold.co/400x300/003399/white?text=Photo'">
                                 <div class="card-body">
                                     <h5>${escapeHtml(m.nom)}</h5>
                                     <p class="text-muted">${escapeHtml(m.titre)}</p>
+                                    ${m.message ? `<p class="small text-muted">"${escapeHtml(m.message)}"</p>` : ''}
                                     <button class="btn-edit" onclick="openModal('comite', ${m.id})"><i class="fas fa-edit"></i> Modifier</button>
                                     <button class="btn-delete" onclick="deleteItem('comite', ${m.id})"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>`).join('') || '<p>Aucun membre enregistré.</p>'}
+                </div>
+            </div>`;
+    }
+
+    // ===== CONSEIL D'ADMINISTRATION =====
+    async function renderConseil() {
+        cache.conseil = await api(`${API_BASE}/data.php?module=conseil`);
+        document.getElementById('contentArea').innerHTML = `
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <h3><i class="fas fa-user-tie"></i> Conseil d'Administration <span class="badge badge-primary">${cache.conseil.length}</span></h3>
+                    <button class="btn-add" onclick="openModal('conseil')"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="row">
+                    ${cache.conseil.map(m => `
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <img src="../${escapeHtml(m.photo)}" class="card-img-top" style="height:260px; object-fit:cover;" onerror="this.src='https://placehold.co/400x300/003399/white?text=Photo'">
+                                <div class="card-body">
+                                    <h5>${escapeHtml(m.nom)}</h5>
+                                    <p class="text-muted">${escapeHtml(m.titre)}</p>
+                                    ${m.message ? `<p class="small text-muted">"${escapeHtml(m.message)}"</p>` : ''}
+                                    <button class="btn-edit" onclick="openModal('conseil', ${m.id})"><i class="fas fa-edit"></i> Modifier</button>
+                                    <button class="btn-delete" onclick="deleteItem('conseil', ${m.id})"><i class="fas fa-trash"></i></button>
                                 </div>
                             </div>
                         </div>`).join('') || '<p>Aucun membre enregistré.</p>'}
@@ -447,11 +494,11 @@
     }
 
     function getModuleFromType(type) {
-        return { actualite: 'actualites', demande: 'demandes', offre: 'offres', comite: 'comite' }[type];
+        return { actualite: 'actualites', demande: 'demandes', offre: 'offres', comite: 'comite', conseil: 'conseil' }[type];
     }
 
     function getSectionFromType(type) {
-        return { actualite: 'actualites', demande: 'demandes', offre: 'offres', comite: 'comite', user: 'users' }[type];
+        return { actualite: 'actualites', demande: 'demandes', offre: 'offres', comite: 'comite', conseil: 'conseil', user: 'users' }[type];
     }
 
     async function deleteItem(type, id) {
@@ -564,13 +611,41 @@
         if (type === 'comite') {
             modalHtml = `
             <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
-                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} un membre</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} un membre du Comité de Gestion</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
                 <form id="modalForm">
                     <input type="hidden" id="itemId" value="${id || ''}">
                     <div class="form-group"><label>Nom *</label><input type="text" id="nom" class="form-control" value="${escapeHtml(item?.nom || '')}" required></div>
-                    <div class="form-group"><label>Titre / Fonction *</label><input type="text" id="titre" class="form-control" value="${escapeHtml(item?.titre || '')}" required></div>
+                    <div class="form-group"><label>Titre / Fonction *</label>
+                        <select id="titre" class="form-select" required>
+                            <option value="">Sélectionner...</option>
+                            <option value="Directeur Général" ${item?.titre === 'Directeur Général' ? 'selected' : ''}>Directeur Général</option>
+                            <option value="Directeur Général Adjoint" ${item?.titre === 'Directeur Général Adjoint' ? 'selected' : ''}>Directeur Général Adjoint</option>
+                        </select>
+                    </div>
                     <div class="form-group"><label>Chemin de la photo *</label><input type="text" id="photo" class="form-control" value="${escapeHtml(item?.photo || '')}" placeholder="assets/images/DG.jpeg" required></div>
                     <div class="form-group"><label>Message</label><textarea id="message" class="form-control" rows="3">${escapeHtml(item?.message || '')}</textarea></div>
+                    <button type="submit" class="btn-add" style="width:100%">${id ? 'Modifier' : 'Ajouter'}</button>
+                </form>
+            </div></div>`;
+        }
+
+        if (type === 'conseil') {
+            modalHtml = `
+            <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
+                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} un membre du Conseil d'Administration</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+                <form id="modalForm">
+                    <input type="hidden" id="itemId" value="${id || ''}">
+                    <div class="form-group"><label>Nom *</label><input type="text" id="nom" class="form-control" value="${escapeHtml(item?.nom || '')}" required></div>
+                    <div class="form-group"><label>Titre / Fonction *</label>
+                        <select id="titre" class="form-select" required>
+                            <option value="">Sélectionner...</option>
+                            <option value="Président du Conseil d'Administration" ${item?.titre === 'Président du Conseil d\'Administration' ? 'selected' : ''}>Président du Conseil d'Administration</option>
+                            <option value="Représentante de la Tutelle" ${item?.titre === 'Représentante de la Tutelle' ? 'selected' : ''}>Représentante de la Tutelle</option>
+                            <option value="Administrateur" ${item?.titre === 'Administrateur' ? 'selected' : ''}>Administrateur</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Chemin de la photo *</label><input type="text" id="photo" class="form-control" value="${escapeHtml(item?.photo || '')}" placeholder="assets/images/pca.png" required></div>
+                    <div class="form-group"><label>Message (optionnel)</label><textarea id="message" class="form-control" rows="3">${escapeHtml(item?.message || '')}</textarea></div>
                     <button type="submit" class="btn-add" style="width:100%">${id ? 'Modifier' : 'Ajouter'}</button>
                 </form>
             </div></div>`;
@@ -677,6 +752,17 @@
                     message: document.getElementById('message').value
                 };
                 url = `${API_BASE}/data.php?module=comite`;
+            }
+
+            if (type === 'conseil') {
+                payload = {
+                    id: formId ? Number(formId) : undefined,
+                    nom: document.getElementById('nom').value,
+                    titre: document.getElementById('titre').value,
+                    photo: document.getElementById('photo').value,
+                    message: document.getElementById('message').value
+                };
+                url = `${API_BASE}/data.php?module=conseil`;
             }
 
             if (type === 'user') {

@@ -7,7 +7,7 @@ if ($method === 'POST' && isset($_POST['_method'])) {
     $method = strtoupper($_POST['_method']);
 }
 
-$allowed = ['actualites', 'demandes', 'offres', 'comite'];
+$allowed = ['actualites', 'demandes', 'offres', 'comite', 'conseil'];
 if (!in_array($module, $allowed, true)) {
     json_response(['success' => false, 'message' => 'Module invalide'], 400);
 }
@@ -17,7 +17,8 @@ function get_table($module) {
         'actualites' => 'actualites',
         'demandes' => 'demandes_transport',
         'offres' => 'offres_transport',
-        'comite' => 'comite_gestion'
+        'comite' => 'comite_gestion',
+        'conseil' => 'conseil_administration'
     ][$module];
 }
 
@@ -125,17 +126,33 @@ if ($method === 'GET') {
         $rows = $pdo->query('SELECT * FROM demandes_transport ORDER BY id DESC')->fetchAll();
         $data = array_map(function($r) {
             return [
-                'id' => (int)$r['id'], 'marchandises' => $r['marchandises'], 'origine' => $r['origine'],
-                'destination' => $r['destination'], 'date' => $r['date_souhaitee'], 'nom' => $r['nom'],
-                'email' => $r['email'], 'telephone' => $r['telephone'], 'statut' => $r['statut'],
+                'id' => (int)$r['id'],
+                'marchandises' => $r['marchandises'],
+                'origine' => $r['origine'],
+                'destination' => $r['destination'],
+                'date' => $r['date_souhaitee'],
+                'nom' => $r['nom'],
+                'email' => $r['email'],
+                'telephone' => $r['telephone'],
+                'statut' => $r['statut'],
                 'dateSoumission' => $r['date_soumission']
             ];
         }, $rows);
         json_response($data);
     }
 
-    if ($module === 'offres') json_response($pdo->query('SELECT * FROM offres_transport ORDER BY id DESC')->fetchAll());
-    if ($module === 'comite') json_response($pdo->query('SELECT * FROM comite_gestion ORDER BY id ASC')->fetchAll());
+    if ($module === 'offres') {
+        json_response($pdo->query('SELECT * FROM offres_transport ORDER BY id DESC')->fetchAll());
+    }
+
+    if ($module === 'comite') {
+        json_response($pdo->query('SELECT * FROM comite_gestion ORDER BY id ASC')->fetchAll());
+    }
+
+    // ===== NOUVEAU : GESTION DU CONSEIL D'ADMINISTRATION =====
+    if ($module === 'conseil') {
+        json_response($pdo->query('SELECT * FROM conseil_administration ORDER BY id ASC')->fetchAll());
+    }
 }
 
 // Le compteur de likes est lui aussi conservé dans MySQL.
@@ -158,6 +175,7 @@ require_auth();
 $isMultipart = str_contains($_SERVER['CONTENT_TYPE'] ?? '', 'multipart/form-data');
 $input = $isMultipart ? $_POST : (json_decode(file_get_contents('php://input'), true) ?: []);
 
+// ===== GESTION DES ACTUALITÉS (avec images) =====
 if ($module === 'actualites' && in_array($method, ['POST', 'PUT'], true)) {
     $id = (int)($input['id'] ?? 0);
     $titre = trim($input['titre'] ?? '');
@@ -199,44 +217,140 @@ if ($module === 'actualites' && in_array($method, ['POST', 'PUT'], true)) {
     }
 }
 
+// ===== GESTION DES POST (INSERTION) =====
 if ($method === 'POST') {
     if ($module === 'demandes') {
         $stmt = $pdo->prepare('INSERT INTO demandes_transport(marchandises, origine, destination, date_souhaitee, nom, email, telephone, statut, date_soumission) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        $stmt->execute([$input['marchandises'], $input['origine'], $input['destination'], $input['date'], $input['nom'], $input['email'] ?? '', $input['telephone'] ?? '', $input['statut'] ?? 'publiée', $input['dateSoumission'] ?? date('d/m/Y H:i')]);
+        $stmt->execute([
+            $input['marchandises'],
+            $input['origine'],
+            $input['destination'],
+            $input['date'],
+            $input['nom'],
+            $input['email'] ?? '',
+            $input['telephone'] ?? '',
+            $input['statut'] ?? 'publiée',
+            $input['dateSoumission'] ?? date('d/m/Y H:i')
+        ]);
+        $id = $pdo->lastInsertId();
+        add_log($pdo, 'CREATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        json_response(['success' => true, 'id' => $id]);
     }
+
     if ($module === 'offres') {
         $stmt = $pdo->prepare('INSERT INTO offres_transport(titre, type, origine, destination, capacite, tarif, contact, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-        $stmt->execute([$input['titre'], $input['type'], $input['origine'], $input['destination'], $input['capacite'] ?? '', $input['tarif'] ?? '', $input['contact'] ?? '', $input['description'] ?? '']);
+        $stmt->execute([
+            $input['titre'],
+            $input['type'],
+            $input['origine'],
+            $input['destination'],
+            $input['capacite'] ?? '',
+            $input['tarif'] ?? '',
+            $input['contact'] ?? '',
+            $input['description'] ?? ''
+        ]);
+        $id = $pdo->lastInsertId();
+        add_log($pdo, 'CREATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        json_response(['success' => true, 'id' => $id]);
     }
+
     if ($module === 'comite') {
         $stmt = $pdo->prepare('INSERT INTO comite_gestion(nom, titre, photo, message) VALUES (?, ?, ?, ?)');
-        $stmt->execute([$input['nom'], $input['titre'], $input['photo'], $input['message'] ?? '']);
+        $stmt->execute([
+            $input['nom'],
+            $input['titre'],
+            $input['photo'],
+            $input['message'] ?? ''
+        ]);
+        $id = $pdo->lastInsertId();
+        add_log($pdo, 'CREATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        json_response(['success' => true, 'id' => $id]);
     }
-    $id = $pdo->lastInsertId();
-    add_log($pdo, 'CREATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
-    json_response(['success' => true, 'id' => $id]);
+
+    // ===== NOUVEAU : GESTION DU CONSEIL D'ADMINISTRATION (INSERTION) =====
+    if ($module === 'conseil') {
+        $stmt = $pdo->prepare('INSERT INTO conseil_administration(nom, titre, photo, message) VALUES (?, ?, ?, ?)');
+        $stmt->execute([
+            $input['nom'],
+            $input['titre'],
+            $input['photo'],
+            $input['message'] ?? ''
+        ]);
+        $id = $pdo->lastInsertId();
+        add_log($pdo, 'CREATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        json_response(['success' => true, 'id' => $id]);
+    }
 }
 
+// ===== GESTION DES PUT (MISE À JOUR) =====
 if ($method === 'PUT') {
     $id = (int)($input['id'] ?? 0);
     if ($id <= 0) json_response(['success' => false, 'message' => 'ID invalide'], 400);
 
     if ($module === 'demandes') {
         $stmt = $pdo->prepare('UPDATE demandes_transport SET marchandises=?, origine=?, destination=?, date_souhaitee=?, nom=?, email=?, telephone=?, statut=?, date_soumission=? WHERE id=?');
-        $stmt->execute([$input['marchandises'], $input['origine'], $input['destination'], $input['date'], $input['nom'], $input['email'] ?? '', $input['telephone'] ?? '', $input['statut'] ?? 'publiée', $input['dateSoumission'] ?? '', $id]);
+        $stmt->execute([
+            $input['marchandises'],
+            $input['origine'],
+            $input['destination'],
+            $input['date'],
+            $input['nom'],
+            $input['email'] ?? '',
+            $input['telephone'] ?? '',
+            $input['statut'] ?? 'publiée',
+            $input['dateSoumission'] ?? '',
+            $id
+        ]);
+        add_log($pdo, 'UPDATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        json_response(['success' => true]);
     }
+
     if ($module === 'offres') {
         $stmt = $pdo->prepare('UPDATE offres_transport SET titre=?, type=?, origine=?, destination=?, capacite=?, tarif=?, contact=?, description=? WHERE id=?');
-        $stmt->execute([$input['titre'], $input['type'], $input['origine'], $input['destination'], $input['capacite'] ?? '', $input['tarif'] ?? '', $input['contact'] ?? '', $input['description'] ?? '', $id]);
+        $stmt->execute([
+            $input['titre'],
+            $input['type'],
+            $input['origine'],
+            $input['destination'],
+            $input['capacite'] ?? '',
+            $input['tarif'] ?? '',
+            $input['contact'] ?? '',
+            $input['description'] ?? '',
+            $id
+        ]);
+        add_log($pdo, 'UPDATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        json_response(['success' => true]);
     }
+
     if ($module === 'comite') {
         $stmt = $pdo->prepare('UPDATE comite_gestion SET nom=?, titre=?, photo=?, message=? WHERE id=?');
-        $stmt->execute([$input['nom'], $input['titre'], $input['photo'], $input['message'] ?? '', $id]);
+        $stmt->execute([
+            $input['nom'],
+            $input['titre'],
+            $input['photo'],
+            $input['message'] ?? '',
+            $id
+        ]);
+        add_log($pdo, 'UPDATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        json_response(['success' => true]);
     }
-    add_log($pdo, 'UPDATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
-    json_response(['success' => true]);
+
+    // ===== NOUVEAU : GESTION DU CONSEIL D'ADMINISTRATION (MISE À JOUR) =====
+    if ($module === 'conseil') {
+        $stmt = $pdo->prepare('UPDATE conseil_administration SET nom=?, titre=?, photo=?, message=? WHERE id=?');
+        $stmt->execute([
+            $input['nom'],
+            $input['titre'],
+            $input['photo'],
+            $input['message'] ?? '',
+            $id
+        ]);
+        add_log($pdo, 'UPDATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        json_response(['success' => true]);
+    }
 }
 
+// ===== GESTION DES DELETE (SUPPRESSION) =====
 if ($method === 'DELETE') {
     $id = (int)($_GET['id'] ?? 0);
     if ($id <= 0) json_response(['success' => false, 'message' => 'ID invalide'], 400);

@@ -1,4 +1,4 @@
-<!-- presentation.html - VERSION COMPLÈTE AVEC COMITÉ DE GESTION (DG + DGA SEULEMENT) -->
+<!-- presentation.html - VERSION COMPLÈTE AVEC COMITÉ DE GESTION + CONSEIL D'ADMINISTRATION -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="assets/css/animations.css">
     
     <style>
-        /* Styles spécifiques pour le Comité de Gestion - cartes réduites et alignées */
+        /* Styles pour le Comité de Gestion */
         .comite-section .row {
             display: flex;
             flex-wrap: wrap;
@@ -84,32 +84,99 @@
             padding: 0 5px;
             font-style: italic;
         }
+
+        /* Styles pour le Conseil d'Administration */
+        .conseil-section .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
         
+        .conseil-card {
+            background: var(--card-bg, #ffffff);
+            border-radius: 16px;
+            padding: 20px 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .conseil-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+        
+        .conseil-photo {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #FFCC00;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+        
+        .conseil-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .conseil-card h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 10px 0 5px;
+            color: #003399;
+        }
+        
+        .conseil-card .conseil-title {
+            font-size: 0.8rem;
+            color: #FFCC00;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .conseil-card .conseil-message {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #666;
+            margin: 0;
+            padding: 0 5px;
+            font-style: italic;
+        }
+
         @media (max-width: 768px) {
-            .comite-photo {
+            .comite-photo, .conseil-photo {
                 width: 110px;
                 height: 110px;
             }
-            .comite-card h4 {
+            .comite-card h4, .conseil-card h4 {
                 font-size: 1rem;
             }
-            .comite-card .comite-title {
+            .comite-card .comite-title, .conseil-card .conseil-title {
                 font-size: 0.75rem;
             }
-            .comite-card .comite-message {
+            .comite-card .comite-message, .conseil-card .conseil-message {
                 font-size: 0.75rem;
             }
         }
 
-        body.dark-mode .comite-card {
+        body.dark-mode .comite-card, body.dark-mode .conseil-card {
             background: #1a1f2e;
         }
 
-        body.dark-mode .comite-card h4 {
+        body.dark-mode .comite-card h4, body.dark-mode .conseil-card h4 {
             color: #FFCC00;
         }
 
-        body.dark-mode .comite-card .comite-message {
+        body.dark-mode .comite-card .comite-message, body.dark-mode .conseil-card .conseil-message {
             color: #bbb;
         }
 
@@ -159,7 +226,6 @@
             text-align: center;
         }
 
-        /* Tooltip */
         .representation-tooltip {
             display: none;
             position: absolute;
@@ -553,7 +619,6 @@
                     
                     <h4 class="text-center mt-4 mb-3">Représentations internationales</h4>
                     <div class="representations-grid">
-                        <!-- Afrique du Sud -->
                         <div class="representation-card">
                             <img src="assets/images/drapeaux/afrique du sud.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=ZA'">
                             <span>Afrique du Sud</span>
@@ -564,8 +629,6 @@
                                 <p><i class="fas fa-phone"></i> +27 82 604 6704</p>
                             </div>
                         </div>
-
-                        <!-- Angola -->
                         <div class="representation-card">
                             <img src="assets/images/drapeaux/angola.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=AO'">
                             <span>Angola</span>
@@ -576,8 +639,6 @@
                                 <p><i class="fas fa-phone"></i> +244 928 922 172 / +244 928 919 094</p>
                             </div>
                         </div>
-
-                        <!-- Europe -->
                         <div class="representation-card">
                             <img src="assets/images/drapeaux/europe.png" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=EU'">
                             <span>Europe</span>
@@ -588,8 +649,6 @@
                                 <p><i class="fas fa-phone"></i> +32 3 232 91 15 / +32 465 41 87 78</p>
                             </div>
                         </div>
-
-                        <!-- Kenya -->
                         <div class="representation-card">
                             <img src="assets/images/drapeaux/kenya.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=KE'">
                             <span>Kenya</span>
@@ -600,8 +659,6 @@
                                 <p><i class="fas fa-phone"></i> +254 742 372 322</p>
                             </div>
                         </div>
-
-                        <!-- Tanzanie -->
                         <div class="representation-card">
                             <img src="assets/images/drapeaux/tanzanie.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=TZ'">
                             <span>Tanzanie</span>
@@ -610,8 +667,6 @@
                                 <p><i class="fas fa-envelope"></i> rtan@ogefrem.cd</p>
                             </div>
                         </div>
-
-                        <!-- Chine -->
                         <div class="representation-card">
                             <img src="assets/images/drapeaux/chine.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=CN'">
                             <span>Chine</span>
@@ -620,8 +675,6 @@
                                 <p><i class="fas fa-envelope"></i> rchi@ogefrem.cd</p>
                             </div>
                         </div>
-
-                        <!-- Mozambique -->
                         <div class="representation-card">
                             <img src="assets/images/drapeaux/mozambique.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=MZ'">
                             <span>Mozambique</span>
@@ -630,8 +683,6 @@
                                 <p><i class="fas fa-envelope"></i> rmo@ogefrem.cd</p>
                             </div>
                         </div>
-
-                        <!-- Émirats Arabes Unis -->
                         <div class="representation-card">
                             <img src="assets/images/drapeaux/emirats-arabes-unis.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=AE'">
                             <span>Émirats Arabes Unis</span>
@@ -640,8 +691,6 @@
                                 <p><i class="fas fa-envelope"></i> rea@ogefrem.cd</p>
                             </div>
                         </div>
-
-                        <!-- Namibie -->
                         <div class="representation-card">
                             <img src="assets/images/drapeaux/Namibie.jpg" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=NA'">
                             <span>Namibie</span>
@@ -652,8 +701,6 @@
                                 <p><i class="fas fa-phone"></i> +264 81 482 7747</p>
                             </div>
                         </div>
-
-                        <!-- Congo Brazzaville -->
                         <div class="representation-card">
                             <img src="assets/images/drapeaux/Congo.png" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=CG'">
                             <span>Congo</span>
@@ -663,8 +710,6 @@
                                 <p><i class="fas fa-phone"></i> +242 05 394 2324</p>
                             </div>
                         </div>
-
-                        <!-- Togo -->
                         <div class="representation-card">
                             <img src="assets/images/drapeaux/togo.png" class="representation-drapeau" onerror="this.src='https://placehold.co/48x32/003399/white?text=TG'">
                             <span>Togo</span>
@@ -679,42 +724,34 @@
             </div>
         </section>
 
-        <!-- SECTION 7 : COMITÉ DE GESTION - UNIQUEMENT DG ET DGA -->
+        <!-- SECTION 7 : COMITÉ DE GESTION - DG + DGA -->
         <section class="content-section comite-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
                     <h2>Comité de <span class="highlight">Gestion</span></h2>
                     <div class="header-decoration"></div>
                 </div>
-                <div class="row g-4 justify-content-center">
-                    <!-- DG -->
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                        <div class="comite-card">
-                            <div class="comite-photo">
-                                <img src="assets/images/DG.jpeg" alt="Directeur Général" onerror="this.src='https://placehold.co/140x140/003399/white?text=DG'">
-                            </div>
-                            <h4>Directeur Général</h4>
-                            <p class="comite-title">Directeur Général</p>
-                            <p class="comite-message">"Moderniser le fret congolais pour une meilleure compétitivité"</p>
-                        </div>
-                    </div>
-                    <!-- DGA -->
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                        <div class="comite-card">
-                            <div class="comite-photo">
-                                <img src="assets/images/DG-MAYELE.jpeg" alt="Directeur Général Adjoint" onerror="this.src='https://placehold.co/140x140/003399/white?text=DGA'">
-                            </div>
-                            <h4>Directeur Général Adjoint</h4>
-                            <p class="comite-title">Directeur Général Adjoint</p>
-                            <p class="comite-message">"L'innovation au service des chargeurs"</p>
-                        </div>
-                    </div>
+                <div class="row g-4 justify-content-center" id="comiteContainer">
+                    <!-- Chargé dynamiquement depuis admin-data.js -->
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 8 : RÉALISATIONS ET PROJETS -->
-        <section class="content-section realisations-section bg-light">
+        <!-- SECTION 8 : CONSEIL D'ADMINISTRATION -->
+        <section class="content-section conseil-section bg-light">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <h2>Conseil d'<span class="highlight">Administration</span></h2>
+                    <div class="header-decoration"></div>
+                </div>
+                <div class="row g-4 justify-content-center" id="conseilContainer">
+                    <!-- Chargé dynamiquement depuis admin-data.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 9 : RÉALISATIONS ET PROJETS -->
+        <section class="content-section realisations-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
                     <h2>Réalisations & <span class="highlight">Projets</span></h2>
@@ -838,6 +875,64 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             AOS.init({ duration: 800, once: true });
+            
+            // ===== CHARGEMENT DU COMITÉ DE GESTION (DG + DGA) =====
+            const comite = AdminData.getComite();
+            const comiteContainer = document.getElementById('comiteContainer');
+            
+            if (comiteContainer && comite.length > 0) {
+                comiteContainer.innerHTML = comite.map((member, index) => `
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
+                        <div class="comite-card">
+                            <div class="comite-photo">
+                                <img src="${member.photo || 'https://placehold.co/140x140/003399/white?text=' + member.nom.charAt(0)}" alt="${member.nom}" onerror="this.src='https://placehold.co/140x140/003399/white?text=${member.nom.charAt(0)}'">
+                            </div>
+                            <h4>${member.nom}</h4>
+                            <p class="comite-title">${member.titre}</p>
+                            <p class="comite-message">"${member.message || ''}"</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // ===== CHARGEMENT DU CONSEIL D'ADMINISTRATION =====
+            const conseil = AdminData.getConseil();
+            const conseilContainer = document.getElementById('conseilContainer');
+            
+            if (conseilContainer && conseil.length > 0) {
+                // Ordre: PCA, Représentante Tutelle, puis les administrateurs
+                const ordreTitres = [
+                    "Président du Conseil d'Administration",
+                    "Représentante de la Tutelle",
+                    "Administrateur"
+                ];
+                
+                // Trier selon l'ordre souhaité
+                const conseilOrdonne = [];
+                for (const titre of ordreTitres) {
+                    const membres = conseil.filter(m => m.titre === titre);
+                    conseilOrdonne.push(...membres);
+                }
+                // Ajouter ceux qui n'ont pas été trouvés (au cas où)
+                for (const membre of conseil) {
+                    if (!conseilOrdonne.find(m => m.id === membre.id)) {
+                        conseilOrdonne.push(membre);
+                    }
+                }
+                
+                conseilContainer.innerHTML = conseilOrdonne.map((member, index) => `
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
+                        <div class="conseil-card">
+                            <div class="conseil-photo">
+                                <img src="${member.photo || 'https://placehold.co/140x140/003399/white?text=' + member.nom.charAt(0)}" alt="${member.nom}" onerror="this.src='https://placehold.co/140x140/003399/white?text=${member.nom.charAt(0)}'">
+                            </div>
+                            <h4>${member.nom}</h4>
+                            <p class="conseil-title">${member.titre}</p>
+                            <p class="conseil-message">"${member.message || ''}"</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
         });
     </script>
 </body>
