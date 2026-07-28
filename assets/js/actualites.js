@@ -1,3 +1,5 @@
+// assets/js/actualites.js - VERSION UNIQUEMENT API
+
 let currentPage = 1;
 const itemsPerPage = 9;
 let currentFilter = 'all';
@@ -26,17 +28,45 @@ function getCategorieLabel(categorie) {
 
 async function loadActualitesData() {
     const container = document.getElementById('actualitesGrid');
+    if (!container) return;
+    
+    container.innerHTML = `
+        <div class="col-12 text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Chargement...</span>
+            </div>
+            <p class="mt-2 text-muted">Chargement des actualités...</p>
+        </div>
+    `;
+    
     try {
         const response = await fetch(ACTUALITES_API, { cache: 'no-store' });
         if (!response.ok) throw new Error('Impossible de charger les actualités.');
         actualitesData = await response.json();
+        
+        if (!actualitesData || actualitesData.length === 0) {
+            container.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Aucune actualité disponible pour le moment.
+                    </div>
+                </div>
+            `;
+            renderPagination(0);
+            return;
+        }
+        
         actualitesData.sort((a, b) => new Date(b.date) - new Date(a.date));
         renderActualites();
     } catch (error) {
         console.error(error);
-        if (container) {
-            container.innerHTML = `<div class="col-12"><div class="alert alert-danger">${escapeHtml(error.message)}</div></div>`;
-        }
+        container.innerHTML = `
+            <div class="col-12">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i> ${escapeHtml(error.message)}
+                </div>
+            </div>
+        `;
     }
 }
 

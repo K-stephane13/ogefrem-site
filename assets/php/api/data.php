@@ -149,13 +149,12 @@ if ($method === 'GET') {
         json_response($pdo->query('SELECT * FROM comite_gestion ORDER BY id ASC')->fetchAll());
     }
 
-    // ===== NOUVEAU : GESTION DU CONSEIL D'ADMINISTRATION =====
     if ($module === 'conseil') {
         json_response($pdo->query('SELECT * FROM conseil_administration ORDER BY id ASC')->fetchAll());
     }
 }
 
-// Le compteur de likes est lui aussi conservé dans MySQL.
+// Gestion des likes
 if ($module === 'actualites' && $_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'like') {
     $input = json_decode(file_get_contents('php://input'), true) ?: [];
     $id = (int)($input['id'] ?? 0);
@@ -175,7 +174,7 @@ require_auth();
 $isMultipart = str_contains($_SERVER['CONTENT_TYPE'] ?? '', 'multipart/form-data');
 $input = $isMultipart ? $_POST : (json_decode(file_get_contents('php://input'), true) ?: []);
 
-// ===== GESTION DES ACTUALITÉS (avec images) =====
+// ===== GESTION DES ACTUALITÉS (avec images et likes) =====
 if ($module === 'actualites' && in_array($method, ['POST', 'PUT'], true)) {
     $id = (int)($input['id'] ?? 0);
     $titre = trim($input['titre'] ?? '');
@@ -185,6 +184,7 @@ if ($module === 'actualites' && in_array($method, ['POST', 'PUT'], true)) {
     $facebook = trim($input['facebookUrl'] ?? '');
     $instagram = trim($input['instagramUrl'] ?? '');
     $twitter = trim($input['twitterUrl'] ?? '');
+    $likes = (int)($input['likes'] ?? 0);
     $replaceImages = ($input['replaceImages'] ?? '0') === '1';
     $files = normalize_uploaded_files('images');
 
@@ -195,13 +195,13 @@ if ($module === 'actualites' && in_array($method, ['POST', 'PUT'], true)) {
     try {
         $pdo->beginTransaction();
         if ($method === 'POST') {
-            $stmt = $pdo->prepare('INSERT INTO actualites(titre, date_publication, categorie, description, facebook_url, instagram_url, twitter_url, likes) VALUES (?, ?, ?, ?, ?, ?, ?, 0)');
-            $stmt->execute([$titre, $date, $categorie, $description, $facebook, $instagram, $twitter]);
+            $stmt = $pdo->prepare('INSERT INTO actualites(titre, date_publication, categorie, description, facebook_url, instagram_url, twitter_url, likes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+            $stmt->execute([$titre, $date, $categorie, $description, $facebook, $instagram, $twitter, $likes]);
             $id = (int)$pdo->lastInsertId();
         } else {
             if ($id <= 0) throw new RuntimeException('ID de l\'actualité invalide.');
-            $stmt = $pdo->prepare('UPDATE actualites SET titre=?, date_publication=?, categorie=?, description=?, facebook_url=?, instagram_url=?, twitter_url=? WHERE id=?');
-            $stmt->execute([$titre, $date, $categorie, $description, $facebook, $instagram, $twitter, $id]);
+            $stmt = $pdo->prepare('UPDATE actualites SET titre=?, date_publication=?, categorie=?, description=?, facebook_url=?, instagram_url=?, twitter_url=?, likes=? WHERE id=?');
+            $stmt->execute([$titre, $date, $categorie, $description, $facebook, $instagram, $twitter, $likes, $id]);
             if ($replaceImages) {
                 $pdo->prepare('DELETE FROM actualite_images WHERE actualite_id = ?')->execute([$id]);
             }
@@ -267,7 +267,6 @@ if ($method === 'POST') {
         json_response(['success' => true, 'id' => $id]);
     }
 
-    // ===== NOUVEAU : GESTION DU CONSEIL D'ADMINISTRATION (INSERTION) =====
     if ($module === 'conseil') {
         $stmt = $pdo->prepare('INSERT INTO conseil_administration(nom, titre, photo, message) VALUES (?, ?, ?, ?)');
         $stmt->execute([
@@ -335,7 +334,6 @@ if ($method === 'PUT') {
         json_response(['success' => true]);
     }
 
-    // ===== NOUVEAU : GESTION DU CONSEIL D'ADMINISTRATION (MISE À JOUR) =====
     if ($module === 'conseil') {
         $stmt = $pdo->prepare('UPDATE conseil_administration SET nom=?, titre=?, photo=?, message=? WHERE id=?');
         $stmt->execute([
@@ -362,3 +360,4 @@ if ($method === 'DELETE') {
 }
 
 json_response(['success' => false, 'message' => 'Méthode non supportée'], 405);
+?>

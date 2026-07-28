@@ -286,14 +286,12 @@
     }
 
     async function loadPublicData() {
-        const [actualites, demandes, offres, comite, conseil] = await Promise.all([
-            api(`${API_BASE}/data.php?module=actualites`),
+        const [demandes, offres, comite, conseil] = await Promise.all([
             api(`${API_BASE}/data.php?module=demandes`),
             api(`${API_BASE}/data.php?module=offres`),
             api(`${API_BASE}/data.php?module=comite`),
             api(`${API_BASE}/data.php?module=conseil`)
         ]);
-        cache.actualites = actualites;
         cache.demandes = demandes;
         cache.offres = offres;
         cache.comite = comite;
@@ -301,12 +299,26 @@
     }
 
     async function renderDashboard() {
+        // Charger les actualités depuis l'API pour le dashboard
+        try {
+            const response = await fetch(`${API_BASE}/data.php?module=actualites`, { cache: 'no-store' });
+            if (response.ok) {
+                cache.actualites = await response.json();
+            } else {
+                cache.actualites = [];
+            }
+        } catch (error) {
+            cache.actualites = [];
+        }
+        
         await loadPublicData();
+        
         const membresComite = cache.comite.filter(m => 
             m.titre === 'Directeur Général' || 
             m.titre === 'Directeur Général Adjoint'
         );
         const totalMembres = membresComite.length + (cache.conseil?.length || 0);
+        
         document.getElementById('contentArea').innerHTML = `
             <div class="stats-grid">
                 <div class="stat-card-admin"><div class="stat-number-admin">${cache.actualites.length}</div><div>Actualités</div></div>
@@ -316,15 +328,23 @@
             </div>
             <div class="content-card">
                 <div class="card-header-custom"><h3><i class="fas fa-newspaper"></i> Dernières actualités</h3><button class="btn-add" onclick="loadSection('actualites')">Gérer tout</button></div>
-                <div class="data-table"><table><thead><tr><th>Titre</th><th>Date</th><th>Catégorie</th></tr></thead><tbody>
-                    ${cache.actualites.slice(0,5).map(a => `<tr><td>${shortText(a.titre, 70)}</td><td>${escapeHtml(a.date)}</td><td>${escapeHtml(a.categorie)}</td></tr>`).join('') || '<tr><td colspan="3">Aucune actualité</td></tr>'}
+                <div class="data-table"><table><thead><tr><th>Titre</th><th>Date</th><th>Catégorie</th><th>Likes</th></tr></thead><tbody>
+                    ${cache.actualites.slice(0,5).map(a => `<tr><td>${shortText(a.titre, 70)}</td><td>${escapeHtml(a.date)}</td><td>${escapeHtml(a.categorie)}</td><td>${a.likes || 0}</td></tr>`).join('') || '<tr><td colspan="4">Aucune actualité</td></tr>'}
                 </tbody></table></div>
             </div>
         `;
     }
 
     async function renderActualites() {
-        cache.actualites = await api(`${API_BASE}/data.php?module=actualites`);
+        try {
+            const response = await fetch(`${API_BASE}/data.php?module=actualites`, { cache: 'no-store' });
+            if (!response.ok) throw new Error('Erreur chargement');
+            cache.actualites = await response.json();
+        } catch (error) {
+            cache.actualites = [];
+            showToast('Erreur chargement actualités', 'error');
+        }
+        
         const totalPages = Math.max(1, Math.ceil(cache.actualites.length / itemsPerPage));
         currentPageActualites = Math.min(currentPageActualites, totalPages);
         const start = (currentPageActualites - 1) * itemsPerPage;
@@ -389,11 +409,8 @@
             </div>`;
     }
 
-    // ===== COMITÉ DE GESTION : FILTRER POUR GARDER UNIQUEMENT DG ET DGA =====
     async function renderComite() {
         cache.comite = await api(`${API_BASE}/data.php?module=comite`);
-        
-        // Filtrer : garder uniquement DG et DGA
         const membresFiltres = cache.comite.filter(m => 
             m.titre === 'Directeur Général' || 
             m.titre === 'Directeur Général Adjoint'
@@ -423,7 +440,6 @@
             </div>`;
     }
 
-    // ===== CONSEIL D'ADMINISTRATION =====
     async function renderConseil() {
         cache.conseil = await api(`${API_BASE}/data.php?module=conseil`);
         document.getElementById('contentArea').innerHTML = `
@@ -542,29 +558,35 @@
                 <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} une actualité</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
                 <form id="modalForm">
                     <input type="hidden" id="itemId" value="${id || ''}">
-                    <div class="form-group"><label>Titre *</label><input type="text" id="titre" class="form-control" value="${escapeHtml(item?.titre || '')}" required></div>
-                    <div class="form-group"><label>Date *</label><input type="date" id="date" class="form-control" value="${escapeHtml(item?.date || new Date().toISOString().split('T')[0])}" required></div>
-                    <div class="form-group"><label>Catégorie *</label><select id="categorie" class="form-select" required>
-                        ${['evenement','communique','projet','partenariat','avis'].map(c => `<option value="${c}" ${item?.categorie === c ? 'selected' : ''}>${c}</option>`).join('')}
-                    </select></div>
-                    <div class="form-group"><label>Description *</label><textarea id="description" class="form-control" rows="7" required>${escapeHtml(item?.description || '')}</textarea></div>
+                    <div class="form-group"><label><i class="fas fa-heading"></i> Titre *</label><input type="text" id="titre" class="form-control" value="${escapeHtml(item?.titre || '')}" required placeholder="Titre de l'actualité"></div>
+                    <div class="form-group"><label><i class="fas fa-calendar"></i> Date *</label><input type="date" id="date" class="form-control" value="${escapeHtml(item?.date || new Date().toISOString().split('T')[0])}" required></div>
+                    <div class="form-group"><label><i class="fas fa-tag"></i> Catégorie *</label>
+                        <select id="categorie" class="form-select" required>
+                            <option value="">Sélectionner une catégorie</option>
+                            ${['evenement','communique','projet','partenariat','avis'].map(c => `<option value="${c}" ${item?.categorie === c ? 'selected' : ''}>${c.charAt(0).toUpperCase() + c.slice(1)}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group"><label><i class="fas fa-align-left"></i> Description *</label><textarea id="description" class="form-control" rows="7" required placeholder="Contenu détaillé de l'actualité...">${escapeHtml(item?.description || '')}</textarea></div>
                     <div class="form-group">
-                        <label>Images réelles à enregistrer dans MySQL</label>
+                        <label><i class="fas fa-images"></i> Images</label>
                         <input type="file" id="images" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif" multiple ${id ? '' : 'required'}>
-                        <small class="text-muted">Formats : JPG, PNG, WEBP ou GIF. Maximum 10 Mo par image.</small>
+                        <small class="text-muted">Formats : JPG, PNG, WEBP ou GIF. Maximum 10 Mo par image. ${id ? 'Laissez vide pour conserver les images existantes.' : 'Sélectionnez au moins une image.'}</small>
                     </div>
                     ${id && item?.images?.length ? `
                         <div class="form-group">
-                            <label>Images actuellement en base</label>
+                            <label>Images actuelles</label>
                             <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
-                                ${item.images.map(img => `<img src="../${escapeHtml(img.url)}" alt="" style="width:90px;height:70px;object-fit:cover;border-radius:6px;">`).join('')}
+                                ${item.images.map(img => `<img src="../${escapeHtml(img.url)}" alt="" style="width:90px;height:70px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">`).join('')}
                             </div>
-                            <label style="display:flex;gap:8px;align-items:center;margin-top:10px;"><input type="checkbox" id="replaceImages"> Remplacer toutes les images existantes par les nouveaux fichiers</label>
+                            <label style="display:flex;gap:8px;align-items:center;margin-top:10px;cursor:pointer;">
+                                <input type="checkbox" id="replaceImages"> <span style="font-weight:normal;">Remplacer toutes les images existantes</span>
+                            </label>
                         </div>` : ''}
-                    <div class="form-group"><label>Facebook URL</label><input type="url" id="facebookUrl" class="form-control" value="${escapeHtml(item?.facebookUrl || '')}"></div>
-                    <div class="form-group"><label>Instagram URL</label><input type="url" id="instagramUrl" class="form-control" value="${escapeHtml(item?.instagramUrl || '')}"></div>
-                    <div class="form-group"><label>Twitter/X URL</label><input type="url" id="twitterUrl" class="form-control" value="${escapeHtml(item?.twitterUrl || '')}"></div>
-                    <button type="submit" class="btn-add" style="width:100%">${id ? 'Modifier' : 'Ajouter'}</button>
+                    <div class="form-group"><label><i class="fab fa-facebook"></i> Facebook URL</label><input type="url" id="facebookUrl" class="form-control" value="${escapeHtml(item?.facebookUrl || '')}" placeholder="https://facebook.com/..."></div>
+                    <div class="form-group"><label><i class="fab fa-instagram"></i> Instagram URL</label><input type="url" id="instagramUrl" class="form-control" value="${escapeHtml(item?.instagramUrl || '')}" placeholder="https://instagram.com/..."></div>
+                    <div class="form-group"><label><i class="fab fa-twitter"></i> Twitter/X URL</label><input type="url" id="twitterUrl" class="form-control" value="${escapeHtml(item?.twitterUrl || '')}" placeholder="https://twitter.com/..."></div>
+                    <div class="form-group"><label><i class="fas fa-heart"></i> Likes</label><input type="number" id="likes" class="form-control" value="${escapeHtml(item?.likes || 0)}" min="0" placeholder="Nombre de likes"></div>
+                    <button type="submit" class="btn-add" style="width:100%;padding:14px;font-size:1.1rem;">${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}</button>
                 </form>
             </div></div>`;
         }
@@ -691,6 +713,7 @@
                 formData.append('facebookUrl', document.getElementById('facebookUrl').value);
                 formData.append('instagramUrl', document.getElementById('instagramUrl').value);
                 formData.append('twitterUrl', document.getElementById('twitterUrl').value);
+                formData.append('likes', document.getElementById('likes').value || 0);
                 formData.append('replaceImages', document.getElementById('replaceImages')?.checked ? '1' : '0');
 
                 const files = document.getElementById('images').files;

@@ -1,4 +1,4 @@
-<!-- presentation.html - VERSION COMPLÈTE AVEC COMITÉ DE GESTION + CONSEIL D'ADMINISTRATION -->
+<!-- presentation.html - VERSION AVEC ORDRE PCA → DG → TUTELLE → ADMINS -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -724,6 +724,21 @@
             </div>
         </section>
 
+        <!-- SECTION 8 : CONSEIL D'ADMINISTRATION (PCA → DG → TUTELLE → ADMINS) -->
+        <section class="content-section conseil-section bg-light">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <h2>Conseil d'<span class="highlight">Administration</span></h2>
+                    <p class="text-muted">Composition du Conseil d'Administration de l'OGEFREM</p>
+                    <div class="header-decoration"></div>
+                </div>
+                
+                <div class="row g-4 justify-content-center" id="conseilContainer">
+                    <!-- Chargé dynamiquement depuis admin-data.js -->
+                </div>
+            </div>
+        </section>
+
         <!-- SECTION 7 : COMITÉ DE GESTION - DG + DGA -->
         <section class="content-section comite-section">
             <div class="container">
@@ -732,19 +747,6 @@
                     <div class="header-decoration"></div>
                 </div>
                 <div class="row g-4 justify-content-center" id="comiteContainer">
-                    <!-- Chargé dynamiquement depuis admin-data.js -->
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 8 : CONSEIL D'ADMINISTRATION -->
-        <section class="content-section conseil-section bg-light">
-            <div class="container">
-                <div class="section-header" data-aos="fade-up">
-                    <h2>Conseil d'<span class="highlight">Administration</span></h2>
-                    <div class="header-decoration"></div>
-                </div>
-                <div class="row g-4 justify-content-center" id="conseilContainer">
                     <!-- Chargé dynamiquement depuis admin-data.js -->
                 </div>
             </div>
@@ -876,7 +878,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             AOS.init({ duration: 800, once: true });
             
-            // ===== CHARGEMENT DU COMITÉ DE GESTION (DG + DGA) =====
+            // ===== CHARGEMENT DU COMITÉ DE GESTION =====
             const comite = AdminData.getComite();
             const comiteContainer = document.getElementById('comiteContainer');
             
@@ -896,13 +898,15 @@
             }
             
             // ===== CHARGEMENT DU CONSEIL D'ADMINISTRATION =====
+            // Ordre : PCA → DG → Tutelle → Admins
             const conseil = AdminData.getConseil();
             const conseilContainer = document.getElementById('conseilContainer');
             
             if (conseilContainer && conseil.length > 0) {
-                // Ordre: PCA, Représentante Tutelle, puis les administrateurs
+                // Ordre d'affichage : PCA, DG, Tutelle, Administrateurs
                 const ordreTitres = [
                     "Président du Conseil d'Administration",
+                    "Directeur Général",
                     "Représentante de la Tutelle",
                     "Administrateur"
                 ];
@@ -920,18 +924,20 @@
                     }
                 }
                 
-                conseilContainer.innerHTML = conseilOrdonne.map((member, index) => `
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
-                        <div class="conseil-card">
-                            <div class="conseil-photo">
-                                <img src="${member.photo || 'https://placehold.co/140x140/003399/white?text=' + member.nom.charAt(0)}" alt="${member.nom}" onerror="this.src='https://placehold.co/140x140/003399/white?text=${member.nom.charAt(0)}'">
+                conseilContainer.innerHTML = conseilOrdonne.map((member, index) => {
+                    return `
+                        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
+                            <div class="conseil-card">
+                                <div class="conseil-photo">
+                                    <img src="${member.photo || 'https://placehold.co/140x140/003399/white?text=' + member.nom.charAt(0)}" alt="${member.nom}" onerror="this.src='https://placehold.co/140x140/003399/white?text=${member.nom.charAt(0)}'">
+                                </div>
+                                <h4>${member.nom}</h4>
+                                <p class="conseil-title">${member.titre}</p>
+                                <p class="conseil-message">"${member.message || ''}"</p>
                             </div>
-                            <h4>${member.nom}</h4>
-                            <p class="conseil-title">${member.titre}</p>
-                            <p class="conseil-message">"${member.message || ''}"</p>
                         </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             }
         });
     </script>
