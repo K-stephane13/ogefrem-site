@@ -1,8 +1,14 @@
 <?php
+// assets/php/api/data.php - API REST OGEFREM
+
 require_once __DIR__ . '/config.php';
 
 $module = $_GET['module'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'];
+
+writeLog("API: $method $module");
+
+// Gestion du _method pour PUT/DELETE via POST
 if ($method === 'POST' && isset($_POST['_method'])) {
     $method = strtoupper($_POST['_method']);
 }
@@ -13,17 +19,19 @@ if (!in_array($module, $allowed, true)) {
 }
 
 function get_table($module) {
-    return [
+    $tables = [
         'actualites' => 'actualites',
         'demandes' => 'demandes_transport',
         'offres' => 'offres_transport',
         'comite' => 'comite_gestion',
         'conseil' => 'conseil_administration'
-    ][$module];
+    ];
+    return $tables[$module] ?? null;
 }
 
 function normalize_uploaded_files($field) {
     if (!isset($_FILES[$field])) return [];
+    
     $files = $_FILES[$field];
     $result = [];
 
@@ -43,13 +51,15 @@ function normalize_uploaded_files($field) {
             'name' => $name,
             'tmp_name' => $files['tmp_name'][$i],
             'error' => $files['error'][$i],
-            'size' => $files['size'][$i]
+            'size' => $files['size'][$i],
+            'type' => $files['type'][$i] ?? 'unknown'
         ];
     }
+    
     return $result;
 }
 
-function save_actualite_images(PDO $pdo, int $actualiteId, array $files): void {
+function save_actualite_images($pdo, $actualiteId, $files) {
     $allowedMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $stmt = $pdo->prepare('INSERT INTO actualite_images(actualite_id, nom_fichier, type_mime, taille, ordre, donnees) VALUES (?, ?, ?, ?, ?, ?)');
@@ -60,20 +70,20 @@ function save_actualite_images(PDO $pdo, int $actualiteId, array $files): void {
 
     foreach ($files as $file) {
         if ($file['error'] !== UPLOAD_ERR_OK) {
-            throw new RuntimeException('Échec du téléversement de l\'image : ' . $file['name']);
+            throw new RuntimeException('Échec du téléversement: ' . $file['name']);
         }
         if ($file['size'] > 10 * 1024 * 1024) {
-            throw new RuntimeException('Chaque image doit avoir une taille maximale de 10 Mo.');
+            throw new RuntimeException('Image trop volumineuse: ' . $file['name']);
         }
 
         $mime = $finfo->file($file['tmp_name']);
         if (!in_array($mime, $allowedMimes, true)) {
-            throw new RuntimeException('Format d\'image non autorisé : ' . $file['name']);
+            throw new RuntimeException('Format non autorisé: ' . $file['name']);
         }
 
         $binary = file_get_contents($file['tmp_name']);
         if ($binary === false) {
-            throw new RuntimeException('Impossible de lire l\'image : ' . $file['name']);
+            throw new RuntimeException('Impossible de lire l\'image: ' . $file['name']);
         }
 
         $stmt->bindValue(1, $actualiteId, PDO::PARAM_INT);
@@ -86,59 +96,52 @@ function save_actualite_images(PDO $pdo, int $actualiteId, array $files): void {
     }
 }
 
+// ===== GET =====
 if ($method === 'GET') {
     if ($module === 'actualites') {
-        $rows = $pdo->query('SELECT id, titre, date_publication, categorie, description, facebook_url, instagram_url, twitter_url, likes, created_at, updated_at FROM actualites ORDER BY date_publication DESC, id DESC')->fetchAll();
-        $imgStmt = $pdo->prepare('SELECT id, nom_fichier, type_mime, taille, ordre FROM actualite_images WHERE actualite_id = ? ORDER BY ordre, id');
+        try {
+            $rows = $pdo->query('SELECT id, titre, date_publication, categorie, description, facebook_url, instagram_url, twitter_url, likes, created_at, updated_at FROM actualites ORDER BY date_publication DESC, id DESC')->fetchAll();
+            
+            $imgStmt = $pdo->prepare('SELECT id, nom_fichier, type_mime, taille, ordre FROM actualite_images WHERE actualite_id = ? ORDER BY ordre, id');
 
-        $data = array_map(function($r) use ($imgStmt) {
-            $imgStmt->execute([$r['id']]);
-            $images = array_map(function($img) {
+            $data = array_map(function($r) use ($imgStmt) {
+                $imgStmt->execute([$r['id']]);
+                $images = $imgStmt->fetchAll();
+                
                 return [
-                    'id' => (int)$img['id'],
-                    'nom' => $img['nom_fichier'],
-                    'type' => $img['type_mime'],
-                    'taille' => (int)$img['taille'],
-                    'ordre' => (int)$img['ordre'],
-                    'url' => 'assets/php/api/image.php?id=' . (int)$img['id']
+                    'id' => (int)$r['id'],
+                    'titre' => $r['titre'],
+                    'date' => $r['date_publication'],
+                    'categorie' => $r['categorie'],
+                    'description' => $r['description'],
+                    'images' => array_map(function($img) {
+                        return [
+                            'id' => (int)$img['id'],
+                            'nom' => $img['nom_fichier'],
+                            'type' => $img['type_mime'],
+                            'taille' => (int)$img['taille'],
+                            'ordre' => (int)$img['ordre'],
+                            'url' => 'assets/php/api/image.php?id=' . (int)$img['id']
+                        ];
+                    }, $images),
+                    'facebookUrl' => $r['facebook_url'] ?? '',
+                    'instagramUrl' => $r['instagram_url'] ?? '',
+                    'twitterUrl' => $r['twitter_url'] ?? '',
+                    'likes' => (int)$r['likes'],
+                    'createdAt' => $r['created_at'],
+                    'updatedAt' => $r['updated_at']
                 ];
-            }, $imgStmt->fetchAll());
-
-            return [
-                'id' => (int)$r['id'],
-                'titre' => $r['titre'],
-                'date' => $r['date_publication'],
-                'categorie' => $r['categorie'],
-                'description' => $r['description'],
-                'images' => $images,
-                'facebookUrl' => $r['facebook_url'] ?? '',
-                'instagramUrl' => $r['instagram_url'] ?? '',
-                'twitterUrl' => $r['twitter_url'] ?? '',
-                'likes' => (int)$r['likes'],
-                'createdAt' => $r['created_at'],
-                'updatedAt' => $r['updated_at']
-            ];
-        }, $rows);
-        json_response($data);
+            }, $rows);
+            
+            json_response($data);
+        } catch (PDOException $e) {
+            writeLog('Erreur GET actualites: ' . $e->getMessage(), null, 'ERROR');
+            json_response(['success' => false, 'message' => 'Erreur base de données'], 500);
+        }
     }
 
     if ($module === 'demandes') {
-        $rows = $pdo->query('SELECT * FROM demandes_transport ORDER BY id DESC')->fetchAll();
-        $data = array_map(function($r) {
-            return [
-                'id' => (int)$r['id'],
-                'marchandises' => $r['marchandises'],
-                'origine' => $r['origine'],
-                'destination' => $r['destination'],
-                'date' => $r['date_souhaitee'],
-                'nom' => $r['nom'],
-                'email' => $r['email'],
-                'telephone' => $r['telephone'],
-                'statut' => $r['statut'],
-                'dateSoumission' => $r['date_soumission']
-            ];
-        }, $rows);
-        json_response($data);
+        json_response($pdo->query('SELECT * FROM demandes_transport ORDER BY id DESC')->fetchAll());
     }
 
     if ($module === 'offres') {
@@ -154,27 +157,39 @@ if ($method === 'GET') {
     }
 }
 
-// Gestion des likes
+// ===== LIKES =====
 if ($module === 'actualites' && $_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'like') {
     $input = json_decode(file_get_contents('php://input'), true) ?: [];
     $id = (int)($input['id'] ?? 0);
-    if ($id <= 0) json_response(['success' => false, 'message' => 'Actualité invalide'], 400);
+    
+    if ($id <= 0) {
+        json_response(['success' => false, 'message' => 'Actualité invalide'], 400);
+    }
 
-    $stmt = $pdo->prepare('UPDATE actualites SET likes = likes + 1 WHERE id = ?');
-    $stmt->execute([$id]);
-    if ($stmt->rowCount() === 0) json_response(['success' => false, 'message' => 'Actualité introuvable'], 404);
+    try {
+        $stmt = $pdo->prepare('UPDATE actualites SET likes = likes + 1 WHERE id = ?');
+        $stmt->execute([$id]);
+        
+        if ($stmt->rowCount() === 0) {
+            json_response(['success' => false, 'message' => 'Actualité introuvable'], 404);
+        }
 
-    $stmt = $pdo->prepare('SELECT likes FROM actualites WHERE id = ?');
-    $stmt->execute([$id]);
-    json_response(['success' => true, 'likes' => (int)$stmt->fetchColumn()]);
+        $stmt = $pdo->prepare('SELECT likes FROM actualites WHERE id = ?');
+        $stmt->execute([$id]);
+        json_response(['success' => true, 'likes' => (int)$stmt->fetchColumn()]);
+    } catch (PDOException $e) {
+        writeLog('Erreur like: ' . $e->getMessage(), null, 'ERROR');
+        json_response(['success' => false, 'message' => 'Erreur'], 500);
+    }
 }
 
+// ===== POST / PUT / DELETE =====
 require_auth();
 
-$isMultipart = str_contains($_SERVER['CONTENT_TYPE'] ?? '', 'multipart/form-data');
+$isMultipart = strpos($_SERVER['CONTENT_TYPE'] ?? '', 'multipart/form-data') !== false;
 $input = $isMultipart ? $_POST : (json_decode(file_get_contents('php://input'), true) ?: []);
 
-// ===== GESTION DES ACTUALITÉS (avec images et likes) =====
+// ===== ACTUALITÉS =====
 if ($module === 'actualites' && in_array($method, ['POST', 'PUT'], true)) {
     $id = (int)($input['id'] ?? 0);
     $titre = trim($input['titre'] ?? '');
@@ -194,30 +209,44 @@ if ($module === 'actualites' && in_array($method, ['POST', 'PUT'], true)) {
 
     try {
         $pdo->beginTransaction();
+
         if ($method === 'POST') {
             $stmt = $pdo->prepare('INSERT INTO actualites(titre, date_publication, categorie, description, facebook_url, instagram_url, twitter_url, likes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
             $stmt->execute([$titre, $date, $categorie, $description, $facebook, $instagram, $twitter, $likes]);
             $id = (int)$pdo->lastInsertId();
+            
+            if (!$id) {
+                throw new RuntimeException('Échec de l\'insertion');
+            }
         } else {
-            if ($id <= 0) throw new RuntimeException('ID de l\'actualité invalide.');
+            if ($id <= 0) {
+                throw new RuntimeException('ID invalide');
+            }
+            
             $stmt = $pdo->prepare('UPDATE actualites SET titre=?, date_publication=?, categorie=?, description=?, facebook_url=?, instagram_url=?, twitter_url=?, likes=? WHERE id=?');
             $stmt->execute([$titre, $date, $categorie, $description, $facebook, $instagram, $twitter, $likes, $id]);
+
             if ($replaceImages) {
                 $pdo->prepare('DELETE FROM actualite_images WHERE actualite_id = ?')->execute([$id]);
             }
         }
 
-        if ($files) save_actualite_images($pdo, $id, $files);
+        if ($files) {
+            save_actualite_images($pdo, $id, $files);
+        }
+
         $pdo->commit();
-        add_log($pdo, $method === 'POST' ? 'CREATE' : 'UPDATE', 'actualites', $id, 'Actualité et images enregistrées dans MySQL');
+        add_log($pdo, $method === 'POST' ? 'CREATE' : 'UPDATE', 'actualites', $id, 'Actualité enregistrée');
         json_response(['success' => true, 'id' => $id]);
+
     } catch (Throwable $e) {
         if ($pdo->inTransaction()) $pdo->rollBack();
+        writeLog('Erreur actualite: ' . $e->getMessage(), null, 'ERROR');
         json_response(['success' => false, 'message' => $e->getMessage()], 422);
     }
 }
 
-// ===== GESTION DES POST (INSERTION) =====
+// ===== POST AUTRES MODULES =====
 if ($method === 'POST') {
     if ($module === 'demandes') {
         $stmt = $pdo->prepare('INSERT INTO demandes_transport(marchandises, origine, destination, date_souhaitee, nom, email, telephone, statut, date_soumission) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
@@ -233,7 +262,7 @@ if ($method === 'POST') {
             $input['dateSoumission'] ?? date('d/m/Y H:i')
         ]);
         $id = $pdo->lastInsertId();
-        add_log($pdo, 'CREATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        add_log($pdo, 'CREATE', $module, $id, 'Demande créée');
         json_response(['success' => true, 'id' => $id]);
     }
 
@@ -250,7 +279,7 @@ if ($method === 'POST') {
             $input['description'] ?? ''
         ]);
         $id = $pdo->lastInsertId();
-        add_log($pdo, 'CREATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        add_log($pdo, 'CREATE', $module, $id, 'Offre créée');
         json_response(['success' => true, 'id' => $id]);
     }
 
@@ -263,7 +292,7 @@ if ($method === 'POST') {
             $input['message'] ?? ''
         ]);
         $id = $pdo->lastInsertId();
-        add_log($pdo, 'CREATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        add_log($pdo, 'CREATE', $module, $id, 'Membre comité ajouté');
         json_response(['success' => true, 'id' => $id]);
     }
 
@@ -276,12 +305,12 @@ if ($method === 'POST') {
             $input['message'] ?? ''
         ]);
         $id = $pdo->lastInsertId();
-        add_log($pdo, 'CREATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        add_log($pdo, 'CREATE', $module, $id, 'Membre CA ajouté');
         json_response(['success' => true, 'id' => $id]);
     }
 }
 
-// ===== GESTION DES PUT (MISE À JOUR) =====
+// ===== PUT =====
 if ($method === 'PUT') {
     $id = (int)($input['id'] ?? 0);
     if ($id <= 0) json_response(['success' => false, 'message' => 'ID invalide'], 400);
@@ -300,7 +329,7 @@ if ($method === 'PUT') {
             $input['dateSoumission'] ?? '',
             $id
         ]);
-        add_log($pdo, 'UPDATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        add_log($pdo, 'UPDATE', $module, $id, 'Demande mise à jour');
         json_response(['success' => true]);
     }
 
@@ -317,7 +346,7 @@ if ($method === 'PUT') {
             $input['description'] ?? '',
             $id
         ]);
-        add_log($pdo, 'UPDATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        add_log($pdo, 'UPDATE', $module, $id, 'Offre mise à jour');
         json_response(['success' => true]);
     }
 
@@ -330,7 +359,7 @@ if ($method === 'PUT') {
             $input['message'] ?? '',
             $id
         ]);
-        add_log($pdo, 'UPDATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        add_log($pdo, 'UPDATE', $module, $id, 'Membre comité mis à jour');
         json_response(['success' => true]);
     }
 
@@ -343,12 +372,12 @@ if ($method === 'PUT') {
             $input['message'] ?? '',
             $id
         ]);
-        add_log($pdo, 'UPDATE', $module, $id, json_encode($input, JSON_UNESCAPED_UNICODE));
+        add_log($pdo, 'UPDATE', $module, $id, 'Membre CA mis à jour');
         json_response(['success' => true]);
     }
 }
 
-// ===== GESTION DES DELETE (SUPPRESSION) =====
+// ===== DELETE =====
 if ($method === 'DELETE') {
     $id = (int)($_GET['id'] ?? 0);
     if ($id <= 0) json_response(['success' => false, 'message' => 'ID invalide'], 400);

@@ -1,7 +1,10 @@
 <?php
+// assets/php/api/image.php - Affichage des images
+
 require_once __DIR__ . '/config.php';
 
 $id = (int)($_GET['id'] ?? 0);
+
 if ($id <= 0) {
     http_response_code(400);
     exit('Image invalide');
@@ -16,9 +19,9 @@ if (!$image) {
     exit('Image introuvable');
 }
 
-header_remove('Content-Type');
 header('Content-Type: ' . $image['type_mime']);
 header('Content-Length: ' . strlen($image['donnees']));
 header('Content-Disposition: inline; filename="' . rawurlencode($image['nom_fichier']) . '"');
 header('Cache-Control: public, max-age=604800, immutable');
 echo $image['donnees'];
+?>
