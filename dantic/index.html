@@ -8,73 +8,1143 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ============================================================
+           RESET & BASE
+           ============================================================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Inter, Arial, sans-serif; background: #f0f2f5; }
-        .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #003399, #0066CC); padding: 20px; }
-        .login-card { background: #fff; border-radius: 24px; padding: 40px; width: 100%; max-width: 450px; box-shadow: 0 25px 50px rgba(0,0,0,.2); }
-        .login-card h2 { color: #003399; }
-        .login-card .logo { text-align: center; margin-bottom: 30px; }
-        .login-card .logo img { height: 60px; }
-        .admin-wrapper { display: flex; min-height: 100vh; }
-        .admin-sidebar { width: 270px; background: #003399; color: #fff; position: fixed; height: 100vh; overflow-y: auto; z-index: 100; }
-        .admin-sidebar .logo { padding: 25px 20px; border-bottom: 1px solid rgba(255,255,255,.1); text-align: center; }
-        .admin-sidebar .logo h3 { color: #FFCC00; font-size: 1.1rem; margin-top: 8px; }
-        .admin-sidebar .nav-item { padding: 14px 25px; display: flex; align-items: center; gap: 12px; cursor: pointer; border-left: 3px solid transparent; transition: .2s; }
-        .admin-sidebar .nav-item:hover { background: rgba(255,255,255,.1); }
-        .admin-sidebar .nav-item.active { background: rgba(255,204,0,.2); border-left-color: #FFCC00; }
-        .admin-sidebar .nav-item i { width: 24px; }
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: #f0f2f5; 
+            overflow-x: hidden;
+        }
+
+        /* ============================================================
+           LOGIN PAGE
+           ============================================================ */
+        .login-container { 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: linear-gradient(135deg, #003399, #0066CC); 
+            padding: 20px; 
+        }
+        .login-card { 
+            background: #fff; 
+            border-radius: 24px; 
+            padding: clamp(30px, 5vw, 50px); 
+            width: 100%; 
+            max-width: 440px; 
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3); 
+        }
+        .login-card .logo { 
+            text-align: center; 
+            margin-bottom: 30px; 
+        }
+        .login-card .logo img { 
+            height: clamp(50px, 8vw, 70px); 
+        }
+        .login-card .logo h2 { 
+            color: #003399; 
+            font-size: clamp(1.3rem, 3vw, 1.8rem); 
+            margin-top: 10px; 
+        }
+        .login-card .logo p { 
+            color: #666; 
+            font-size: clamp(0.85rem, 1.5vw, 1rem); 
+        }
+
+        /* ============================================================
+           CHAMP MOT DE PASSE AVEC OEIL
+           ============================================================ */
+        .password-wrapper {
+            position: relative;
+        }
+        .password-wrapper .form-control {
+            padding-right: 50px;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 6px;
+            transition: color 0.2s ease;
+            z-index: 2;
+            line-height: 1;
+        }
+        .password-toggle:hover {
+            color: #003399;
+        }
+        .password-toggle:focus {
+            outline: none;
+        }
+        .password-toggle .fa-eye-slash {
+            display: none;
+        }
+        .password-wrapper.show-password .password-toggle .fa-eye {
+            display: none;
+        }
+        .password-wrapper.show-password .password-toggle .fa-eye-slash {
+            display: inline-block;
+        }
+
+        /* ============================================================
+           ADMIN LAYOUT
+           ============================================================ */
+        .admin-wrapper { 
+            display: flex; 
+            min-height: 100vh; 
+            position: relative;
+        }
+
+        /* ============================================================
+           SIDEBAR
+           ============================================================ */
+        .admin-sidebar {
+            width: 270px;
+            background: #003399;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1050;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .admin-sidebar::-webkit-scrollbar { width: 4px; }
+        .admin-sidebar::-webkit-scrollbar-thumb { background: #FFCC00; border-radius: 4px; }
+        .admin-sidebar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+
+        .admin-sidebar .logo { 
+            padding: 20px; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); 
+            text-align: center; 
+            flex-shrink: 0;
+        }
+        .admin-sidebar .logo img { 
+            height: 45px; 
+            display: block; 
+            margin: 0 auto 8px; 
+        }
+        .admin-sidebar .logo h3 { 
+            color: #FFCC00; 
+            font-size: 1rem; 
+            margin: 0; 
+            font-weight: 600;
+        }
+
+        .admin-sidebar .nav-menu {
+            flex: 1;
+            padding: 12px 0 20px;
+            overflow-y: auto;
+        }
+
+        .admin-sidebar .nav-item { 
+            padding: 12px 22px; 
+            display: flex; 
+            align-items: center; 
+            gap: 14px; 
+            cursor: pointer; 
+            border-left: 3px solid transparent; 
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .admin-sidebar .nav-item:hover { 
+            background: rgba(255,255,255,0.08); 
+            color: #fff; 
+        }
+        .admin-sidebar .nav-item.active { 
+            background: rgba(255,204,0,0.15); 
+            border-left-color: #FFCC00; 
+            color: #fff;
+        }
+        .admin-sidebar .nav-item i { 
+            width: 22px; 
+            font-size: 1.1rem; 
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .admin-sidebar .nav-item .nav-label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .admin-sidebar .nav-item .nav-badge {
+            margin-left: auto;
+            background: #FFCC00;
+            color: #003399;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
         .super-only { display: none; }
-        .admin-main { flex: 1; margin-left: 270px; padding: 20px 30px; }
-        .admin-header { background: #fff; border-radius: 16px; padding: 15px 25px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,.05); }
-        .admin-header h1 { font-size: 1.4rem; margin: 0; color: #003399; }
-        .user-pill { background: #f8f9fa; border-radius: 999px; padding: 8px 14px; font-size: .9rem; margin-right: 10px; }
-        .logout-btn { background: #dc3545; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; }
-        .content-card { background: #fff; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,.05); }
-        .card-header-custom { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #FFCC00; flex-wrap: wrap; gap: 15px; }
-        .btn-add { background: #003399; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; }
-        .btn-edit { background: #FFCC00; color: #003399; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; margin-right: 5px; }
-        .btn-delete { background: #dc3545; color: #fff; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
-        .btn-secondary-custom { background: #6c757d; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; }
-        .modal-custom { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
-        .modal-custom.active { display: flex; }
-        .modal-content-custom { background: #fff; border-radius: 24px; width: 100%; max-width: 760px; max-height: 88vh; overflow-y: auto; padding: 30px; }
-        .modal-header-custom { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-        .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
-        .form-control, .form-select { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; }
-        textarea.form-control { resize: vertical; min-height: 110px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card-admin { background: #fff; border-radius: 16px; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,.05); }
-        .stat-number-admin { font-size: 2rem; font-weight: 800; color: #FFCC00; }
-        .data-table { width: 100%; overflow-x: auto; }
-        .data-table table { width: 100%; border-collapse: collapse; }
-        .data-table th, .data-table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; vertical-align: top; }
-        .data-table th { background: #f8f9fa; font-weight: 700; }
-        .badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: .75rem; font-weight: 700; }
+
+        /* ============================================================
+           SIDEBAR FOOTER
+           ============================================================ */
+        .sidebar-footer {
+            padding: 15px 22px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* ============================================================
+           SIDEBAR TOGGLE
+           ============================================================ */
+        .sidebar-toggle {
+            display: none;
+            background: transparent;
+            color: #003399;
+            border: none;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            line-height: 1;
+        }
+        .sidebar-toggle:hover { 
+            background: rgba(0,51,153,0.08); 
+        }
+
+        /* ============================================================
+           OVERLAY
+           ============================================================ */
+        .sidebar-overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.5); 
+            z-index: 1040; 
+            backdrop-filter: blur(2px);
+        }
+        .sidebar-overlay.active { display: block; }
+
+        /* ============================================================
+           MAIN CONTENT
+           ============================================================ */
+        .admin-main {
+            flex: 1;
+            margin-left: 270px;
+            padding: 20px 30px 40px;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+            width: 100%;
+            max-width: calc(100% - 270px);
+        }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        .admin-header {
+            background: #fff;
+            border-radius: 16px;
+            padding: 14px 24px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+            background: rgba(255,255,255,0.95);
+        }
+        .admin-header .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .admin-header .header-left h1 { 
+            font-size: clamp(1rem, 2vw, 1.4rem); 
+            margin: 0; 
+            color: #003399; 
+            font-weight: 700;
+        }
+        .admin-header .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .user-pill { 
+            background: #f0f4ff; 
+            border-radius: 999px; 
+            padding: 6px 16px; 
+            font-size: 0.85rem; 
+            color: #003399;
+            font-weight: 500;
+        }
+        .user-pill strong { color: #003399; }
+        .user-pill .role-badge {
+            background: #FFCC00;
+            color: #003399;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            margin-left: 6px;
+            text-transform: uppercase;
+        }
+        .btn-change-password {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .btn-change-password:hover { background: #138496; }
+        .btn-change-password i { margin-right: 6px; }
+
+        .logout-btn { 
+            background: #dc3545; 
+            color: #fff; 
+            border: none; 
+            padding: 7px 18px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .logout-btn:hover { background: #c82333; }
+        .logout-btn i { margin-right: 6px; }
+
+        /* ============================================================
+           CARDS
+           ============================================================ */
+        .content-card { 
+            background: #fff; 
+            border-radius: 20px; 
+            padding: clamp(15px, 2.5vw, 30px); 
+            margin-bottom: 25px; 
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card-header-custom { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            padding-bottom: 15px; 
+            border-bottom: 2px solid #FFCC00; 
+            flex-wrap: wrap; 
+            gap: 12px; 
+        }
+        .card-header-custom h3 {
+            font-size: clamp(1rem, 1.8vw, 1.2rem);
+            font-weight: 700;
+            color: #003399;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-header-custom h3 .badge {
+            font-size: 0.7rem;
+            padding: 2px 12px;
+        }
+        .card-header-custom .card-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* ============================================================
+           STATS GRID
+           ============================================================ */
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+            gap: 16px; 
+            margin-bottom: 30px; 
+        }
+        .stat-card-admin { 
+            background: #fff; 
+            border-radius: 16px; 
+            padding: 20px; 
+            text-align: center; 
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-card-admin:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+        .stat-card-admin .stat-icon {
+            font-size: 1.8rem;
+            color: #003399;
+            margin-bottom: 6px;
+        }
+        .stat-number-admin { 
+            font-size: clamp(1.8rem, 3vw, 2.4rem); 
+            font-weight: 800; 
+            color: #FFCC00; 
+            line-height: 1.2;
+        }
+        .stat-card-admin .stat-label {
+            font-size: 0.8rem;
+            color: #888;
+            font-weight: 500;
+        }
+
+        /* ============================================================
+           TABLEAUX
+           ============================================================ */
+        .table-wrapper-scroll {
+            overflow-x: auto;
+            overflow-y: visible;
+            -webkit-overflow-scrolling: touch;
+            margin: 10px 0 15px;
+            border-radius: 12px;
+            border: 1px solid #eef0f2;
+            background: #fff;
+        }
+        .table-wrapper-scroll table {
+            min-width: 600px;
+            width: 100%;
+            margin-bottom: 0;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .table-wrapper-scroll table thead th {
+            background: #003399;
+            color: white;
+            padding: 12px 16px;
+            font-weight: 600;
+            text-align: left;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .table-wrapper-scroll table tbody td {
+            padding: 11px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+            color: #333;
+            font-size: 0.85rem;
+        }
+        .table-wrapper-scroll table tbody tr:hover td {
+            background: rgba(0,51,153,0.03);
+        }
+        .table-wrapper-scroll table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .table-wrapper-scroll::-webkit-scrollbar { height: 6px; width: 6px; }
+        .table-wrapper-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .table-wrapper-scroll::-webkit-scrollbar-thumb { background: #003399; border-radius: 10px; }
+        .table-wrapper-scroll::-webkit-scrollbar-thumb:hover { background: #FFCC00; }
+
+        /* ============================================================
+           BOUTONS
+           ============================================================ */
+        .btn-add { 
+            background: #003399; 
+            color: #fff; 
+            border: none; 
+            padding: 8px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .btn-add:hover { 
+            background: #FFCC00; 
+            color: #003399; 
+            transform: translateY(-1px);
+        }
+        .btn-add i { font-size: 0.9rem; }
+
+        .btn-edit { 
+            background: #FFCC00; 
+            color: #003399; 
+            border: none; 
+            padding: 5px 12px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .btn-edit:hover { background: #e6b800; }
+
+        .btn-delete { 
+            background: #dc3545; 
+            color: #fff; 
+            border: none; 
+            padding: 5px 12px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .btn-delete:hover { background: #c82333; }
+
+        .btn-reset-password {
+            background: #ffc107;
+            color: #003399;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-reset-password:hover { background: #e0a800; }
+
+        .btn-sm { padding: 4px 10px; font-size: 0.7rem; }
+
+        /* ============================================================
+           BADGES
+           ============================================================ */
         .badge-primary { background: #003399; color: #fff; }
         .badge-warning { background: #ffc107; color: #003399; }
-        .badge-success { background: #198754; color: #fff; }
-        .search-box { position: relative; margin-bottom: 20px; }
-        .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #999; }
-        .search-box input { padding-left: 45px; border-radius: 50px; }
-        .toast-notification { position: fixed; bottom: 20px; right: 20px; color: #fff; padding: 12px 24px; border-radius: 8px; z-index: 1100; display: none; max-width: 420px; }
+        .badge-success { background: #28a745; color: #fff; }
+        .badge-secondary { background: #6c757d; color: #fff; }
+
+        /* ============================================================
+           SEARCH BOX
+           ============================================================ */
+        .search-box { 
+            position: relative; 
+            margin-bottom: 16px; 
+            max-width: 100%;
+        }
+        .search-box i { 
+            position: absolute; 
+            left: 15px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            color: #999; 
+            font-size: 0.9rem;
+        }
+        .search-box input { 
+            padding-left: 45px; 
+            border-radius: 50px; 
+            border: 1px solid #e0e0e0;
+            padding: 10px 20px 10px 45px;
+            width: 100%;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+        .search-box input:focus {
+            border-color: #003399;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0,51,153,0.1);
+        }
+
+        /* ============================================================
+           MODAL
+           ============================================================ */
+        .modal-custom { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.5); 
+            z-index: 1100; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 15px; 
+            backdrop-filter: blur(4px);
+        }
+        .modal-custom.active { display: flex; }
+        .modal-content-custom { 
+            background: #fff; 
+            border-radius: 24px; 
+            width: 100%; 
+            max-width: 760px; 
+            max-height: 90vh; 
+            overflow-y: auto; 
+            padding: clamp(20px, 3vw, 35px); 
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-content-custom::-webkit-scrollbar { width: 4px; }
+        .modal-content-custom::-webkit-scrollbar-thumb { background: #003399; border-radius: 4px; }
+
+        .modal-header-custom { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            padding-bottom: 15px; 
+            border-bottom: 1px solid #eee; 
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .modal-header-custom h3 { 
+            font-size: clamp(1.1rem, 2vw, 1.4rem); 
+            color: #003399; 
+            margin: 0;
+            font-weight: 700;
+        }
+        .modal-header-custom .btn-close-modal {
+            background: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s ease;
+        }
+        .modal-header-custom .btn-close-modal:hover { background: #c82333; }
+
+        /* ============================================================
+           FORMULAIRE
+           ============================================================ */
+        .form-group { margin-bottom: 18px; }
+        .form-group label { 
+            display: block; 
+            margin-bottom: 6px; 
+            font-weight: 600; 
+            font-size: 0.9rem;
+            color: #333;
+        }
+        .form-group label i { 
+            color: #003399; 
+            margin-right: 6px; 
+        }
+        .form-group .required { color: #dc3545; }
+        .form-control, .form-select { 
+            width: 100%; 
+            padding: 10px 14px; 
+            border: 1px solid #ddd; 
+            border-radius: 10px; 
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+            background: #fff;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #003399;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0,51,153,0.08);
+        }
+        textarea.form-control { resize: vertical; min-height: 100px; }
+        .form-text {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        /* ============================================================
+           PAGINATION
+           ============================================================ */
+        .pagination-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+        }
+        .page-link-btn { 
+            background: #fff; 
+            border: 1px solid #ddd; 
+            padding: 6px 14px; 
+            border-radius: 8px; 
+            color: #003399; 
+            cursor: pointer; 
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        .page-link-btn:hover { background: #f0f4ff; }
+        .page-link-btn.active { 
+            background: #003399; 
+            color: #fff; 
+            border-color: #003399; 
+        }
+        .page-link-btn:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+            background: #f5f5f5;
+        }
+
+        /* ============================================================
+           TOAST
+           ============================================================ */
+        .toast-notification { 
+            position: fixed; 
+            bottom: 30px; 
+            right: 30px; 
+            color: #fff; 
+            padding: 14px 28px; 
+            border-radius: 12px; 
+            z-index: 1200; 
+            display: none; 
+            max-width: 420px; 
+            font-size: 0.95rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: toastIn 0.4s ease;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .toast-success { background: #28a745; }
         .toast-error { background: #dc3545; }
-        .page-link-btn { background: #fff; border: 1px solid #ddd; padding: 6px 12px; border-radius: 6px; color: #003399; cursor: pointer; margin: 0 2px; }
-        .page-link-btn.active { background: #003399; color: #fff; border-color: #003399; }
-        .page-link-btn:disabled { opacity: .5; cursor: not-allowed; }
-        .image-preview { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; background: #f1f1f1; }
-        @media (max-width: 768px) {
-            .admin-sidebar { width: 0; transform: translateX(-100%); transition: .2s; }
-            .admin-sidebar.open { width: 270px; transform: translateX(0); }
-            .admin-main { margin-left: 0; padding: 15px; }
-            .sidebar-toggle { display: inline-block; background: #003399; color: #fff; border: none; padding: 10px; border-radius: 8px; margin-right: 15px; }
+        .toast-info { background: #17a2b8; }
+        .toast-warning { background: #ffc107; color: #003399; }
+
+        /* ============================================================
+           COMITE / CONSEIL / MINISTRE CARDS
+           ============================================================ */
+        .leader-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 10px;
         }
-        @media (min-width: 769px) { .sidebar-toggle { display: none; } }
+        .leader-card-item {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid #f0f0f0;
+        }
+        .leader-card-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.10);
+        }
+        .leader-card-item .leader-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #003399, #0066CC);
+        }
+        .leader-card-item .leader-body {
+            padding: 16px;
+        }
+        .leader-card-item .leader-body h5 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #003399;
+            margin: 0 0 4px;
+        }
+        .leader-card-item .leader-body .leader-title {
+            font-size: 0.8rem;
+            color: #FFCC00;
+            font-weight: 600;
+            margin: 0 0 8px;
+        }
+        .leader-card-item .leader-body .leader-message {
+            font-size: 0.8rem;
+            color: #666;
+            font-style: italic;
+            margin: 0 0 12px;
+            line-height: 1.4;
+        }
+        .leader-card-item .leader-body .leader-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        /* Style pour l'affichage du ministre */
+        .ministre-card {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        .ministre-card .ministre-photo {
+            flex: 0 0 200px;
+            text-align: center;
+        }
+        .ministre-card .ministre-photo img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #FFCC00;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .ministre-card .ministre-photo .no-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #003399, #0066CC);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            color: rgba(255,255,255,0.7);
+            border: 4px solid #FFCC00;
+        }
+        .ministre-card .ministre-infos {
+            flex: 1;
+            min-width: 250px;
+        }
+        .ministre-card .ministre-infos table {
+            width: 100%;
+        }
+        .ministre-card .ministre-infos table td {
+            padding: 8px 12px 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .ministre-card .ministre-infos table td:first-child {
+            font-weight: 600;
+            width: 120px;
+            color: #003399;
+        }
+
+        /* ============================================================
+           DARK MODE
+           ============================================================ */
+        body.dark-mode .admin-main { background: #0f1219; }
+        body.dark-mode .admin-header { background: #1a1f2e; color: #e0e0e0; }
+        body.dark-mode .admin-header .header-left h1 { color: #FFCC00; }
+        body.dark-mode .user-pill { background: #1a2a3a; color: #e0e0e0; }
+        body.dark-mode .user-pill strong { color: #FFCC00; }
+        body.dark-mode .content-card { background: #1a1f2e; color: #e0e0e0; }
+        body.dark-mode .card-header-custom h3 { color: #FFCC00; }
+        body.dark-mode .stat-card-admin { background: #1a1f2e; color: #e0e0e0; }
+        body.dark-mode .table-wrapper-scroll { background: #1a1f2e; border-color: #2a2f3e; }
+        body.dark-mode .table-wrapper-scroll table tbody td { 
+            border-bottom-color: #2a2f3e; 
+            color: #d0d0d0; 
+        }
+        body.dark-mode .table-wrapper-scroll table tbody tr:hover td { 
+            background: rgba(255,204,0,0.04); 
+        }
+        body.dark-mode .search-box input { 
+            background: #151a28; 
+            color: #e0e0e0; 
+            border-color: #2a2f3e; 
+        }
+        body.dark-mode .search-box input:focus { border-color: #FFCC00; }
+        body.dark-mode .modal-content-custom { background: #1a1f2e; color: #e0e0e0; }
+        body.dark-mode .modal-content-custom .form-control,
+        body.dark-mode .modal-content-custom .form-select { 
+            background: #151a28; 
+            color: #e0e0e0; 
+            border-color: #2a2f3e; 
+        }
+        body.dark-mode .modal-header-custom { border-bottom-color: #2a2f3e; }
+        body.dark-mode .modal-header-custom h3 { color: #FFCC00; }
+        body.dark-mode .leader-card-item { background: #1a1f2e; border-color: #2a2f3e; }
+        body.dark-mode .leader-card-item .leader-body h5 { color: #FFCC00; }
+        body.dark-mode .leader-card-item .leader-body .leader-message { color: #aaa; }
+        body.dark-mode .ministre-card .ministre-infos table td { border-bottom-color: #2a2f3e; }
+        body.dark-mode .ministre-card .ministre-infos table td:first-child { color: #FFCC00; }
+        body.dark-mode .page-link-btn { background: #1a1f2e; border-color: #2a2f3e; color: #e0e0e0; }
+        body.dark-mode .page-link-btn.active { background: #FFCC00; color: #003399; border-color: #FFCC00; }
+        body.dark-mode .form-group label { color: #d0d0d0; }
+        body.dark-mode .password-toggle { color: #888; }
+        body.dark-mode .password-toggle:hover { color: #FFCC00; }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 992px) {
+            .admin-main { 
+                margin-left: 0; 
+                padding: 15px 20px 30px;
+                max-width: 100%;
+            }
+            .sidebar-toggle { display: inline-block; }
+            .admin-sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                box-shadow: 0 0 40px rgba(0,0,0,0.2);
+            }
+            .admin-sidebar.open { transform: translateX(0); }
+            .sidebar-overlay.active { display: block; }
+            .admin-header { 
+                padding: 12px 18px; 
+                border-radius: 12px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .admin-header .header-left h1 { font-size: 1rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .leader-card-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+            .table-wrapper-scroll table { min-width: 550px; font-size: 0.8rem; }
+            .table-wrapper-scroll table thead th,
+            .table-wrapper-scroll table tbody td { padding: 8px 12px; }
+            .ministre-card { flex-direction: column; align-items: center; }
+            .ministre-card .ministre-photo { flex: 0 0 auto; }
+        }
+
+        @media (max-width: 768px) {
+            .admin-main { padding: 10px 12px 25px; }
+            .admin-header { 
+                padding: 10px 14px; 
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                border-radius: 12px;
+            }
+            .admin-header .header-left { 
+                justify-content: space-between; 
+                width: 100%;
+            }
+            .admin-header .header-right { 
+                justify-content: center; 
+                flex-wrap: wrap;
+                border-top: 1px solid #eee;
+                padding-top: 10px;
+            }
+            body.dark-mode .admin-header .header-right {
+                border-top-color: #2a2f3e;
+            }
+            .user-pill { 
+                font-size: 0.75rem; 
+                padding: 4px 12px; 
+            }
+            .btn-change-password { 
+                font-size: 0.7rem; 
+                padding: 5px 12px; 
+            }
+            .logout-btn { 
+                font-size: 0.7rem; 
+                padding: 5px 14px; 
+            }
+            .sidebar-toggle { font-size: 1.2rem; padding: 5px 8px; }
+            .stats-grid { 
+                grid-template-columns: 1fr 1fr; 
+                gap: 8px; 
+            }
+            .stat-card-admin { 
+                padding: 14px; 
+                border-radius: 12px; 
+            }
+            .stat-number-admin { font-size: 1.5rem; }
+            .stat-card-admin .stat-label { font-size: 0.7rem; }
+            .content-card { 
+                padding: 14px; 
+                border-radius: 14px; 
+            }
+            .card-header-custom { 
+                flex-direction: column; 
+                align-items: stretch; 
+                gap: 10px;
+                padding-bottom: 12px;
+            }
+            .card-header-custom .card-actions { 
+                width: 100%; 
+            }
+            .card-header-custom .card-actions .btn-add { 
+                width: 100%; 
+                justify-content: center; 
+            }
+            .table-wrapper-scroll { 
+                border-radius: 10px; 
+                margin: 8px 0 12px;
+            }
+            .table-wrapper-scroll table { 
+                min-width: 450px; 
+                font-size: 0.7rem; 
+            }
+            .table-wrapper-scroll table thead th,
+            .table-wrapper-scroll table tbody td { 
+                padding: 6px 10px; 
+                font-size: 0.7rem; 
+            }
+            .btn-edit, .btn-delete { 
+                padding: 3px 8px; 
+                font-size: 0.65rem; 
+            }
+            .btn-reset-password { 
+                padding: 3px 8px; 
+                font-size: 0.6rem; 
+            }
+            .modal-content-custom { 
+                padding: 16px; 
+                margin: 10px; 
+                max-height: 85vh; 
+                border-radius: 18px;
+            }
+            .modal-header-custom h3 { font-size: 1rem; }
+            .form-group { margin-bottom: 12px; }
+            .form-control, .form-select { 
+                padding: 8px 12px; 
+                font-size: 0.85rem; 
+            }
+            .leader-card-grid { 
+                grid-template-columns: 1fr 1fr; 
+                gap: 12px; 
+            }
+            .leader-card-item .leader-image { height: 150px; }
+            .leader-card-item .leader-body { padding: 12px; }
+            .leader-card-item .leader-body h5 { font-size: 0.85rem; }
+            .pagination-wrapper { gap: 4px; }
+            .page-link-btn { 
+                padding: 4px 10px; 
+                font-size: 0.75rem; 
+            }
+            .toast-notification { 
+                left: 15px; 
+                right: 15px; 
+                bottom: 15px; 
+                max-width: 100%; 
+                padding: 12px 18px;
+                font-size: 0.85rem;
+            }
+            .search-box input { 
+                padding: 8px 15px 8px 40px; 
+                font-size: 0.85rem; 
+            }
+            .search-box i { left: 12px; }
+            .password-toggle { right: 10px; font-size: 0.95rem; }
+            .ministre-card { flex-direction: column; align-items: center; }
+            .ministre-card .ministre-photo { flex: 0 0 auto; }
+            .ministre-card .ministre-photo img,
+            .ministre-card .ministre-photo .no-photo {
+                width: 150px;
+                height: 150px;
+            }
+            .ministre-card .ministre-infos table td:first-child {
+                width: 80px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admin-main { padding: 8px 8px 20px; }
+            .admin-header { padding: 8px 10px; }
+            .admin-header .header-left h1 { font-size: 0.85rem; }
+            .stats-grid { 
+                grid-template-columns: 1fr 1fr; 
+                gap: 6px; 
+            }
+            .stat-card-admin { 
+                padding: 10px; 
+                border-radius: 10px; 
+            }
+            .stat-number-admin { font-size: 1.2rem; }
+            .stat-card-admin .stat-icon { font-size: 1.2rem; }
+            .stat-card-admin .stat-label { font-size: 0.6rem; }
+            .content-card { padding: 10px; }
+            .card-header-custom h3 { 
+                font-size: 0.9rem; 
+                gap: 6px;
+            }
+            .card-header-custom h3 .badge { font-size: 0.6rem; }
+            .table-wrapper-scroll table { min-width: 350px; font-size: 0.6rem; }
+            .table-wrapper-scroll table thead th,
+            .table-wrapper-scroll table tbody td { 
+                padding: 4px 6px; 
+                font-size: 0.6rem; 
+            }
+            .btn-edit, .btn-delete, .btn-reset-password { 
+                padding: 2px 6px; 
+                font-size: 0.55rem; 
+            }
+            .leader-card-grid { 
+                grid-template-columns: 1fr; 
+                gap: 10px; 
+            }
+            .leader-card-item .leader-image { height: 130px; }
+            .modal-content-custom { 
+                padding: 12px; 
+                margin: 5px; 
+                border-radius: 14px;
+            }
+            .modal-header-custom h3 { font-size: 0.9rem; }
+            .user-pill { 
+                font-size: 0.65rem; 
+                padding: 3px 10px; 
+            }
+            .btn-change-password, .logout-btn { 
+                font-size: 0.65rem; 
+                padding: 4px 10px; 
+            }
+            .sidebar-toggle { font-size: 1rem; padding: 4px 6px; }
+            .admin-sidebar { width: 260px; }
+            .page-link-btn { 
+                padding: 3px 8px; 
+                font-size: 0.65rem; 
+                border-radius: 6px;
+            }
+            .password-toggle { right: 8px; font-size: 0.85rem; padding: 4px; }
+            .ministre-card .ministre-photo img,
+            .ministre-card .ministre-photo .no-photo {
+                width: 120px;
+                height: 120px;
+            }
+            .ministre-card .ministre-infos table td {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* ============================================================
+           UTILITAIRES
+           ============================================================ */
+        .text-muted { color: #888; }
+        .text-center { text-align: center; }
+        .mt-2 { margin-top: 8px; }
+        .mt-3 { margin-top: 16px; }
+        .mt-4 { margin-top: 24px; }
+        .mb-2 { margin-bottom: 8px; }
+        .mb-3 { margin-bottom: 16px; }
+        .mb-4 { margin-bottom: 24px; }
+        .w-100 { width: 100%; }
+        .d-flex { display: flex; }
+        .gap-2 { gap: 8px; }
+        .flex-wrap { flex-wrap: wrap; }
+        .align-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #003399; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #FFCC00; }
+        body.dark-mode ::-webkit-scrollbar-track { background: #1a1f2e; }
+        body.dark-mode ::-webkit-scrollbar-thumb { background: #FFCC00; }
     </style>
 </head>
 <body>
 <div id="app">
+    <!-- ===== LOGIN PAGE ===== -->
     <div id="loginPage" class="login-container">
         <div class="login-card">
             <div class="logo">
@@ -85,54 +1155,153 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label>Identifiant</label>
-                    <input type="text" id="username" class="form-control" placeholder="superadmin, admin1, admin2, admin3" required>
+                    <input type="text" id="username" class="form-control" placeholder="Identifiant" required>
                 </div>
                 <div class="form-group">
                     <label>Mot de passe</label>
-                    <input type="password" id="password" class="form-control" placeholder="••••••" required>
+                    <div class="password-wrapper" id="loginPasswordWrapper">
+                        <input type="password" id="password" class="form-control" placeholder="••••••" required>
+                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password', 'loginPasswordWrapper')" aria-label="Afficher/masquer le mot de passe">
+                            <i class="fas fa-eye"></i>
+                            <i class="fas fa-eye-slash"></i>
+                        </button>
+                    </div>
                 </div>
-                <button type="submit" class="btn-add" style="width:100%; padding:12px;">Se connecter</button>
+                <button type="submit" class="btn-add" style="width:100%; padding:14px; justify-content:center; font-size:1rem;">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </button>
             </form>
         </div>
     </div>
 
+    <!-- ===== ADMIN PANEL ===== -->
     <div id="adminPanel" style="display:none;">
         <div class="admin-wrapper">
+            <div class="sidebar-overlay" id="sidebarOverlay"></div>
+            
             <div class="admin-sidebar" id="sidebar">
                 <div class="logo">
-                    <img src="../assets/images/ogefrem_logo2.png" alt="OGEFREM" onerror="this.src='https://placehold.co/40x40/003399/white?text=OG'" style="height:40px;">
+                    <img src="../assets/images/ogefrem_logo2.png" alt="OGEFREM" onerror="this.src='https://placehold.co/45x45/003399/white?text=OG'">
                     <h3>OGEFREM Admin</h3>
                 </div>
-                <div class="nav-item active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
-                <div class="nav-item" data-section="actualites"><i class="fas fa-newspaper"></i> Actualités</div>
-                <div class="nav-item" data-section="demandes"><i class="fas fa-file-signature"></i> Demandes de transport</div>
-                <div class="nav-item" data-section="offres"><i class="fas fa-tags"></i> Offres de transport</div>
-                <div class="nav-item" data-section="comite"><i class="fas fa-users"></i> Comité de Gestion</div>
-                <div class="nav-item" data-section="conseil"><i class="fas fa-user-tie"></i> Conseil d'Administration</div>
-                <div class="nav-item super-only" data-section="users"><i class="fas fa-user-shield"></i> Utilisateurs</div>
-                <div class="nav-item super-only" data-section="logs"><i class="fas fa-history"></i> Logs</div>
+                <nav class="nav-menu">
+                    <div class="nav-item active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span class="nav-label">Dashboard</span>
+                    </div>
+                    <div class="nav-item" data-section="actualites">
+                        <i class="fas fa-newspaper"></i>
+                        <span class="nav-label">Actualités</span>
+                        <span class="nav-badge" id="badgeActualites">0</span>
+                    </div>
+                    <div class="nav-item super-only" data-section="demandes">
+                        <i class="fas fa-file-signature"></i>
+                        <span class="nav-label">Demandes de transport</span>
+                        <span class="nav-badge" id="badgeDemandes">0</span>
+                    </div>
+                    <div class="nav-item super-only" data-section="offres">
+                        <i class="fas fa-tags"></i>
+                        <span class="nav-label">Offres de transport</span>
+                        <span class="nav-badge" id="badgeOffres">0</span>
+                    </div>
+                    <div class="nav-item" data-section="comite">
+                        <i class="fas fa-users"></i>
+                        <span class="nav-label">Comité de Gestion</span>
+                        <span class="nav-badge" id="badgeComite">0</span>
+                    </div>
+                    <div class="nav-item" data-section="conseil">
+                        <i class="fas fa-user-tie"></i>
+                        <span class="nav-label">Conseil d'Administration</span>
+                        <span class="nav-badge" id="badgeConseil">0</span>
+                    </div>
+                    <!-- ===== MINISTRE - UNIQUEMENT POUR SUPER ADMIN ===== -->
+                    <div class="nav-item super-only" data-section="ministre">
+                        <i class="fas fa-user-secret"></i>
+                        <span class="nav-label">Ministre des Transports</span>
+                        <span class="nav-badge" style="background:#FFCC00;color:#003399;">1</span>
+                    </div>
+                    <div class="nav-item super-only" data-section="users">
+                        <i class="fas fa-user-shield"></i>
+                        <span class="nav-label">Utilisateurs</span>
+                        <span class="nav-badge" id="badgeUsers">0</span>
+                    </div>
+                    <div class="nav-item super-only" data-section="logs">
+                        <i class="fas fa-history"></i>
+                        <span class="nav-label">Logs</span>
+                    </div>
+                </nav>
+                <div class="sidebar-footer">
+                    <span>v1.0 &bull; OGEFREM &copy; 2025</span>
+                </div>
             </div>
-
+            
             <div class="admin-main">
-                <div class="admin-header">
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+                <header class="admin-header">
+                    <div class="header-left">
+                        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Ouvrir le menu">
+                            <i class="fas fa-bars"></i>
+                        </button>
                         <h1 id="sectionTitle">Dashboard</h1>
                     </div>
-                    <div>
-                        <span class="user-pill" id="currentUserLabel"></span>
-                        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+                    <div class="header-right">
+                        <span class="user-pill" id="currentUserLabel">
+                            <strong>Utilisateur</strong> <span class="role-badge">ADMIN</span>
+                        </span>
+                        <button class="btn-change-password" id="changePasswordBtn">
+                            <i class="fas fa-key"></i> <span class="btn-label">Changer mot de passe</span>
+                        </button>
+                        <button class="logout-btn" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i> <span class="btn-label">Déconnexion</span>
+                        </button>
                     </div>
-                </div>
+                </header>
                 <div id="contentArea"></div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- ===== TOAST ===== -->
 <div id="toast" class="toast-notification"></div>
 
+<!-- ============================================================ -->
+<!-- ===== JAVASCRIPT ===== -->
+<!-- ============================================================ -->
 <script>
+    // ============================================================
+    // FONCTION TOGGLE MOT DE PASSE (utilisée partout)
+    // ============================================================
+    function togglePasswordVisibility(inputId, wrapperId) {
+        const input = document.getElementById(inputId);
+        const wrapper = document.getElementById(wrapperId);
+        if (!input || !wrapper) return;
+        
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        wrapper.classList.toggle('show-password');
+    }
+
+    // Initialiser les toggles pour les modales (créées dynamiquement)
+    function initPasswordToggles() {
+        document.querySelectorAll('.password-wrapper:not(.initialized)').forEach(wrapper => {
+            wrapper.classList.add('initialized');
+            const toggle = wrapper.querySelector('.password-toggle');
+            const input = wrapper.querySelector('input[type="password"], input[type="text"]');
+            if (toggle && input) {
+                if (input.type !== 'password' && input.type !== 'text') {
+                    input.type = 'password';
+                }
+                wrapper.classList.remove('show-password');
+                if (input.type === 'text') {
+                    input.type = 'password';
+                }
+            }
+        });
+    }
+
+    // ============================================================
+    // CONFIGURATION API
+    // ============================================================
     const API_BASE = '../assets/php/api';
     let currentUser = null;
     let currentSection = 'dashboard';
@@ -140,7 +1309,7 @@
     let currentPageDemandes = 1;
     let currentPageOffres = 1;
     const itemsPerPage = 10;
-    const cache = { actualites: [], demandes: [], offres: [], comite: [], conseil: [], users: [], logs: [] };
+    const cache = { actualites: [], demandes: [], offres: [], comite: [], conseil: [], ministre: null, users: [], logs: [] };
 
     const sectionTitles = {
         dashboard: 'Dashboard',
@@ -149,17 +1318,78 @@
         offres: 'Offres de Transport',
         comite: 'Comité de Gestion',
         conseil: 'Conseil d\'Administration',
+        ministre: 'Ministre des Transports',
         users: 'Gestion des utilisateurs',
         logs: 'Journal des modifications'
     };
 
-    document.getElementById('loginForm').addEventListener('submit', login);
-    document.getElementById('logoutBtn').addEventListener('click', logout);
-    document.getElementById('sidebarToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
-
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', () => loadSection(item.dataset.section));
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('loginForm').addEventListener('submit', login);
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        document.getElementById('changePasswordBtn').addEventListener('click', function() {
+            openChangePasswordModal();
+        });
+        
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                loadSection(this.dataset.section);
+            });
+        });
+        
+        initSidebarToggle();
+        checkAuth();
+        initPasswordToggles();
     });
+
+    // Observer les mutations du DOM pour initialiser les toggles dans les modales
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.addedNodes.length) {
+                setTimeout(initPasswordToggles, 100);
+            }
+        });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    function initSidebarToggle() {
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        
+        if (!sidebarToggle) return;
+        
+        sidebarToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            sidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('active');
+            this.setAttribute('aria-expanded', sidebar.classList.contains('open'));
+        });
+        
+        sidebarOverlay.addEventListener('click', function() {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('active');
+            sidebarToggle.setAttribute('aria-expanded', 'false');
+        });
+        
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (window.innerWidth <= 992) {
+                    sidebar.classList.remove('open');
+                    sidebarOverlay.classList.remove('active');
+                    sidebarToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+        
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 992) {
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('active');
+                sidebarToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
 
     async function api(url, options = {}) {
         const isFormData = options.body instanceof FormData;
@@ -202,7 +1432,12 @@
         toast.textContent = message;
         toast.className = `toast-notification toast-${type}`;
         toast.style.display = 'block';
-        setTimeout(() => toast.style.display = 'none', 3500);
+        clearTimeout(toast._timeout);
+        toast._timeout = setTimeout(() => { toast.style.display = 'none'; }, 3500);
+    }
+
+    function safeArray(arr) {
+        return Array.isArray(arr) ? arr : [];
     }
 
     async function login(e) {
@@ -241,11 +1476,26 @@
     function showAdminPanel() {
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('adminPanel').style.display = 'block';
-        document.getElementById('currentUserLabel').innerHTML = `<strong>${escapeHtml(currentUser.nom)}</strong> - ${escapeHtml(currentUser.role)}`;
+        
+        const userLabel = document.getElementById('currentUserLabel');
+        const isSuperAdmin = currentUser.role === 'SUPER_ADMIN';
+        const roleLabel = isSuperAdmin ? 'SUPER ADMIN' : 'ADMIN';
+        userLabel.innerHTML = `<strong>${escapeHtml(currentUser.nom)}</strong> <span class="role-badge">${roleLabel}</span>`;
 
         document.querySelectorAll('.super-only').forEach(el => {
-            el.style.display = currentUser.role === 'SUPER_ADMIN' ? 'flex' : 'none';
+            el.style.display = isSuperAdmin ? 'flex' : 'none';
         });
+        
+        const allowedSections = ['dashboard', 'actualites', 'comite', 'conseil'];
+        if (!isSuperAdmin) {
+            const currentSectionEl = document.querySelector('.nav-item.active');
+            if (currentSectionEl) {
+                const section = currentSectionEl.dataset.section;
+                if (!allowedSections.includes(section)) {
+                    loadSection('dashboard');
+                }
+            }
+        }
     }
 
     function showLoginPage() {
@@ -260,8 +1510,16 @@
     }
 
     async function loadSection(section) {
-        if ((section === 'users' || section === 'logs') && currentUser.role !== 'SUPER_ADMIN') {
-            showToast('Accès réservé au super utilisateur', 'error');
+        if (currentUser && currentUser.role !== 'SUPER_ADMIN') {
+            const allowedSections = ['dashboard', 'actualites', 'comite', 'conseil'];
+            if (!allowedSections.includes(section)) {
+                showToast('Accès réservé au Super Administrateur', 'error');
+                return;
+            }
+        }
+        
+        if ((section === 'users' || section === 'logs' || section === 'ministre') && currentUser.role !== 'SUPER_ADMIN') {
+            showToast('Accès réservé au Super Administrateur', 'error');
             return;
         }
 
@@ -278,6 +1536,7 @@
             if (section === 'offres') await renderOffres();
             if (section === 'comite') await renderComite();
             if (section === 'conseil') await renderConseil();
+            if (section === 'ministre') await renderMinistre();
             if (section === 'users') await renderUsers();
             if (section === 'logs') await renderLogs();
         } catch (error) {
@@ -285,56 +1544,130 @@
         }
     }
 
-    async function loadPublicData() {
-        const [demandes, offres, comite, conseil] = await Promise.all([
-            api(`${API_BASE}/data.php?module=demandes`),
-            api(`${API_BASE}/data.php?module=offres`),
-            api(`${API_BASE}/data.php?module=comite`),
-            api(`${API_BASE}/data.php?module=conseil`)
-        ]);
-        cache.demandes = demandes;
-        cache.offres = offres;
-        cache.comite = comite;
-        cache.conseil = conseil;
-    }
-
+    // ============================================================
+    // DASHBOARD
+    // ============================================================
     async function renderDashboard() {
-        // Charger les actualités depuis l'API pour le dashboard
         try {
             const response = await fetch(`${API_BASE}/data.php?module=actualites`, { cache: 'no-store' });
-            if (response.ok) {
-                cache.actualites = await response.json();
-            } else {
-                cache.actualites = [];
-            }
-        } catch (error) {
-            cache.actualites = [];
+            if (response.ok) cache.actualites = await response.json();
+            else cache.actualites = [];
+        } catch (e) { cache.actualites = []; }
+        cache.actualites = safeArray(cache.actualites);
+        
+        try {
+            const r = await fetch(`${API_BASE}/data.php?module=comite`, { cache: 'no-store' });
+            if (r.ok) cache.comite = await r.json();
+            else cache.comite = [];
+        } catch (e) { cache.comite = []; }
+        cache.comite = safeArray(cache.comite);
+        
+        try {
+            const r = await fetch(`${API_BASE}/data.php?module=conseil`, { cache: 'no-store' });
+            if (r.ok) cache.conseil = await r.json();
+            else cache.conseil = [];
+        } catch (e) { cache.conseil = []; }
+        cache.conseil = safeArray(cache.conseil);
+        
+        try {
+            const r = await fetch(`${API_BASE}/data.php?module=demandes`, { cache: 'no-store' });
+            if (r.ok) cache.demandes = await r.json();
+            else cache.demandes = [];
+        } catch (e) { cache.demandes = []; }
+        cache.demandes = safeArray(cache.demandes);
+        
+        try {
+            const r = await fetch(`${API_BASE}/data.php?module=offres`, { cache: 'no-store' });
+            if (r.ok) cache.offres = await r.json();
+            else cache.offres = [];
+        } catch (e) { cache.offres = []; }
+        cache.offres = safeArray(cache.offres);
+        
+        updateBadges();
+
+        const actualites = safeArray(cache.actualites);
+        const demandes = safeArray(cache.demandes);
+        const offres = safeArray(cache.offres);
+        const comite = safeArray(cache.comite);
+        const conseil = safeArray(cache.conseil);
+        
+        const totalMembres = comite.length + conseil.length;
+        const isSuperAdmin = currentUser && currentUser.role === 'SUPER_ADMIN';
+        
+        let statsHTML = `
+            <div class="stats-grid">
+                <div class="stat-card-admin">
+                    <div class="stat-icon"><i class="fas fa-newspaper"></i></div>
+                    <div class="stat-number-admin">${actualites.length}</div>
+                    <div class="stat-label">Actualités</div>
+                </div>
+        `;
+        
+        if (isSuperAdmin) {
+            statsHTML += `
+                <div class="stat-card-admin">
+                    <div class="stat-icon"><i class="fas fa-file-signature"></i></div>
+                    <div class="stat-number-admin">${demandes.length}</div>
+                    <div class="stat-label">Demandes</div>
+                </div>
+                <div class="stat-card-admin">
+                    <div class="stat-icon"><i class="fas fa-tags"></i></div>
+                    <div class="stat-number-admin">${offres.length}</div>
+                    <div class="stat-label">Offres</div>
+                </div>
+            `;
         }
         
-        await loadPublicData();
-        
-        const membresComite = cache.comite.filter(m => 
-            m.titre === 'Directeur Général' || 
-            m.titre === 'Directeur Général Adjoint'
-        );
-        const totalMembres = membresComite.length + (cache.conseil?.length || 0);
+        statsHTML += `
+                <div class="stat-card-admin">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-number-admin">${totalMembres}</div>
+                    <div class="stat-label">Membres (Comité + CA)</div>
+                </div>
+            </div>
+        `;
         
         document.getElementById('contentArea').innerHTML = `
-            <div class="stats-grid">
-                <div class="stat-card-admin"><div class="stat-number-admin">${cache.actualites.length}</div><div>Actualités</div></div>
-                <div class="stat-card-admin"><div class="stat-number-admin">${cache.demandes.length}</div><div>Demandes</div></div>
-                <div class="stat-card-admin"><div class="stat-number-admin">${cache.offres.length}</div><div>Offres</div></div>
-                <div class="stat-card-admin"><div class="stat-number-admin">${totalMembres}</div><div>Membres (Comité + CA)</div></div>
-            </div>
+            ${statsHTML}
             <div class="content-card">
-                <div class="card-header-custom"><h3><i class="fas fa-newspaper"></i> Dernières actualités</h3><button class="btn-add" onclick="loadSection('actualites')">Gérer tout</button></div>
-                <div class="data-table"><table><thead><tr><th>Titre</th><th>Date</th><th>Catégorie</th><th>Likes</th></tr></thead><tbody>
-                    ${cache.actualites.slice(0,5).map(a => `<tr><td>${shortText(a.titre, 70)}</td><td>${escapeHtml(a.date)}</td><td>${escapeHtml(a.categorie)}</td><td>${a.likes || 0}</td></tr>`).join('') || '<tr><td colspan="4">Aucune actualité</td></tr>'}
-                </tbody></table></div>
+                <div class="card-header-custom">
+                    <h3><i class="fas fa-newspaper"></i> Dernières actualités</h3>
+                    <div class="card-actions">
+                        <button class="btn-add" onclick="loadSection('actualites')"><i class="fas fa-arrow-right"></i> Gérer tout</button>
+                    </div>
+                </div>
+                <div class="table-wrapper-scroll">
+                    <table>
+                        <thead><tr><th>Titre</th><th>Date</th><th>Catégorie</th><th>Likes</th></tr></thead>
+                        <tbody>
+                            ${actualites.slice(0,5).map(a => `<tr><td>${shortText(a.titre, 70)}</td><td>${escapeHtml(a.date || '')}</td><td>${escapeHtml(a.categorie || '')}</td><td>${a.likes || 0}</td></tr>`).join('') || '<tr><td colspan="4">Aucune actualité</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         `;
     }
 
+    function updateBadges() {
+        const badges = {
+            actualites: document.getElementById('badgeActualites'),
+            demandes: document.getElementById('badgeDemandes'),
+            offres: document.getElementById('badgeOffres'),
+            comite: document.getElementById('badgeComite'),
+            conseil: document.getElementById('badgeConseil'),
+            users: document.getElementById('badgeUsers')
+        };
+        if (badges.actualites) badges.actualites.textContent = safeArray(cache.actualites).length;
+        if (badges.demandes) badges.demandes.textContent = safeArray(cache.demandes).length;
+        if (badges.offres) badges.offres.textContent = safeArray(cache.offres).length;
+        if (badges.comite) badges.comite.textContent = safeArray(cache.comite).length;
+        if (badges.conseil) badges.conseil.textContent = safeArray(cache.conseil).length;
+        if (badges.users) badges.users.textContent = safeArray(cache.users).length;
+    }
+
+    // ============================================================
+    // ACTUALITÉS
+    // ============================================================
     async function renderActualites() {
         try {
             const response = await fetch(`${API_BASE}/data.php?module=actualites`, { cache: 'no-store' });
@@ -345,154 +1678,344 @@
             showToast('Erreur chargement actualités', 'error');
         }
         
-        const totalPages = Math.max(1, Math.ceil(cache.actualites.length / itemsPerPage));
+        const actualites = safeArray(cache.actualites);
+        updateBadges();
+        const totalPages = Math.max(1, Math.ceil(actualites.length / itemsPerPage));
         currentPageActualites = Math.min(currentPageActualites, totalPages);
         const start = (currentPageActualites - 1) * itemsPerPage;
-        const paginated = cache.actualites.slice(start, start + itemsPerPage);
+        const paginated = actualites.slice(start, start + itemsPerPage);
 
         document.getElementById('contentArea').innerHTML = `
             <div class="content-card">
                 <div class="card-header-custom">
-                    <h3><i class="fas fa-newspaper"></i> Actualités <span class="badge badge-primary">${cache.actualites.length}</span></h3>
-                    <button class="btn-add" onclick="openModal('actualite')"><i class="fas fa-plus"></i> Ajouter</button>
+                    <h3><i class="fas fa-newspaper"></i> Actualités <span class="badge badge-primary">${actualites.length}</span></h3>
+                    <div class="card-actions">
+                        <button class="btn-add" onclick="openModal('actualite')"><i class="fas fa-plus"></i> Ajouter</button>
+                    </div>
                 </div>
                 <div class="search-box"><i class="fas fa-search"></i><input type="text" class="form-control" id="searchActualites" placeholder="Rechercher une actualité..."></div>
-                <div class="data-table"><table><thead><tr><th>Titre</th><th>Date</th><th>Catégorie</th><th>Likes</th><th>Actions</th></tr></thead><tbody id="actualitesTableBody">
-                    ${paginated.map(a => `<tr><td>${shortText(a.titre)}</td><td>${escapeHtml(a.date)}</td><td>${escapeHtml(a.categorie)}</td><td>${a.likes || 0}</td><td><button class="btn-edit" onclick="openModal('actualite', ${a.id})"><i class="fas fa-edit"></i></button><button class="btn-delete" onclick="deleteItem('actualite', ${a.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('') || '<tr><td colspan="5">Aucune actualité</td></tr>'}
-                </tbody></table></div>
-                <div class="mt-3">${renderPagination('actualites', currentPageActualites, totalPages)}</div>
+                <div class="table-wrapper-scroll">
+                    <table>
+                        <thead><tr><th>Titre</th><th>Date</th><th>Catégorie</th><th>Likes</th><th>Actions</th></tr></thead>
+                        <tbody id="actualitesTableBody">
+                            ${paginated.map(a => `<tr><td>${shortText(a.titre)}</td><td>${escapeHtml(a.date || '')}</td><td>${escapeHtml(a.categorie || '')}</td><td>${a.likes || 0}</td><td><button class="btn-edit" onclick="openModal('actualite', ${a.id})"><i class="fas fa-edit"></i></button><button class="btn-delete" onclick="deleteItem('actualite', ${a.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('') || '<tr><td colspan="5">Aucune actualité</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-wrapper">${renderPagination('actualites', currentPageActualites, totalPages)}</div>
             </div>`;
 
-        document.getElementById('searchActualites').addEventListener('input', function() {
+        document.getElementById('searchActualites')?.addEventListener('input', function() {
             const q = this.value.toLowerCase();
             document.querySelectorAll('#actualitesTableBody tr').forEach(row => row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none');
         });
     }
 
+    // ============================================================
+    // DEMANDES
+    // ============================================================
     async function renderDemandes() {
-        cache.demandes = await api(`${API_BASE}/data.php?module=demandes`);
-        const totalPages = Math.max(1, Math.ceil(cache.demandes.length / itemsPerPage));
+        try {
+            cache.demandes = await api(`${API_BASE}/data.php?module=demandes`);
+        } catch (error) {
+            cache.demandes = [];
+        }
+        const demandes = safeArray(cache.demandes);
+        updateBadges();
+        const totalPages = Math.max(1, Math.ceil(demandes.length / itemsPerPage));
         currentPageDemandes = Math.min(currentPageDemandes, totalPages);
         const start = (currentPageDemandes - 1) * itemsPerPage;
-        const paginated = cache.demandes.slice(start, start + itemsPerPage);
+        const paginated = demandes.slice(start, start + itemsPerPage);
 
         document.getElementById('contentArea').innerHTML = `
             <div class="content-card">
                 <div class="card-header-custom">
-                    <h3><i class="fas fa-file-signature"></i> Demandes de transport <span class="badge badge-primary">${cache.demandes.length}</span></h3>
-                    <button class="btn-add" onclick="openModal('demande')"><i class="fas fa-plus"></i> Ajouter</button>
+                    <h3><i class="fas fa-file-signature"></i> Demandes de transport <span class="badge badge-primary">${demandes.length}</span></h3>
+                    <div class="card-actions">
+                        <button class="btn-add" onclick="openModal('demande')"><i class="fas fa-plus"></i> Ajouter</button>
+                    </div>
                 </div>
-                <div class="data-table"><table><thead><tr><th>Marchandises</th><th>Origine</th><th>Destination</th><th>Date</th><th>Demandeur</th><th>Actions</th></tr></thead><tbody>
-                    ${paginated.map(d => `<tr><td>${shortText(d.marchandises)}</td><td>${escapeHtml(d.origine)}</td><td>${escapeHtml(d.destination)}</td><td>${escapeHtml(d.date)}</td><td>${escapeHtml(d.nom)}</td><td><button class="btn-edit" onclick="openModal('demande', ${d.id})"><i class="fas fa-edit"></i></button><button class="btn-delete" onclick="deleteItem('demande', ${d.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('') || '<tr><td colspan="6">Aucune demande</td></tr>'}
-                </tbody></table></div>
-                <div class="mt-3">${renderPagination('demandes', currentPageDemandes, totalPages)}</div>
+                <div class="table-wrapper-scroll">
+                    <table>
+                        <thead><tr><th>Marchandises</th><th>Origine</th><th>Destination</th><th>Date</th><th>Demandeur</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            ${paginated.map(d => `<tr><td>${shortText(d.marchandises)}</td><td>${escapeHtml(d.origine || '')}</td><td>${escapeHtml(d.destination || '')}</td><td>${escapeHtml(d.date || '')}</td><td>${escapeHtml(d.nom || '')}</td><td><button class="btn-edit" onclick="openModal('demande', ${d.id})"><i class="fas fa-edit"></i></button><button class="btn-delete" onclick="deleteItem('demande', ${d.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('') || '<tr><td colspan="6">Aucune demande</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-wrapper">${renderPagination('demandes', currentPageDemandes, totalPages)}</div>
             </div>`;
     }
 
+    // ============================================================
+    // OFFRES
+    // ============================================================
     async function renderOffres() {
-        cache.offres = await api(`${API_BASE}/data.php?module=offres`);
-        const totalPages = Math.max(1, Math.ceil(cache.offres.length / itemsPerPage));
+        try {
+            cache.offres = await api(`${API_BASE}/data.php?module=offres`);
+        } catch (error) {
+            cache.offres = [];
+        }
+        const offres = safeArray(cache.offres);
+        updateBadges();
+        const totalPages = Math.max(1, Math.ceil(offres.length / itemsPerPage));
         currentPageOffres = Math.min(currentPageOffres, totalPages);
         const start = (currentPageOffres - 1) * itemsPerPage;
-        const paginated = cache.offres.slice(start, start + itemsPerPage);
+        const paginated = offres.slice(start, start + itemsPerPage);
 
         document.getElementById('contentArea').innerHTML = `
             <div class="content-card">
                 <div class="card-header-custom">
-                    <h3><i class="fas fa-tags"></i> Offres de transport <span class="badge badge-primary">${cache.offres.length}</span></h3>
-                    <button class="btn-add" onclick="openModal('offre')"><i class="fas fa-plus"></i> Ajouter</button>
+                    <h3><i class="fas fa-tags"></i> Offres de transport <span class="badge badge-primary">${offres.length}</span></h3>
+                    <div class="card-actions">
+                        <button class="btn-add" onclick="openModal('offre')"><i class="fas fa-plus"></i> Ajouter</button>
+                    </div>
                 </div>
-                <div class="data-table"><table><thead><tr><th>Titre</th><th>Type</th><th>Trajet</th><th>Tarif</th><th>Actions</th></tr></thead><tbody>
-                    ${paginated.map(o => `<tr><td>${shortText(o.titre)}</td><td>${escapeHtml(o.type)}</td><td>${escapeHtml(o.origine)} → ${escapeHtml(o.destination)}</td><td>${escapeHtml(o.tarif || '-')}</td><td><button class="btn-edit" onclick="openModal('offre', ${o.id})"><i class="fas fa-edit"></i></button><button class="btn-delete" onclick="deleteItem('offre', ${o.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('') || '<tr><td colspan="5">Aucune offre</td></tr>'}
-                </tbody></table></div>
-                <div class="mt-3">${renderPagination('offres', currentPageOffres, totalPages)}</div>
+                <div class="table-wrapper-scroll">
+                    <table>
+                        <thead><tr><th>Titre</th><th>Type</th><th>Trajet</th><th>Tarif</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            ${paginated.map(o => `<tr><td>${shortText(o.titre)}</td><td>${escapeHtml(o.type || '')}</td><td>${escapeHtml(o.origine || '')} → ${escapeHtml(o.destination || '')}</td><td>${escapeHtml(o.tarif || '-')}</td><td><button class="btn-edit" onclick="openModal('offre', ${o.id})"><i class="fas fa-edit"></i></button><button class="btn-delete" onclick="deleteItem('offre', ${o.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('') || '<tr><td colspan="5">Aucune offre</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-wrapper">${renderPagination('offres', currentPageOffres, totalPages)}</div>
             </div>`;
     }
 
+    // ============================================================
+    // COMITÉ DE GESTION - AVEC IMAGES BLOB SANS FALLBACK
+    // ============================================================
     async function renderComite() {
-        cache.comite = await api(`${API_BASE}/data.php?module=comite`);
-        const membresFiltres = cache.comite.filter(m => 
-            m.titre === 'Directeur Général' || 
-            m.titre === 'Directeur Général Adjoint'
-        );
+        try {
+            const response = await fetch(`${API_BASE}/data.php?module=comite`, { cache: 'no-store' });
+            if (!response.ok) throw new Error('Erreur chargement comité');
+            cache.comite = await response.json();
+        } catch (error) {
+            cache.comite = [];
+        }
+        const comite = safeArray(cache.comite);
+        updateBadges();
+
+        document.getElementById('contentArea').innerHTML = `
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <h3><i class="fas fa-users"></i> Comité de Gestion <span class="badge badge-primary">${comite.length}</span></h3>
+                    <div class="card-actions">
+                        <button class="btn-add" onclick="openModal('comite')"><i class="fas fa-plus"></i> Ajouter</button>
+                    </div>
+                </div>
+                <div class="leader-card-grid">
+                    ${comite.map(m => {
+                        const hasPhoto = m.has_photo === true || m.has_photo === 1;
+                        const photoUrl = hasPhoto ? m.photo_url : null;
+                        
+                        return `
+                            <div class="leader-card-item">
+                                ${hasPhoto && photoUrl ? `
+                                    <img src="${photoUrl}" class="leader-image" alt="${escapeHtml(m.nom)}">
+                                ` : `
+                                    <div class="leader-image" style="background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.6);font-size:3rem;font-weight:bold;">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                `}
+                                <div class="leader-body">
+                                    <h5>${escapeHtml(m.nom || '')}</h5>
+                                    <div class="leader-title">${escapeHtml(m.titre || '')}</div>
+                                    ${m.message ? `<div class="leader-message">"${escapeHtml(m.message)}"</div>` : ''}
+                                    <div class="leader-actions">
+                                        <button class="btn-edit" onclick="openModal('comite', ${m.id})"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-delete" onclick="deleteItem('comite', ${m.id})"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </div>
+                            </div>`;
+                    }).join('') || '<div class="col-12"><p>Aucun membre enregistré.</p></div>'}
+                </div>
+            </div>`;
+    }
+
+    // ============================================================
+    // CONSEIL D'ADMINISTRATION - AVEC IMAGES BLOB SANS FALLBACK
+    // ============================================================
+    async function renderConseil() {
+        try {
+            const response = await fetch(`${API_BASE}/data.php?module=conseil`, { cache: 'no-store' });
+            if (!response.ok) throw new Error('Erreur chargement conseil');
+            cache.conseil = await response.json();
+        } catch (error) {
+            cache.conseil = [];
+        }
+        const conseil = safeArray(cache.conseil);
+        updateBadges();
+
+        document.getElementById('contentArea').innerHTML = `
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <h3><i class="fas fa-user-tie"></i> Conseil d'Administration <span class="badge badge-primary">${conseil.length}</span></h3>
+                    <div class="card-actions">
+                        <button class="btn-add" onclick="openModal('conseil')"><i class="fas fa-plus"></i> Ajouter</button>
+                    </div>
+                </div>
+                <div class="leader-card-grid">
+                    ${conseil.map(m => {
+                        const hasPhoto = m.has_photo === true || m.has_photo === 1;
+                        const photoUrl = hasPhoto ? m.photo_url : null;
+                        
+                        return `
+                            <div class="leader-card-item">
+                                ${hasPhoto && photoUrl ? `
+                                    <img src="${photoUrl}" class="leader-image" alt="${escapeHtml(m.nom)}">
+                                ` : `
+                                    <div class="leader-image" style="background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.6);font-size:3rem;font-weight:bold;">
+                                        <i class="fas fa-user-tie"></i>
+                                    </div>
+                                `}
+                                <div class="leader-body">
+                                    <h5>${escapeHtml(m.nom || '')}</h5>
+                                    <div class="leader-title">${escapeHtml(m.titre || '')}</div>
+                                    ${m.message ? `<div class="leader-message">"${escapeHtml(m.message)}"</div>` : ''}
+                                    <div class="leader-actions">
+                                        <button class="btn-edit" onclick="openModal('conseil', ${m.id})"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-delete" onclick="deleteItem('conseil', ${m.id})"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </div>
+                            </div>`;
+                    }).join('') || '<div class="col-12"><p>Aucun membre enregistré.</p></div>'}
+                </div>
+            </div>`;
+    }
+
+    // ============================================================
+    // MINISTRE DES TRANSPORTS - RÉSERVÉ SUPER ADMIN
+    // ============================================================
+    async function renderMinistre() {
+        try {
+            const response = await fetch(`${API_BASE}/data.php?module=ministre`, { cache: 'no-store' });
+            if (!response.ok) throw new Error('Erreur chargement ministre');
+            const ministre = await response.json();
+            cache.ministre = ministre;
+            
+            const hasPhoto = ministre.has_photo === true || ministre.has_photo === 1;
+            const photoUrl = hasPhoto ? ministre.photo_url : null;
+            
+            document.getElementById('contentArea').innerHTML = `
+                <div class="content-card">
+                    <div class="card-header-custom">
+                        <h3><i class="fas fa-user-secret"></i> Ministre des Transports</h3>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="openModal('ministre', ${ministre.id})"><i class="fas fa-edit"></i> Modifier</button>
+                        </div>
+                    </div>
+                    <div class="ministre-card">
+                        <div class="ministre-photo">
+                            ${hasPhoto && photoUrl ? `
+                                <img src="${photoUrl}" alt="${escapeHtml(ministre.nom)}">
+                            ` : `
+                                <div class="no-photo">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                            `}
+                            <p class="text-muted mt-2">${hasPhoto ? '✅ Photo présente' : '❌ Aucune photo'}</p>
+                        </div>
+                        <div class="ministre-infos">
+                            <table>
+                                <tr><td>Nom</td><td><strong>${escapeHtml(ministre.nom)}</strong></td></tr>
+                                <tr><td>Titre</td><td>${escapeHtml(ministre.titre)}</td></tr>
+                                <tr><td>Message</td><td>${escapeHtml(ministre.message || '')}</td></tr>
+                                <tr><td>Photo</td><td>${hasPhoto ? '✅ Oui' : '❌ Non'}</td></tr>
+                                <tr><td>Dernière mise à jour</td><td>${ministre.updated_at || 'N/A'}</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } catch (error) {
+            console.error('Erreur chargement ministre:', error);
+            document.getElementById('contentArea').innerHTML = `
+                <div class="content-card">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i> Erreur de chargement du Ministre.
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    // ============================================================
+    // UTILISATEURS
+    // ============================================================
+    async function renderUsers() {
+        try {
+            const result = await api(`${API_BASE}/users.php`);
+            cache.users = result.users || [];
+        } catch (error) {
+            cache.users = [];
+        }
+        const users = safeArray(cache.users);
+        updateBadges();
         
         document.getElementById('contentArea').innerHTML = `
             <div class="content-card">
                 <div class="card-header-custom">
-                    <h3><i class="fas fa-users"></i> Comité de Gestion <span class="badge badge-primary">${membresFiltres.length}</span></h3>
-                    <button class="btn-add" onclick="openModal('comite')"><i class="fas fa-plus"></i> Ajouter</button>
-                </div>
-                <div class="row">
-                    ${membresFiltres.map(m => `
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100">
-                                <img src="../${escapeHtml(m.photo)}" class="card-img-top" style="height:260px; object-fit:cover;" onerror="this.src='https://placehold.co/400x300/003399/white?text=Photo'">
-                                <div class="card-body">
-                                    <h5>${escapeHtml(m.nom)}</h5>
-                                    <p class="text-muted">${escapeHtml(m.titre)}</p>
-                                    ${m.message ? `<p class="small text-muted">"${escapeHtml(m.message)}"</p>` : ''}
-                                    <button class="btn-edit" onclick="openModal('comite', ${m.id})"><i class="fas fa-edit"></i> Modifier</button>
-                                    <button class="btn-delete" onclick="deleteItem('comite', ${m.id})"><i class="fas fa-trash"></i></button>
-                                </div>
-                            </div>
-                        </div>`).join('') || '<p>Aucun membre enregistré.</p>'}
-                </div>
-            </div>`;
-    }
-
-    async function renderConseil() {
-        cache.conseil = await api(`${API_BASE}/data.php?module=conseil`);
-        document.getElementById('contentArea').innerHTML = `
-            <div class="content-card">
-                <div class="card-header-custom">
-                    <h3><i class="fas fa-user-tie"></i> Conseil d'Administration <span class="badge badge-primary">${cache.conseil.length}</span></h3>
-                    <button class="btn-add" onclick="openModal('conseil')"><i class="fas fa-plus"></i> Ajouter</button>
-                </div>
-                <div class="row">
-                    ${cache.conseil.map(m => `
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100">
-                                <img src="../${escapeHtml(m.photo)}" class="card-img-top" style="height:260px; object-fit:cover;" onerror="this.src='https://placehold.co/400x300/003399/white?text=Photo'">
-                                <div class="card-body">
-                                    <h5>${escapeHtml(m.nom)}</h5>
-                                    <p class="text-muted">${escapeHtml(m.titre)}</p>
-                                    ${m.message ? `<p class="small text-muted">"${escapeHtml(m.message)}"</p>` : ''}
-                                    <button class="btn-edit" onclick="openModal('conseil', ${m.id})"><i class="fas fa-edit"></i> Modifier</button>
-                                    <button class="btn-delete" onclick="deleteItem('conseil', ${m.id})"><i class="fas fa-trash"></i></button>
-                                </div>
-                            </div>
-                        </div>`).join('') || '<p>Aucun membre enregistré.</p>'}
-                </div>
-            </div>`;
-    }
-
-    async function renderUsers() {
-        const result = await api(`${API_BASE}/users.php`);
-        cache.users = result.users || [];
-        document.getElementById('contentArea').innerHTML = `
-            <div class="content-card">
-                <div class="card-header-custom">
                     <h3><i class="fas fa-user-shield"></i> Utilisateurs</h3>
-                    <button class="btn-add" onclick="openModal('user')"><i class="fas fa-plus"></i> Créer un utilisateur</button>
+                    <div class="card-actions">
+                        <button class="btn-add" onclick="openModal('user')"><i class="fas fa-plus"></i> Créer un utilisateur</button>
+                    </div>
                 </div>
-                <div class="data-table"><table><thead><tr><th>Nom</th><th>Identifiant</th><th>Rôle</th><th>Statut</th><th>Créé le</th><th>Actions</th></tr></thead><tbody>
-                    ${cache.users.map(u => `<tr><td>${escapeHtml(u.nom)}</td><td>${escapeHtml(u.username)}</td><td><span class="badge ${u.role === 'SUPER_ADMIN' ? 'badge-warning' : 'badge-primary'}">${escapeHtml(u.role)}</span></td><td>${Number(u.actif) === 1 ? '<span class="badge badge-success">Actif</span>' : '<span class="badge badge-warning">Désactivé</span>'}</td><td>${escapeHtml(u.created_at || '')}</td><td>${Number(u.actif) === 1 && Number(u.id) !== Number(currentUser.id) ? `<button class="btn-delete" onclick="disableUser(${u.id})"><i class="fas fa-ban"></i></button>` : '-'}</td></tr>`).join('')}
-                </tbody></table></div>
+                <div class="table-wrapper-scroll">
+                    <table>
+                        <thead><tr><th>Nom</th><th>Identifiant</th><th>Rôle</th><th>Statut</th><th>Créé le</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            ${users.map(u => `
+                                <tr>
+                                    <td>${escapeHtml(u.nom || '')}</td>
+                                    <td>${escapeHtml(u.username || '')}</td>
+                                    <td><span class="badge ${u.role === 'SUPER_ADMIN' ? 'badge-warning' : 'badge-primary'}">${escapeHtml(u.role || '')}</span></td>
+                                    <td>${Number(u.actif) === 1 ? '<span class="badge badge-success">Actif</span>' : '<span class="badge badge-secondary">Désactivé</span>'}</td>
+                                    <td>${escapeHtml(u.created_at || '')}</td>
+                                    <td>
+                                        ${Number(u.id) !== Number(currentUser.id) ? `
+                                            <button class="btn-reset-password" onclick="resetUserPassword(${u.id})" title="Réinitialiser le mot de passe"><i class="fas fa-sync"></i></button>
+                                        ` : ''}
+                                        ${Number(u.actif) === 1 && Number(u.id) !== Number(currentUser.id) ? `<button class="btn-delete" onclick="disableUser(${u.id})"><i class="fas fa-ban"></i></button>` : ''}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
             </div>`;
     }
 
+    // ============================================================
+    // LOGS
+    // ============================================================
     async function renderLogs() {
-        const result = await api(`${API_BASE}/logs.php`);
-        cache.logs = result.logs || [];
+        try {
+            const result = await api(`${API_BASE}/logs.php`);
+            cache.logs = result.logs || [];
+        } catch (error) {
+            cache.logs = [];
+        }
+        const logs = safeArray(cache.logs);
+        
         document.getElementById('contentArea').innerHTML = `
             <div class="content-card">
                 <div class="card-header-custom"><h3><i class="fas fa-history"></i> Logs des actions</h3></div>
-                <div class="data-table"><table><thead><tr><th>Date</th><th>Utilisateur</th><th>Action</th><th>Module</th><th>ID</th><th>Détails</th><th>IP</th></tr></thead><tbody>
-                    ${cache.logs.map(l => `<tr><td>${escapeHtml(l.created_at)}</td><td>${escapeHtml(l.nom || l.username || 'Système')}</td><td>${escapeHtml(l.action)}</td><td>${escapeHtml(l.module)}</td><td>${escapeHtml(l.item_id || '')}</td><td>${shortText(l.details || '', 80)}</td><td>${escapeHtml(l.ip_address || '')}</td></tr>`).join('') || '<tr><td colspan="7">Aucun log.</td></tr>'}
-                </tbody></table></div>
+                <div class="table-wrapper-scroll">
+                    <table>
+                        <thead><tr><th>Date</th><th>Utilisateur</th><th>Action</th><th>Module</th><th>ID</th><th>Détails</th><th>IP</th></tr></thead>
+                        <tbody>
+                            ${logs.map(l => `<tr><td>${escapeHtml(l.created_at || '')}</td><td>${escapeHtml(l.nom || l.username || 'Système')}</td><td>${escapeHtml(l.action || '')}</td><td>${escapeHtml(l.module || '')}</td><td>${escapeHtml(l.item_id || '')}</td><td>${shortText(l.details || '', 80)}</td><td>${escapeHtml(l.ip_address || '')}</td></tr>`).join('') || '<tr><td colspan="7">Aucun log.</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
             </div>`;
     }
 
+    // ============================================================
+    // PAGINATION
+    // ============================================================
     function renderPagination(type, currentPage, totalPages) {
         if (totalPages <= 1) return '';
         let html = `<button class="page-link-btn" onclick="changePage('${type}', ${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Précédent</button>`;
@@ -510,11 +2033,11 @@
     }
 
     function getModuleFromType(type) {
-        return { actualite: 'actualites', demande: 'demandes', offre: 'offres', comite: 'comite', conseil: 'conseil' }[type];
+        return { actualite: 'actualites', demande: 'demandes', offre: 'offres', comite: 'comite', conseil: 'conseil', ministre: 'ministre' }[type];
     }
 
     function getSectionFromType(type) {
-        return { actualite: 'actualites', demande: 'demandes', offre: 'offres', comite: 'comite', conseil: 'conseil', user: 'users' }[type];
+        return { actualite: 'actualites', demande: 'demandes', offre: 'offres', comite: 'comite', conseil: 'conseil', ministre: 'ministre', user: 'users' }[type];
     }
 
     async function deleteItem(type, id) {
@@ -540,43 +2063,206 @@
         }
     }
 
+    async function resetUserPassword(userId) {
+        if (!confirm('Réinitialiser le mot de passe de cet utilisateur ? Un mot de passe temporaire sera généré.')) return;
+        try {
+            const result = await api(`${API_BASE}/users.php?action=reset_password`, {
+                method: 'POST',
+                body: JSON.stringify({ id: userId })
+            });
+            if (result.success) {
+                showToast(`Mot de passe réinitialisé. Nouveau mot de passe : ${result.new_password}`, 'success');
+                await renderUsers();
+            } else {
+                showToast(result.message || 'Erreur lors de la réinitialisation', 'error');
+            }
+        } catch (error) {
+            showToast(error.message, 'error');
+        }
+    }
+
+    // ============================================================
+    // CHANGEMENT DE MOT DE PASSE (avec œil)
+    // ============================================================
+    function openChangePasswordModal() {
+        document.getElementById('dynamicModal')?.remove();
+        document.body.insertAdjacentHTML('beforeend', `
+            <div class="modal-custom active" id="dynamicModal">
+                <div class="modal-content-custom">
+                    <div class="modal-header-custom">
+                        <h3><i class="fas fa-key"></i> Changer mon mot de passe</h3>
+                        <button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                    </div>
+                    <form id="changePasswordForm">
+                        <div class="form-group">
+                            <label>Identifiant actuel</label>
+                            <input type="text" id="currentUsername" class="form-control" value="${escapeHtml(currentUser.username)}" readonly style="background:#f0f0f0;cursor:not-allowed;">
+                        </div>
+                        <div class="form-group">
+                            <label>Nouvel identifiant</label>
+                            <input type="text" id="newUsername" class="form-control" value="${escapeHtml(currentUser.username)}" placeholder="Nouvel identifiant">
+                        </div>
+                        <div class="form-group">
+                            <label>Mot de passe actuel <span class="required">*</span></label>
+                            <div class="password-wrapper" id="changePwdCurrentWrapper">
+                                <input type="password" id="currentPassword" class="form-control" placeholder="Mot de passe actuel" required>
+                                <button type="button" class="password-toggle" onclick="togglePasswordVisibility('currentPassword', 'changePwdCurrentWrapper')" aria-label="Afficher/masquer le mot de passe">
+                                    <i class="fas fa-eye"></i>
+                                    <i class="fas fa-eye-slash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Nouveau mot de passe</label>
+                            <div class="password-wrapper" id="changePwdNewWrapper">
+                                <input type="password" id="newPassword" class="form-control" placeholder="Nouveau mot de passe (laisser vide pour ne pas changer)">
+                                <button type="button" class="password-toggle" onclick="togglePasswordVisibility('newPassword', 'changePwdNewWrapper')" aria-label="Afficher/masquer le mot de passe">
+                                    <i class="fas fa-eye"></i>
+                                    <i class="fas fa-eye-slash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirmer le nouveau mot de passe</label>
+                            <div class="password-wrapper" id="changePwdConfirmWrapper">
+                                <input type="password" id="confirmPassword" class="form-control" placeholder="Confirmer le nouveau mot de passe">
+                                <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmPassword', 'changePwdConfirmWrapper')" aria-label="Afficher/masquer le mot de passe">
+                                    <i class="fas fa-eye"></i>
+                                    <i class="fas fa-eye-slash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;">
+                            <i class="fas fa-save"></i> Mettre à jour
+                        </button>
+                    </form>
+                </div>
+            </div>
+        `);
+        
+        document.getElementById('changePasswordForm').addEventListener('submit', changePassword);
+        setTimeout(initPasswordToggles, 100);
+    }
+
+    async function changePassword(e) {
+        e.preventDefault();
+        const newUsername = document.getElementById('newUsername').value.trim();
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        if (!currentPassword) {
+            showToast('Veuillez entrer votre mot de passe actuel', 'error');
+            return;
+        }
+        if (newPassword && newPassword !== confirmPassword) {
+            showToast('Les mots de passe ne correspondent pas', 'error');
+            return;
+        }
+        if (!newUsername) {
+            showToast('L\'identifiant ne peut pas être vide', 'error');
+            return;
+        }
+        if (newPassword && newPassword.length < 4) {
+            showToast('Le nouveau mot de passe doit contenir au moins 4 caractères', 'error');
+            return;
+        }
+        
+        try {
+            const result = await api(`${API_BASE}/users.php?action=change_password`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    username: currentUser.username,
+                    new_username: newUsername,
+                    current_password: currentPassword,
+                    new_password: newPassword || null
+                })
+            });
+            if (result.success) {
+                showToast('Identifiant et/ou mot de passe mis à jour avec succès !', 'success');
+                closeModal();
+                currentUser.username = newUsername;
+                const userLabel = document.getElementById('currentUserLabel');
+                const isSuperAdmin = currentUser.role === 'SUPER_ADMIN';
+                userLabel.innerHTML = `<strong>${escapeHtml(currentUser.nom)}</strong> <span class="role-badge">${isSuperAdmin ? 'SUPER ADMIN' : 'ADMIN'}</span>`;
+                if (newUsername !== currentUser.username || newPassword) {
+                    setTimeout(() => {
+                        if (confirm('Vos identifiants ont été modifiés. Vous allez être déconnecté pour utiliser les nouveaux.')) {
+                            logout();
+                        }
+                    }, 1500);
+                }
+            } else {
+                showToast(result.message || 'Erreur lors de la mise à jour', 'error');
+            }
+        } catch (error) {
+            showToast(error.message, 'error');
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('dynamicModal')?.remove();
+    }
+
+    // ============================================================
+    // OPEN MODAL
+    // ============================================================
     async function openModal(type, id = null) {
         let item = null;
         if (id) {
             const module = getModuleFromType(type);
             if (module) {
-                if (!cache[module]?.length) cache[module] = await api(`${API_BASE}/data.php?module=${module}`);
-                item = cache[module].find(x => Number(x.id) === Number(id));
+                if (module === 'ministre') {
+                    // Pour le ministre, on le charge directement
+                    try {
+                        const response = await fetch(`${API_BASE}/data.php?module=ministre`, { cache: 'no-store' });
+                        if (response.ok) {
+                            cache.ministre = await response.json();
+                        }
+                    } catch (e) {}
+                    item = cache.ministre;
+                } else {
+                    if (!cache[module]?.length) {
+                        try {
+                            cache[module] = await api(`${API_BASE}/data.php?module=${module}`);
+                        } catch (error) {
+                            cache[module] = [];
+                        }
+                    }
+                    const data = safeArray(cache[module]);
+                    item = data.find(x => Number(x.id) === Number(id));
+                }
             }
         }
 
         let modalHtml = '';
 
+        // ACTUALITÉ
         if (type === 'actualite') {
             modalHtml = `
             <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
-                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} une actualité</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-                <form id="modalForm">
+                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} une actualité</h3><button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+                <form id="modalForm" enctype="multipart/form-data">
                     <input type="hidden" id="itemId" value="${id || ''}">
-                    <div class="form-group"><label><i class="fas fa-heading"></i> Titre *</label><input type="text" id="titre" class="form-control" value="${escapeHtml(item?.titre || '')}" required placeholder="Titre de l'actualité"></div>
-                    <div class="form-group"><label><i class="fas fa-calendar"></i> Date *</label><input type="date" id="date" class="form-control" value="${escapeHtml(item?.date || new Date().toISOString().split('T')[0])}" required></div>
-                    <div class="form-group"><label><i class="fas fa-tag"></i> Catégorie *</label>
+                    <div class="form-group"><label><i class="fas fa-heading"></i> Titre <span class="required">*</span></label><input type="text" id="titre" class="form-control" value="${escapeHtml(item?.titre || '')}" required placeholder="Titre de l'actualité"></div>
+                    <div class="form-group"><label><i class="fas fa-calendar"></i> Date <span class="required">*</span></label><input type="date" id="date" class="form-control" value="${escapeHtml(item?.date || new Date().toISOString().split('T')[0])}" required></div>
+                    <div class="form-group"><label><i class="fas fa-tag"></i> Catégorie <span class="required">*</span></label>
                         <select id="categorie" class="form-select" required>
                             <option value="">Sélectionner une catégorie</option>
-                            ${['evenement','communique','projet','partenariat','avis'].map(c => `<option value="${c}" ${item?.categorie === c ? 'selected' : ''}>${c.charAt(0).toUpperCase() + c.slice(1)}</option>`).join('')}
+                            ${['evenement','communique','projet','partenariat','avis'].map(c => `<option value="${c}" ${item?.categorie === c ? 'selected' : ''}>${c === 'evenement' ? 'Actualité' : c.charAt(0).toUpperCase() + c.slice(1)}</option>`).join('')}
                         </select>
                     </div>
-                    <div class="form-group"><label><i class="fas fa-align-left"></i> Description *</label><textarea id="description" class="form-control" rows="7" required placeholder="Contenu détaillé de l'actualité...">${escapeHtml(item?.description || '')}</textarea></div>
+                    <div class="form-group"><label><i class="fas fa-align-left"></i> Description <span class="required">*</span></label><textarea id="description" class="form-control" rows="6" required placeholder="Contenu détaillé de l'actualité...">${escapeHtml(item?.description || '')}</textarea></div>
                     <div class="form-group">
                         <label><i class="fas fa-images"></i> Images</label>
                         <input type="file" id="images" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif" multiple ${id ? '' : 'required'}>
-                        <small class="text-muted">Formats : JPG, PNG, WEBP ou GIF. Maximum 10 Mo par image. ${id ? 'Laissez vide pour conserver les images existantes.' : 'Sélectionnez au moins une image.'}</small>
+                        <div class="form-text">Formats : JPG, PNG, WEBP ou GIF. Maximum 10 Mo par image. ${id ? 'Laissez vide pour conserver les images existantes.' : 'Sélectionnez au moins une image.'}</div>
                     </div>
                     ${id && item?.images?.length ? `
                         <div class="form-group">
                             <label>Images actuelles</label>
                             <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
-                                ${item.images.map(img => `<img src="../${escapeHtml(img.url)}" alt="" style="width:90px;height:70px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">`).join('')}
+                                ${item.images.map(img => `<img src="../${escapeHtml(img.url)}" alt="" style="width:80px;height:60px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">`).join('')}
                             </div>
                             <label style="display:flex;gap:8px;align-items:center;margin-top:10px;cursor:pointer;">
                                 <input type="checkbox" id="replaceImages"> <span style="font-weight:normal;">Remplacer toutes les images existantes</span>
@@ -586,79 +2272,94 @@
                     <div class="form-group"><label><i class="fab fa-instagram"></i> Instagram URL</label><input type="url" id="instagramUrl" class="form-control" value="${escapeHtml(item?.instagramUrl || '')}" placeholder="https://instagram.com/..."></div>
                     <div class="form-group"><label><i class="fab fa-twitter"></i> Twitter/X URL</label><input type="url" id="twitterUrl" class="form-control" value="${escapeHtml(item?.twitterUrl || '')}" placeholder="https://twitter.com/..."></div>
                     <div class="form-group"><label><i class="fas fa-heart"></i> Likes</label><input type="number" id="likes" class="form-control" value="${escapeHtml(item?.likes || 0)}" min="0" placeholder="Nombre de likes"></div>
-                    <button type="submit" class="btn-add" style="width:100%;padding:14px;font-size:1.1rem;">${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}</button>
+                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}</button>
                 </form>
             </div></div>`;
         }
 
+        // DEMANDE
         if (type === 'demande') {
             modalHtml = `
             <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
-                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} une demande</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} une demande</h3><button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
                 <form id="modalForm">
                     <input type="hidden" id="itemId" value="${id || ''}">
-                    <div class="form-group"><label>Marchandises *</label><input type="text" id="marchandises" class="form-control" value="${escapeHtml(item?.marchandises || '')}" required></div>
-                    <div class="form-group"><label>Origine *</label><input type="text" id="origine" class="form-control" value="${escapeHtml(item?.origine || '')}" required></div>
-                    <div class="form-group"><label>Destination *</label><input type="text" id="destination" class="form-control" value="${escapeHtml(item?.destination || '')}" required></div>
-                    <div class="form-group"><label>Date souhaitée *</label><input type="date" id="date" class="form-control" value="${escapeHtml(item?.date || '')}" required></div>
-                    <div class="form-group"><label>Nom du demandeur *</label><input type="text" id="nom" class="form-control" value="${escapeHtml(item?.nom || '')}" required></div>
+                    <div class="form-group"><label>Marchandises <span class="required">*</span></label><input type="text" id="marchandises" class="form-control" value="${escapeHtml(item?.marchandises || '')}" required></div>
+                    <div class="form-group"><label>Origine <span class="required">*</span></label><input type="text" id="origine" class="form-control" value="${escapeHtml(item?.origine || '')}" required></div>
+                    <div class="form-group"><label>Destination <span class="required">*</span></label><input type="text" id="destination" class="form-control" value="${escapeHtml(item?.destination || '')}" required></div>
+                    <div class="form-group"><label>Date souhaitée <span class="required">*</span></label><input type="date" id="date" class="form-control" value="${escapeHtml(item?.date || '')}" required></div>
+                    <div class="form-group"><label>Nom du demandeur <span class="required">*</span></label><input type="text" id="nom" class="form-control" value="${escapeHtml(item?.nom || '')}" required></div>
                     <div class="form-group"><label>Email</label><input type="email" id="email" class="form-control" value="${escapeHtml(item?.email || '')}"></div>
                     <div class="form-group"><label>Téléphone</label><input type="text" id="telephone" class="form-control" value="${escapeHtml(item?.telephone || '')}"></div>
-                    <button type="submit" class="btn-add" style="width:100%">${id ? 'Modifier' : 'Ajouter'}</button>
+                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}</button>
                 </form>
             </div></div>`;
         }
 
+        // OFFRE
         if (type === 'offre') {
             modalHtml = `
             <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
-                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} une offre</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} une offre</h3><button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
                 <form id="modalForm">
                     <input type="hidden" id="itemId" value="${id || ''}">
-                    <div class="form-group"><label>Titre *</label><input type="text" id="titre" class="form-control" value="${escapeHtml(item?.titre || '')}" required></div>
-                    <div class="form-group"><label>Type *</label><select id="type" class="form-select">
+                    <div class="form-group"><label>Titre <span class="required">*</span></label><input type="text" id="titre" class="form-control" value="${escapeHtml(item?.titre || '')}" required></div>
+                    <div class="form-group"><label>Type <span class="required">*</span></label><select id="type" class="form-select">
                         ${['Routier','Maritime','Aérien','Ferroviaire'].map(t => `<option value="${t}" ${item?.type === t ? 'selected' : ''}>${t}</option>`).join('')}
                     </select></div>
-                    <div class="form-group"><label>Origine *</label><input type="text" id="origine" class="form-control" value="${escapeHtml(item?.origine || '')}" required></div>
-                    <div class="form-group"><label>Destination *</label><input type="text" id="destination" class="form-control" value="${escapeHtml(item?.destination || '')}" required></div>
+                    <div class="form-group"><label>Origine <span class="required">*</span></label><input type="text" id="origine" class="form-control" value="${escapeHtml(item?.origine || '')}" required></div>
+                    <div class="form-group"><label>Destination <span class="required">*</span></label><input type="text" id="destination" class="form-control" value="${escapeHtml(item?.destination || '')}" required></div>
                     <div class="form-group"><label>Capacité</label><input type="text" id="capacite" class="form-control" value="${escapeHtml(item?.capacite || '')}"></div>
                     <div class="form-group"><label>Tarif</label><input type="text" id="tarif" class="form-control" value="${escapeHtml(item?.tarif || '')}"></div>
                     <div class="form-group"><label>Contact</label><input type="text" id="contact" class="form-control" value="${escapeHtml(item?.contact || '')}"></div>
                     <div class="form-group"><label>Description</label><textarea id="description" class="form-control" rows="3">${escapeHtml(item?.description || '')}</textarea></div>
-                    <button type="submit" class="btn-add" style="width:100%">${id ? 'Modifier' : 'Ajouter'}</button>
+                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}</button>
                 </form>
             </div></div>`;
         }
 
+        // COMITÉ - MODAL AVEC UPLOAD D'IMAGE (BLOB)
         if (type === 'comite') {
             modalHtml = `
             <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
-                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} un membre du Comité de Gestion</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-                <form id="modalForm">
+                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} un membre du Comité de Gestion</h3><button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+                <form id="modalForm" enctype="multipart/form-data">
                     <input type="hidden" id="itemId" value="${id || ''}">
-                    <div class="form-group"><label>Nom *</label><input type="text" id="nom" class="form-control" value="${escapeHtml(item?.nom || '')}" required></div>
-                    <div class="form-group"><label>Titre / Fonction *</label>
+                    <div class="form-group"><label>Nom <span class="required">*</span></label><input type="text" id="nom" class="form-control" value="${escapeHtml(item?.nom || '')}" required></div>
+                    <div class="form-group"><label>Titre / Fonction <span class="required">*</span></label>
                         <select id="titre" class="form-select" required>
                             <option value="">Sélectionner...</option>
                             <option value="Directeur Général" ${item?.titre === 'Directeur Général' ? 'selected' : ''}>Directeur Général</option>
                             <option value="Directeur Général Adjoint" ${item?.titre === 'Directeur Général Adjoint' ? 'selected' : ''}>Directeur Général Adjoint</option>
                         </select>
                     </div>
-                    <div class="form-group"><label>Chemin de la photo *</label><input type="text" id="photo" class="form-control" value="${escapeHtml(item?.photo || '')}" placeholder="assets/images/DG.jpeg" required></div>
+                    <div class="form-group">
+                        <label>Photo <span class="required">${!id ? '*' : ''}</span></label>
+                        <input type="file" id="photo" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif" ${!id ? 'required' : ''}>
+                        <div class="form-text">Formats : JPG, PNG, WEBP ou GIF. Maximum 10 Mo. ${id ? 'Laissez vide pour conserver l\'image existante.' : 'Sélectionnez une photo.'}</div>
+                    </div>
+                    ${id && item?.has_photo ? `
+                        <div class="form-group">
+                            <label>Photo actuelle</label>
+                            <div style="margin-top:8px;">
+                                <img src="${item.photo_url}" alt="" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:1px solid #ddd;">
+                            </div>
+                        </div>` : ''}
                     <div class="form-group"><label>Message</label><textarea id="message" class="form-control" rows="3">${escapeHtml(item?.message || '')}</textarea></div>
-                    <button type="submit" class="btn-add" style="width:100%">${id ? 'Modifier' : 'Ajouter'}</button>
+                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}</button>
                 </form>
             </div></div>`;
         }
 
+        // CONSEIL - MODAL AVEC UPLOAD D'IMAGE (BLOB)
         if (type === 'conseil') {
             modalHtml = `
             <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
-                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} un membre du Conseil d'Administration</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-                <form id="modalForm">
+                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} un membre du Conseil d'Administration</h3><button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+                <form id="modalForm" enctype="multipart/form-data">
                     <input type="hidden" id="itemId" value="${id || ''}">
-                    <div class="form-group"><label>Nom *</label><input type="text" id="nom" class="form-control" value="${escapeHtml(item?.nom || '')}" required></div>
-                    <div class="form-group"><label>Titre / Fonction *</label>
+                    <div class="form-group"><label>Nom <span class="required">*</span></label><input type="text" id="nom" class="form-control" value="${escapeHtml(item?.nom || '')}" required></div>
+                    <div class="form-group"><label>Titre / Fonction <span class="required">*</span></label>
                         <select id="titre" class="form-select" required>
                             <option value="">Sélectionner...</option>
                             <option value="Président du Conseil d'Administration" ${item?.titre === 'Président du Conseil d\'Administration' ? 'selected' : ''}>Président du Conseil d'Administration</option>
@@ -666,32 +2367,100 @@
                             <option value="Administrateur" ${item?.titre === 'Administrateur' ? 'selected' : ''}>Administrateur</option>
                         </select>
                     </div>
-                    <div class="form-group"><label>Chemin de la photo *</label><input type="text" id="photo" class="form-control" value="${escapeHtml(item?.photo || '')}" placeholder="assets/images/pca.png" required></div>
+                    <div class="form-group">
+                        <label>Photo <span class="required">${!id ? '*' : ''}</span></label>
+                        <input type="file" id="photo" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif" ${!id ? 'required' : ''}>
+                        <div class="form-text">Formats : JPG, PNG, WEBP ou GIF. Maximum 10 Mo. ${id ? 'Laissez vide pour conserver l\'image existante.' : 'Sélectionnez une photo.'}</div>
+                    </div>
+                    ${id && item?.has_photo ? `
+                        <div class="form-group">
+                            <label>Photo actuelle</label>
+                            <div style="margin-top:8px;">
+                                <img src="${item.photo_url}" alt="" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:1px solid #ddd;">
+                            </div>
+                        </div>` : ''}
                     <div class="form-group"><label>Message (optionnel)</label><textarea id="message" class="form-control" rows="3">${escapeHtml(item?.message || '')}</textarea></div>
-                    <button type="submit" class="btn-add" style="width:100%">${id ? 'Modifier' : 'Ajouter'}</button>
+                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}</button>
                 </form>
             </div></div>`;
         }
 
+        // ============================================================
+        // MINISTRE - MODAL AVEC UPLOAD D'IMAGE (BLOB) - SUPER ADMIN UNIQUEMENT
+        // ============================================================
+        if (type === 'ministre') {
+            const hasPhoto = item?.has_photo === true || item?.has_photo === 1;
+            const photoUrl = hasPhoto ? item?.photo_url : null;
+            
+            modalHtml = `
+            <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
+                <div class="modal-header-custom"><h3><i class="fas fa-user-secret"></i> Modifier le Ministre des Transports</h3><button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+                <form id="modalForm" enctype="multipart/form-data">
+                    <input type="hidden" id="itemId" value="${item?.id || 1}">
+                    <div class="form-group">
+                        <label>Nom <span class="required">*</span></label>
+                        <input type="text" id="nom" class="form-control" value="${escapeHtml(item?.nom || 'Ministre des Transports')}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Titre <span class="required">*</span></label>
+                        <input type="text" id="titre" class="form-control" value="${escapeHtml(item?.titre || 'Ministre des Transports')}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea id="message" class="form-control" rows="3">${escapeHtml(item?.message || 'Partenariat stratégique avec l\'OGEFREM')}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Photo</label>
+                        <input type="file" id="photo" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif">
+                        <div class="form-text">Formats : JPG, PNG, WEBP ou GIF. Maximum 10 Mo. Laissez vide pour conserver l'image existante.</div>
+                    </div>
+                    ${hasPhoto && photoUrl ? `
+                        <div class="form-group">
+                            <label>Photo actuelle</label>
+                            <div style="margin-top:8px;">
+                                <img src="${photoUrl}" alt="" style="width:120px;height:120px;object-fit:cover;border-radius:8px;border:1px solid #ddd;">
+                            </div>
+                        </div>` : ''}
+                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                </form>
+            </div></div>`;
+        }
+
+        // USER (avec œil sur le mot de passe)
         if (type === 'user') {
             if (currentUser.role !== 'SUPER_ADMIN') return showToast('Accès refusé', 'error');
             modalHtml = `
             <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
-                <div class="modal-header-custom"><h3>Créer un utilisateur</h3><button class="btn-delete" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+                <div class="modal-header-custom"><h3>Créer un utilisateur</h3><button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
                 <form id="modalForm">
-                    <div class="form-group"><label>Nom *</label><input type="text" id="nom" class="form-control" required></div>
-                    <div class="form-group"><label>Identifiant *</label><input type="text" id="usernameNew" class="form-control" required></div>
-                    <div class="form-group"><label>Mot de passe *</label><input type="password" id="passwordNew" class="form-control" required></div>
-                    <div class="form-group"><label>Rôle *</label><select id="role" class="form-select"><option value="ADMIN">ADMIN</option><option value="SUPER_ADMIN">SUPER_ADMIN</option></select></div>
-                    <button type="submit" class="btn-add" style="width:100%">Créer</button>
+                    <div class="form-group"><label>Nom <span class="required">*</span></label><input type="text" id="nom" class="form-control" required></div>
+                    <div class="form-group"><label>Identifiant <span class="required">*</span></label><input type="text" id="usernameNew" class="form-control" required></div>
+                    <div class="form-group">
+                        <label>Mot de passe <span class="required">*</span></label>
+                        <div class="password-wrapper" id="createUserPwdWrapper">
+                            <input type="password" id="passwordNew" class="form-control" required>
+                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('passwordNew', 'createUserPwdWrapper')" aria-label="Afficher/masquer le mot de passe">
+                                <i class="fas fa-eye"></i>
+                                <i class="fas fa-eye-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>Rôle <span class="required">*</span></label><select id="role" class="form-select"><option value="ADMIN">ADMIN</option><option value="SUPER_ADMIN">SUPER_ADMIN</option></select></div>
+                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;"><i class="fas fa-user-plus"></i> Créer</button>
                 </form>
             </div></div>`;
         }
 
         document.body.insertAdjacentHTML('beforeend', modalHtml);
         document.getElementById('modalForm').addEventListener('submit', e => saveModal(e, type, item));
+        setTimeout(initPasswordToggles, 100);
     }
 
+    // ============================================================
+    // SAVE MODAL
+    // ============================================================
     async function saveModal(e, type, oldItem) {
         e.preventDefault();
         const formId = document.getElementById('itemId')?.value || '';
@@ -700,6 +2469,7 @@
         let method = formId ? 'PUT' : 'POST';
 
         try {
+            // ACTUALITÉ
             if (type === 'actualite') {
                 const formData = new FormData();
                 if (formId) {
@@ -729,12 +2499,88 @@
                 url = `${API_BASE}/data.php?module=actualites`;
                 method = 'POST';
                 await api(url, { method, body: formData });
-                showToast('Actualité et images enregistrées dans MySQL');
+                showToast('Actualité et images enregistrées');
                 closeModal();
                 await loadSection(getSectionFromType(type));
                 return;
             }
 
+            // COMITÉ - SAVE
+            if (type === 'comite') {
+                const formData = new FormData();
+                if (formId) {
+                    formData.append('id', formId);
+                    formData.append('_method', 'PUT');
+                }
+                formData.append('nom', document.getElementById('nom').value);
+                formData.append('titre', document.getElementById('titre').value);
+                formData.append('message', document.getElementById('message').value || '');
+                
+                const photoFile = document.getElementById('photo')?.files[0];
+                if (photoFile) {
+                    formData.append('photo[]', photoFile);
+                }
+                
+                url = `${API_BASE}/data.php?module=comite`;
+                method = 'POST';
+                await api(url, { method, body: formData });
+                showToast('Membre enregistré avec succès');
+                closeModal();
+                await loadSection(getSectionFromType(type));
+                return;
+            }
+
+            // CONSEIL - SAVE
+            if (type === 'conseil') {
+                const formData = new FormData();
+                if (formId) {
+                    formData.append('id', formId);
+                    formData.append('_method', 'PUT');
+                }
+                formData.append('nom', document.getElementById('nom').value);
+                formData.append('titre', document.getElementById('titre').value);
+                formData.append('message', document.getElementById('message').value || '');
+                
+                const photoFile = document.getElementById('photo')?.files[0];
+                if (photoFile) {
+                    formData.append('photo[]', photoFile);
+                }
+                
+                url = `${API_BASE}/data.php?module=conseil`;
+                method = 'POST';
+                await api(url, { method, body: formData });
+                showToast('Membre enregistré avec succès');
+                closeModal();
+                await loadSection(getSectionFromType(type));
+                return;
+            }
+
+            // ============================================================
+            // MINISTRE - SAVE (réservé SUPER ADMIN)
+            // ============================================================
+            if (type === 'ministre') {
+                const formData = new FormData();
+                formData.append('id', document.getElementById('itemId').value || 1);
+                formData.append('_method', 'PUT');
+                formData.append('nom', document.getElementById('nom').value);
+                formData.append('titre', document.getElementById('titre').value);
+                formData.append('message', document.getElementById('message').value || '');
+                
+                const photoFile = document.getElementById('photo')?.files[0];
+                if (photoFile) {
+                    formData.append('photo[]', photoFile);
+                }
+                
+                url = `${API_BASE}/data.php?module=ministre`;
+                method = 'POST';
+                await api(url, { method, body: formData });
+                showToast('Ministre mis à jour avec succès');
+                closeModal();
+                await loadSection(getSectionFromType(type));
+                return;
+            }
+
+            // DEMANDE
             if (type === 'demande') {
                 payload = {
                     id: formId ? Number(formId) : undefined,
@@ -751,6 +2597,7 @@
                 url = `${API_BASE}/data.php?module=demandes`;
             }
 
+            // OFFRE
             if (type === 'offre') {
                 payload = {
                     id: formId ? Number(formId) : undefined,
@@ -766,28 +2613,7 @@
                 url = `${API_BASE}/data.php?module=offres`;
             }
 
-            if (type === 'comite') {
-                payload = {
-                    id: formId ? Number(formId) : undefined,
-                    nom: document.getElementById('nom').value,
-                    titre: document.getElementById('titre').value,
-                    photo: document.getElementById('photo').value,
-                    message: document.getElementById('message').value
-                };
-                url = `${API_BASE}/data.php?module=comite`;
-            }
-
-            if (type === 'conseil') {
-                payload = {
-                    id: formId ? Number(formId) : undefined,
-                    nom: document.getElementById('nom').value,
-                    titre: document.getElementById('titre').value,
-                    photo: document.getElementById('photo').value,
-                    message: document.getElementById('message').value
-                };
-                url = `${API_BASE}/data.php?module=conseil`;
-            }
-
+            // USER
             if (type === 'user') {
                 payload = {
                     nom: document.getElementById('nom').value,
@@ -804,22 +2630,30 @@
             closeModal();
             await loadSection(getSectionFromType(type));
         } catch (error) {
+            console.error('Erreur saveModal:', error);
             showToast(error.message, 'error');
         }
     }
 
-    function closeModal() {
-        document.getElementById('dynamicModal')?.remove();
-    }
-
+    // Exposer les fonctions globalement
     window.changePage = changePage;
     window.deleteItem = deleteItem;
     window.disableUser = disableUser;
+    window.resetUserPassword = resetUserPassword;
     window.openModal = openModal;
     window.closeModal = closeModal;
     window.loadSection = loadSection;
-
-    checkAuth();
+    window.openChangePasswordModal = openChangePasswordModal;
+    window.renderActualites = renderActualites;
+    window.renderDemandes = renderDemandes;
+    window.renderOffres = renderOffres;
+    window.renderComite = renderComite;
+    window.renderConseil = renderConseil;
+    window.renderMinistre = renderMinistre;
+    window.renderUsers = renderUsers;
+    window.renderLogs = renderLogs;
+    window.togglePasswordVisibility = togglePasswordVisibility;
+    window.initPasswordToggles = initPasswordToggles;
 </script>
 </body>
 </html>

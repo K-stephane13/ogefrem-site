@@ -1,9 +1,8 @@
-// assets/js/admin-data.js - VERSION SANS ACTUALITÉS PAR DÉFAUT
+// assets/js/admin-data.js - VERSION AVEC SUPPORT BLOB
 
 const AdminData = {
-    
     // ============================================================
-    // 1. ACTUALITÉS - UNIQUEMENT DEPUIS L'API
+    // ACTUALITÉS - DEPUIS L'API
     // ============================================================
     getActualites: async function() {
         try {
@@ -11,8 +10,7 @@ const AdminData = {
                 cache: 'no-store'
             });
             if (!response.ok) throw new Error('Erreur chargement actualités');
-            const data = await response.json();
-            return data;
+            return await response.json();
         } catch (error) {
             console.error('Erreur:', error);
             return [];
@@ -20,7 +18,7 @@ const AdminData = {
     },
     
     // ============================================================
-    // 2. DEMANDES DE TRANSPORT
+    // DEMANDES DE TRANSPORT
     // ============================================================
     getDemandes: function() {
         const saved = localStorage.getItem('ogefrem_demandes');
@@ -41,7 +39,7 @@ const AdminData = {
     },
     
     // ============================================================
-    // 3. OFFRES DE TRANSPORT
+    // OFFRES DE TRANSPORT
     // ============================================================
     getOffres: function() {
         const saved = localStorage.getItem('ogefrem_offres');
@@ -62,7 +60,7 @@ const AdminData = {
     },
     
     // ============================================================
-    // 4. COMITÉ DE GESTION (DG + DGA)
+    // COMITÉ DE GESTION (DG + DGA)
     // ============================================================
     getComite: function() {
         const saved = localStorage.getItem('ogefrem_comite');
@@ -77,7 +75,7 @@ const AdminData = {
     saveComite: function(data) { localStorage.setItem('ogefrem_comite', JSON.stringify(data)); },
     
     // ============================================================
-    // 5. CONSEIL D'ADMINISTRATION
+    // CONSEIL D'ADMINISTRATION
     // ============================================================
     getConseil: function() {
         const saved = localStorage.getItem('ogefrem_conseil');
@@ -85,54 +83,18 @@ const AdminData = {
             return JSON.parse(saved);
         }
         return [
-            { 
-                id: 1, 
-                nom: "Adolphe Amisi Makutano", 
-                titre: "Président du Conseil d'Administration", 
-                photo: "assets/images/PCA.png", 
-                message: "Une gouvernance transparente et efficace" 
-            },
-            { 
-                id: 0, 
-                nom: "Olivier Tshibola Mukuma", 
-                titre: "Directeur Général", 
-                photo: "assets/images/DG.jpeg", 
-                message: "Moderniser le fret congolais pour une meilleure compétitivité" 
-            },
-            { 
-                id: 2, 
-                nom: "Anny Mombunza Libotolo", 
-                titre: "Représentante de la Tutelle", 
-                photo: "assets/images/tutelle.png", 
-                message: "Accompagner l'OGEFREM dans sa mission de service public" 
-            },
-            { 
-                id: 3, 
-                nom: "Alengo Lohongo", 
-                titre: "Administrateur", 
-                photo: "assets/images/admin1.png", 
-                message: "Œuvrer pour une gouvernance exemplaire et transparente" 
-            },
-            { 
-                id: 4, 
-                nom: "Irenge Mukabene", 
-                titre: "Administrateur", 
-                photo: "assets/images/admin2.png", 
-                message: "Promouvoir l'efficacité et la modernisation des services de l'OGEFREM" 
-            },
-            { 
-                id: 5, 
-                nom: "Shafali Bihanze", 
-                titre: "Administrateur", 
-                photo: "assets/images/admin3.png", 
-                message: "Contribuer activement à la réalisation des objectifs stratégiques de l'OGEFREM" 
-            }
+            { id: 1, nom: "Adolphe Amisi Makutano", titre: "Président du Conseil d'Administration", photo: "assets/images/PCA.png", message: "Une gouvernance transparente et efficace" },
+            { id: 0, nom: "Olivier Tshibola Mukuma", titre: "Directeur Général", photo: "assets/images/DG.jpeg", message: "Moderniser le fret congolais pour une meilleure compétitivité" },
+            { id: 2, nom: "Anny Mombunza Libotolo", titre: "Représentante de la Tutelle", photo: "assets/images/tutelle.png", message: "Accompagner l'OGEFREM dans sa mission de service public" },
+            { id: 3, nom: "Alengo Lohongo", titre: "Administrateur", photo: "assets/images/admin1.png", message: "Œuvrer pour une gouvernance exemplaire et transparente" },
+            { id: 4, nom: "Irenge Mukabene", titre: "Administrateur", photo: "assets/images/admin2.png", message: "Promouvoir l'efficacité et la modernisation des services de l'OGEFREM" },
+            { id: 5, nom: "Shafali Bihanze", titre: "Administrateur", photo: "assets/images/admin3.png", message: "Contribuer activement à la réalisation des objectifs stratégiques de l'OGEFREM" }
         ];
     },
     saveConseil: function(data) { localStorage.setItem('ogefrem_conseil', JSON.stringify(data)); },
     
     // ============================================================
-    // 6. LIKES - UNIQUEMENT VIA L'API
+    // LIKES
     // ============================================================
     getLikes: async function(postId) {
         try {
@@ -158,7 +120,7 @@ const AdminData = {
     },
     
     // ============================================================
-    // 7. EXPORT / BACKUP / RESET
+    // EXPORT / BACKUP / RESET
     // ============================================================
     exportData: function() {
         const data = {

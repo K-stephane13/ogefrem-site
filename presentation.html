@@ -734,7 +734,7 @@
                 </div>
                 
                 <div class="row g-4 justify-content-center" id="conseilContainer">
-                    <!-- Chargé dynamiquement depuis admin-data.js -->
+                    <!-- Chargé dynamiquement depuis l'API -->
                 </div>
             </div>
         </section>
@@ -747,7 +747,7 @@
                     <div class="header-decoration"></div>
                 </div>
                 <div class="row g-4 justify-content-center" id="comiteContainer">
-                    <!-- Chargé dynamiquement depuis admin-data.js -->
+                    <!-- Chargé dynamiquement depuis l'API -->
                 </div>
             </div>
         </section>
@@ -870,76 +870,156 @@
     <div id="footer-placeholder"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="assets/js/admin-data.js"></script>
-    <script src="assets/js/components.js"></script>
-    <script src="assets/js/main.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            AOS.init({ duration: 800, once: true });
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="assets/js/components.js"></script>
+<script src="assets/js/main.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    AOS.init({ duration: 800, once: true });
+    
+    // ============================================================
+    // CHARGEMENT DU COMITÉ DE GESTION - VERSION BLOB
+    // ============================================================
+    async function loadComite() {
+        const comiteContainer = document.getElementById('comiteContainer');
+        if (!comiteContainer) return;
+        
+        try {
+            const response = await fetch('assets/php/api/data.php?module=comite', { cache: 'no-store' });
+            if (!response.ok) throw new Error('Erreur chargement comité');
+            const comite = await response.json();
             
-            // ===== CHARGEMENT DU COMITÉ DE GESTION =====
-            const comite = AdminData.getComite();
-            const comiteContainer = document.getElementById('comiteContainer');
+            console.log('Comité chargé:', comite);
             
-            if (comiteContainer && comite.length > 0) {
-                comiteContainer.innerHTML = comite.map((member, index) => `
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
-                        <div class="comite-card">
-                            <div class="comite-photo">
-                                <img src="${member.photo || 'https://placehold.co/140x140/003399/white?text=' + member.nom.charAt(0)}" alt="${member.nom}" onerror="this.src='https://placehold.co/140x140/003399/white?text=${member.nom.charAt(0)}'">
-                            </div>
-                            <h4>${member.nom}</h4>
-                            <p class="comite-title">${member.titre}</p>
-                            <p class="comite-message">"${member.message || ''}"</p>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            
-            // ===== CHARGEMENT DU CONSEIL D'ADMINISTRATION =====
-            // Ordre : PCA → DG → Tutelle → Admins
-            const conseil = AdminData.getConseil();
-            const conseilContainer = document.getElementById('conseilContainer');
-            
-            if (conseilContainer && conseil.length > 0) {
-                // Ordre d'affichage : PCA, DG, Tutelle, Administrateurs
-                const ordreTitres = [
-                    "Président du Conseil d'Administration",
-                    "Directeur Général",
-                    "Représentante de la Tutelle",
-                    "Administrateur"
-                ];
-                
-                // Trier selon l'ordre souhaité
-                const conseilOrdonne = [];
-                for (const titre of ordreTitres) {
-                    const membres = conseil.filter(m => m.titre === titre);
-                    conseilOrdonne.push(...membres);
-                }
-                // Ajouter ceux qui n'ont pas été trouvés (au cas où)
-                for (const membre of conseil) {
-                    if (!conseilOrdonne.find(m => m.id === membre.id)) {
-                        conseilOrdonne.push(membre);
-                    }
-                }
-                
-                conseilContainer.innerHTML = conseilOrdonne.map((member, index) => {
+            if (comite && comite.length > 0) {
+                comiteContainer.innerHTML = comite.map((member, index) => {
+                    // Vérifier si le membre a une photo
+                    const hasPhoto = member.has_photo === true || member.has_photo === 1;
+                    const photoUrl = hasPhoto ? member.photo_url : null;
+                    
                     return `
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
-                            <div class="conseil-card">
-                                <div class="conseil-photo">
-                                    <img src="${member.photo || 'https://placehold.co/140x140/003399/white?text=' + member.nom.charAt(0)}" alt="${member.nom}" onerror="this.src='https://placehold.co/140x140/003399/white?text=${member.nom.charAt(0)}'">
+                            <div class="comite-card">
+                                <div class="comite-photo">
+                                    ${hasPhoto && photoUrl ? `
+                                        <img src="${photoUrl}" alt="${member.nom}">
+                                    ` : `
+                                        <div style="width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:3rem;">
+                                            <i class="fas fa-user-circle"></i>
+                                        </div>
+                                    `}
                                 </div>
                                 <h4>${member.nom}</h4>
-                                <p class="conseil-title">${member.titre}</p>
-                                <p class="conseil-message">"${member.message || ''}"</p>
+                                <p class="comite-title">${member.titre}</p>
+                                ${member.message ? `<p class="comite-message">"${member.message}"</p>` : ''}
                             </div>
                         </div>
                     `;
                 }).join('');
+            } else {
+                comiteContainer.innerHTML = '<div class="col-12 text-center"><p>Aucun membre du comité disponible.</p></div>';
             }
-        });
-    </script>
+        } catch (error) {
+            console.error('Erreur chargement comité:', error);
+            comiteContainer.innerHTML = '<div class="col-12 text-center"><p class="text-danger">Erreur de chargement du comité.</p></div>';
+        }
+    }
+    
+    // ============================================================
+    // CHARGEMENT DU CONSEIL D'ADMINISTRATION - VERSION BLOB
+    // ============================================================
+    async function loadConseil() {
+        const conseilContainer = document.getElementById('conseilContainer');
+        if (!conseilContainer) return;
+        
+        try {
+            // Charger le conseil depuis l'API
+            const response = await fetch('assets/php/api/data.php?module=conseil', { cache: 'no-store' });
+            if (!response.ok) throw new Error('Erreur chargement conseil');
+            let conseil = await response.json();
+            
+            console.log('Conseil chargé:', conseil);
+            
+            // Charger le comité pour récupérer le DG
+            const comiteResponse = await fetch('assets/php/api/data.php?module=comite', { cache: 'no-store' });
+            let dg = null;
+            if (comiteResponse.ok) {
+                const comite = await comiteResponse.json();
+                // Trouver le Directeur Général dans le comité
+                dg = comite.find(m => m.titre === 'Directeur Général');
+            }
+            
+            // Construire la liste finale : PCA en premier, puis DG, puis les autres
+            let membresFinal = [];
+            
+            // 1. Ajouter le PCA (Président du Conseil d'Administration)
+            const pca = conseil.find(m => m.titre === 'Président du Conseil d\'Administration');
+            if (pca) {
+                membresFinal.push(pca);
+                conseil = conseil.filter(m => m.titre !== 'Président du Conseil d\'Administration');
+            }
+            
+            // 2. Ajouter le DG (Directeur Général) s'il existe dans le comité
+            if (dg) {
+                membresFinal.push({
+                    id: dg.id,
+                    nom: dg.nom,
+                    titre: 'Directeur Général',
+                    has_photo: dg.has_photo,
+                    photo_url: dg.photo_url,
+                    message: dg.message || ''
+                });
+            }
+            
+            // 3. Ajouter la Représentante de la Tutelle
+            const tutelle = conseil.find(m => m.titre === 'Représentante de la Tutelle');
+            if (tutelle) {
+                membresFinal.push(tutelle);
+                conseil = conseil.filter(m => m.titre !== 'Représentante de la Tutelle');
+            }
+            
+            // 4. Ajouter les autres administrateurs
+            membresFinal = membresFinal.concat(conseil);
+            
+            if (membresFinal && membresFinal.length > 0) {
+                conseilContainer.innerHTML = membresFinal.map((member, index) => {
+                    // Vérifier si le membre a une photo
+                    const hasPhoto = member.has_photo === true || member.has_photo === 1;
+                    const photoUrl = hasPhoto ? member.photo_url : null;
+                    
+                    return `
+                        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
+                            <div class="conseil-card">
+                                <div class="conseil-photo">
+                                    ${hasPhoto && photoUrl ? `
+                                        <img src="${photoUrl}" alt="${member.nom}">
+                                    ` : `
+                                        <div style="width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:3rem;">
+                                            <i class="fas fa-user-tie"></i>
+                                        </div>
+                                    `}
+                                </div>
+                                <h4>${member.nom}</h4>
+                                <p class="conseil-title">${member.titre}</p>
+                                ${member.message ? `<p class="conseil-message">"${member.message}"</p>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                conseilContainer.innerHTML = '<div class="col-12 text-center"><p>Aucun membre du conseil disponible.</p></div>';
+            }
+        } catch (error) {
+            console.error('Erreur chargement conseil:', error);
+            conseilContainer.innerHTML = '<div class="col-12 text-center"><p class="text-danger">Erreur de chargement du conseil.</p></div>';
+        }
+    }
+    
+    // Exécuter les chargements
+    loadComite();
+    loadConseil();
+});
+</script>
 </body>
 </html>

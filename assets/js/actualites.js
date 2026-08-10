@@ -1,4 +1,4 @@
-// assets/js/actualites.js - VERSION UNIQUEMENT API
+// assets/js/actualites.js - VERSION COMPLÈTE AVEC LIKES PERSISTANTS
 
 let currentPage = 1;
 const itemsPerPage = 9;
@@ -17,7 +17,7 @@ function escapeHtml(value) {
 
 function getCategorieLabel(categorie) {
     const labels = {
-        evenement: 'Événement',
+        evenement: 'Actualité',
         communique: 'Communiqué',
         projet: 'Projet',
         partenariat: 'Partenariat',
@@ -26,6 +26,73 @@ function getCategorieLabel(categorie) {
     return labels[categorie] || categorie;
 }
 
+function imageUrl(image) {
+    return image?.url || '';
+}
+
+// ============================================================
+// LIKES AVEC PERSISTANCE
+// ============================================================
+async function registerLike(postId, button) {
+    if (button.disabled) return;
+    button.disabled = true;
+    
+    try {
+        const response = await fetch(`${ACTUALITES_API}&action=like`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: postId })
+        });
+        const result = await response.json();
+        
+        if (!response.ok) {
+            if (result.already_liked) {
+                localStorage.setItem(`post_liked_${postId}`, 'true');
+                button.classList.add('liked');
+                const countSpan = button.querySelector('.like-count');
+                if (countSpan) {
+                    const currentCount = parseInt(countSpan.textContent) || 0;
+                    countSpan.textContent = currentCount;
+                }
+                showToast('Vous avez déjà liké cette actualité', 'info');
+                return;
+            }
+            throw new Error(result.message || 'Impossible d\'enregistrer le like.');
+        }
+        
+        localStorage.setItem(`post_liked_${postId}`, 'true');
+        
+        const post = actualitesData.find(p => Number(p.id) === Number(postId));
+        if (post) post.likes = result.likes;
+        
+        document.querySelectorAll(`[data-id="${postId}"] .like-count, .like-btn-modal[data-id="${postId}"] .like-count`)
+            .forEach(span => span.textContent = result.likes);
+        button.classList.add('liked');
+        
+    } catch (error) {
+        console.error(error);
+        showToast(error.message, 'error');
+    } finally {
+        button.disabled = false;
+    }
+}
+
+function initLikeButtons() {
+    document.querySelectorAll('.like-btn').forEach(btn => {
+        const postId = Number(btn.dataset.id);
+        if (localStorage.getItem(`post_liked_${postId}`) === 'true') {
+            btn.classList.add('liked');
+        }
+        btn.addEventListener('click', e => {
+            e.stopPropagation();
+            registerLike(postId, btn);
+        });
+    });
+}
+
+// ============================================================
+// CHARGEMENT ET AFFICHAGE DES ACTUALITÉS
+// ============================================================
 async function loadActualitesData() {
     const container = document.getElementById('actualitesGrid');
     if (!container) return;
@@ -70,10 +137,6 @@ async function loadActualitesData() {
     }
 }
 
-function imageUrl(image) {
-    return image?.url || '';
-}
-
 function renderActualites() {
     let filtered = currentFilter === 'all'
         ? [...actualitesData]
@@ -97,6 +160,7 @@ function renderActualites() {
     container.innerHTML = paginatedItems.map(post => {
         const images = Array.isArray(post.images) ? post.images : [];
         const imageCount = images.length;
+        const isLiked = localStorage.getItem(`post_liked_${post.id}`) === 'true';
         return `
             <div class="col-md-6 col-lg-4 actualite-post" data-categorie="${escapeHtml(post.categorie)}">
                 <div class="actualite-post-card" data-id="${post.id}">
@@ -128,7 +192,7 @@ function renderActualites() {
                         <h3 class="post-title">${escapeHtml(post.titre)}</h3>
                         <p class="post-description">${escapeHtml(post.description.substring(0, 120))}${post.description.length > 120 ? '...' : ''}</p>
                         <div class="post-actions">
-                            <button class="like-btn" type="button" data-id="${post.id}">
+                            <button class="like-btn ${isLiked ? 'liked' : ''}" type="button" data-id="${post.id}">
                                 <i class="fas fa-heart"></i>
                                 <span class="like-count">${Number(post.likes) || 0}</span>
                             </button>
@@ -149,39 +213,9 @@ function renderActualites() {
     renderPagination(totalPages);
 }
 
-async function registerLike(postId, button) {
-    if (button.disabled) return;
-    button.disabled = true;
-    try {
-        const response = await fetch(`${ACTUALITES_API}&action=like`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: postId })
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || 'Impossible d\'enregistrer le like.');
-
-        const post = actualitesData.find(p => Number(p.id) === Number(postId));
-        if (post) post.likes = result.likes;
-        document.querySelectorAll(`[data-id="${postId}"] .like-count, .like-btn-modal[data-id="${postId}"] .like-count`)
-            .forEach(span => span.textContent = result.likes);
-        button.classList.add('liked');
-    } catch (error) {
-        console.error(error);
-    } finally {
-        button.disabled = false;
-    }
-}
-
-function initLikeButtons() {
-    document.querySelectorAll('.like-btn').forEach(btn => {
-        btn.addEventListener('click', e => {
-            e.stopPropagation();
-            registerLike(Number(btn.dataset.id), btn);
-        });
-    });
-}
-
+// ============================================================
+// CARROUSEL
+// ============================================================
 function initCarousels() {
     document.querySelectorAll('.actualite-post-card .has-carousel').forEach(carouselContainer => {
         const card = carouselContainer.closest('.actualite-post-card');
@@ -210,6 +244,9 @@ function initCarousels() {
     });
 }
 
+// ============================================================
+// PAGINATION
+// ============================================================
 function renderPagination(totalPages) {
     const paginationContainer = document.getElementById('pagination');
     if (!paginationContainer) return;
@@ -241,6 +278,9 @@ function renderPagination(totalPages) {
     });
 }
 
+// ============================================================
+// FILTRES
+// ============================================================
 document.querySelectorAll('.filter-active-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.filter-active-btn').forEach(b => b.classList.remove('active'));
@@ -251,10 +291,14 @@ document.querySelectorAll('.filter-active-btn').forEach(btn => {
     });
 });
 
+// ============================================================
+// MODAL
+// ============================================================
 window.openPostModal = function(postId) {
     const post = actualitesData.find(p => Number(p.id) === Number(postId));
     if (!post) return;
     const images = Array.isArray(post.images) ? post.images : [];
+    const isLiked = localStorage.getItem(`post_liked_${post.id}`) === 'true';
 
     document.getElementById('postModal')?.remove();
     document.body.insertAdjacentHTML('beforeend', `
@@ -266,7 +310,7 @@ window.openPostModal = function(postId) {
                     <div class="modal-info"><span class="post-categorie ${escapeHtml(post.categorie)}">${escapeHtml(getCategorieLabel(post.categorie))}</span><span class="post-date"><i class="far fa-calendar-alt"></i> ${new Date(post.date + 'T00:00:00').toLocaleDateString('fr-FR')}</span></div>
                     <div class="modal-description">${post.description.split(/\r?\n/).filter(Boolean).map(p => `<p>${escapeHtml(p)}</p>`).join('')}</div>
                     <div class="modal-actions">
-                        <button class="like-btn-modal" type="button" data-id="${post.id}"><i class="fas fa-heart"></i> <span class="like-count">${Number(post.likes) || 0}</span></button>
+                        <button class="like-btn-modal ${isLiked ? 'liked' : ''}" type="button" data-id="${post.id}"><i class="fas fa-heart"></i> <span class="like-count">${Number(post.likes) || 0}</span></button>
                         <div class="social-share-modal">
                             ${post.facebookUrl ? `<a href="${escapeHtml(post.facebookUrl)}" target="_blank" rel="noopener" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>` : ''}
                             ${post.instagramUrl ? `<a href="${escapeHtml(post.instagramUrl)}" target="_blank" rel="noopener" class="social-icon instagram"><i class="fab fa-instagram"></i></a>` : ''}
@@ -280,12 +324,28 @@ window.openPostModal = function(postId) {
     const modalElement = document.getElementById('postModal');
     const modal = new bootstrap.Modal(modalElement);
     modal.show();
+    
     const likeButton = modalElement.querySelector('.like-btn-modal');
     likeButton.addEventListener('click', () => registerLike(post.id, likeButton));
+    
     modalElement.addEventListener('hidden.bs.modal', () => modalElement.remove());
 };
 
+// ============================================================
+// INITIALISATION
+// ============================================================
 document.addEventListener('DOMContentLoaded', () => {
     loadActualitesData();
     if (window.AOS) AOS.refresh();
+    
+    // Gestion des ancres #post-xxx
+    if (window.location.hash.startsWith('#post-')) {
+        const postId = parseInt(window.location.hash.replace('#post-', ''));
+        if (postId) {
+            setTimeout(() => {
+                const post = actualitesData.find(p => p.id === postId);
+                if (post) openPostModal(postId);
+            }, 1000);
+        }
+    }
 });
