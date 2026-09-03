@@ -22,8 +22,8 @@
     <main>
         <section class="page-header">
             <div class="container">
-                <h1 data-aos="fade-up">Mercuriales</h1>
-                <p data-aos="fade-up" data-aos-delay="100">Prix de référence du fret et tarifs actualisés</p>
+                <h1 data-aos="fade-up" data-fr="Mercuriales" data-en="Price Lists">Mercuriales</h1>
+                <p data-aos="fade-up" data-aos-delay="100" data-fr="Prix de référence du fret et tarifs actualisés" data-en="Freight reference prices and updated rates">Prix de référence du fret et tarifs actualisés</p>
                 <div class="header-decoration" data-aos="fade-up" data-aos-delay="150"></div>
             </div>
         </section>
@@ -32,26 +32,26 @@
             <div class="container">
                 <div class="info-banner" data-aos="fade-up">
                     <i class="fas fa-chart-line"></i>
-                    <div>Dernière mise à jour : Mai 2025 - Les prix sont donnés à titre indicatif</div>
+                    <div data-fr="Dernière mise à jour : Mai 2025 - Les prix sont donnés à titre indicatif" data-en="Last update: May 2025 - Prices are for information only">Dernière mise à jour : Mai 2025 - Les prix sont donnés à titre indicatif</div>
                 </div><br>
 
                 <div class="table-responsive-wrapper" data-aos="fade-up">
                     <table class="table-service">
-                        <thead><tr><th>Itinéraire</th><th>Type de fret</th><th>Prix indicatif (USD)</th><th>Unité</th></tr></thead>
+                        <thead><tr><th data-fr="Itinéraire" data-en="Route">Itinéraire</th><th data-fr="Type de fret" data-en="Freight type">Type de fret</th><th data-fr="Prix indicatif (USD)" data-en="Indicative price (USD)">Prix indicatif (USD)</th><th data-fr="Unité" data-en="Unit">Unité</th></tr></thead>
                         <tbody>
-                            <tr><td>Shanghai → Matadi</td><td>Maritime (FCL 20')</td><td>1 200 - 1 500</td><td>Conteneur</td></tr>
-                            <tr><td>Anvers → Matadi</td><td>Maritime (FCL 20')</td><td>1 000 - 1 300</td><td>Conteneur</td></tr>
-                            <tr><td>Dubaï → Kinshasa</td><td>Aérien</td><td>3.50 - 4.20</td><td>USD/kg</td></tr>
-                            <tr><td>Johannesburg → Lubumbashi</td><td>Routier</td><td>250 - 350</td><td>USD/tonne</td></tr>
-                            <tr><td>Kinshasa → Matadi</td><td>Routier</td><td>50 - 80</td><td>USD/tonne</td></tr>
-                            <tr><td>Kinshasa → Goma</td><td>Routier</td><td>180 - 250</td><td>USD/tonne</td></tr>
-                            <tr><td>Matadi → Kinshasa</td><td>Routier/Rail</td><td>40 - 60</td><td>USD/tonne</td></tr>
+                            <tr><td>Shanghai → Matadi</td><td data-fr="Maritime (FCL 20')" data-en="Maritime (FCL 20')">Maritime (FCL 20')</td><td>1 200 - 1 500</td><td data-fr="Conteneur" data-en="Container">Conteneur</td></tr>
+                            <tr><td>Anvers → Matadi</td><td data-fr="Maritime (FCL 20')" data-en="Maritime (FCL 20')">Maritime (FCL 20')</td><td>1 000 - 1 300</td><td data-fr="Conteneur" data-en="Container">Conteneur</td></tr>
+                            <tr><td>Dubaï → Kinshasa</td><td data-fr="Aérien" data-en="Air">Aérien</td><td>3.50 - 4.20</td><td>USD/kg</td></tr>
+                            <tr><td>Johannesburg → Lubumbashi</td><td data-fr="Routier" data-en="Road">Routier</td><td>250 - 350</td><td>USD/<span data-fr="tonne" data-en="ton">tonne</span></td></tr>
+                            <tr><td>Kinshasa → Matadi</td><td data-fr="Routier" data-en="Road">Routier</td><td>50 - 80</td><td>USD/<span data-fr="tonne" data-en="ton">tonne</span></td></tr>
+                            <tr><td>Kinshasa → Goma</td><td data-fr="Routier" data-en="Road">Routier</td><td>180 - 250</td><td>USD/<span data-fr="tonne" data-en="ton">tonne</span></td></tr>
+                            <tr><td>Matadi → Kinshasa</td><td data-fr="Routier/Rail" data-en="Road/Rail">Routier/Rail</td><td>40 - 60</td><td>USD/<span data-fr="tonne" data-en="ton">tonne</span></td></tr>
                         </tbody>
                     </table>
                 </div>
 
                 <div class="service-actions" data-aos="fade-up">
-                    <a href="#" class="btn btn-primary"><i class="fas fa-download"></i> Télécharger la grille complète (PDF)</a>
+                    <a href="#" class="btn btn-primary"><i class="fas fa-download"></i> <span data-fr="Télécharger la grille complète (PDF)" data-en="Download full price list (PDF)">Télécharger la grille complète (PDF)</span></a>
                 </div>
             </div>
         </section>
@@ -64,6 +64,36 @@
     <script src="../assets/js/admin-data.js"></script>
     <script src="../assets/js/components.js"></script>
     <script src="../assets/js/main.js"></script>
-    <script>document.addEventListener('DOMContentLoaded', function() { AOS.init({ duration: 800, once: true }); });</script>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        AOS.init({ duration: 800, once: true });
+        
+        let currentLang = localStorage.getItem('ogefrem_lang') || 'fr';
+        
+        function updatePageLanguage(lang) {
+            document.querySelectorAll('[data-fr][data-en]').forEach(el => {
+                if (lang === 'fr' && el.dataset.fr) {
+                    el.textContent = el.dataset.fr;
+                } else if (lang === 'en' && el.dataset.en) {
+                    el.textContent = el.dataset.en;
+                }
+            });
+        }
+        
+        const langObserver = new MutationObserver(function() {
+            const newLang = localStorage.getItem('ogefrem_lang') || 'fr';
+            if (newLang !== currentLang) {
+                currentLang = newLang;
+                updatePageLanguage(currentLang);
+            }
+        });
+        langObserver.observe(document.documentElement, { childList: true, subtree: true });
+        
+        setTimeout(function() {
+            updatePageLanguage(currentLang);
+        }, 500);
+    });
+    </script>
 </body>
 </html>

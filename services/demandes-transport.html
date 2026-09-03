@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="../assets/css/responsive.css">
     <link rel="stylesheet" href="../assets/css/animations.css">
     <style>
-        /* Styles spécifiques */
         .form-section {
             background: white;
             border-radius: 24px;
@@ -94,8 +93,8 @@
     <main>
         <section class="page-header">
             <div class="container">
-                <h1 data-aos="fade-up">Demandes de transport</h1>
-                <p data-aos="fade-up" data-aos-delay="100">Publiez un besoin de transport pour vos marchandises</p>
+                <h1 data-aos="fade-up" data-fr="Demandes de transport" data-en="Transport Requests">Demandes de transport</h1>
+                <p data-aos="fade-up" data-aos-delay="100" data-fr="Publiez un besoin de transport pour vos marchandises" data-en="Post a transport need for your goods">Publiez un besoin de transport pour vos marchandises</p>
                 <div class="header-decoration" data-aos="fade-up" data-aos-delay="150"></div>
             </div>
         </section>
@@ -103,85 +102,83 @@
         <section class="service-content-section">
             <div class="container">
                 <div class="row g-5">
-                    <!-- Formulaire de demande -->
                     <div class="col-lg-6" data-aos="fade-right">
                         <div class="form-section">
                             <div class="info-banner-form">
                                 <i class="fas fa-info-circle"></i>
                                 <div>
-                                    <strong>Comment ça fonctionne ?</strong><br>
-                                    Remplissez ce formulaire. Votre demande sera étudiée par notre équipe et publiée après validation.
-                                    Vous serez contacté par les transporteurs intéressés.
+                                    <strong data-fr="Comment ça fonctionne ?" data-en="How does it work?">Comment ça fonctionne ?</strong><br>
+                                    <span data-fr="Remplissez ce formulaire. Votre demande sera étudiée par notre équipe et publiée après validation. Vous serez contacté par les transporteurs intéressés." data-en="Fill out this form. Your request will be reviewed by our team and published after validation. You will be contacted by interested carriers.">Remplissez ce formulaire. Votre demande sera étudiée par notre équipe et publiée après validation. Vous serez contacté par les transporteurs intéressés.</span>
                                 </div>
                             </div>
                             
-                            <h3 class="form-title"><i class="fas fa-file-signature"></i> Nouvelle demande de transport</h3>
+                            <h3 class="form-title"><i class="fas fa-file-signature"></i> <span data-fr="Nouvelle demande de transport" data-en="New transport request">Nouvelle demande de transport</span></h3>
                             
                             <form id="demandeForm">
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><i class="fas fa-box"></i> Type de marchandises *</label>
-                                            <input type="text" id="marchandises" class="form-control" placeholder="Ex: Produits miniers, Bois, Café..." required>
+                                            <label><i class="fas fa-box"></i> <span data-fr="Type de marchandises *" data-en="Type of goods *">Type de marchandises *</span></label>
+                                            <input type="text" id="marchandises" class="form-control" data-fr-placeholder="Ex: Produits miniers, Bois, Café..." data-en-placeholder="Ex: Mining products, Timber, Coffee..." placeholder="Ex: Produits miniers, Bois, Café..." required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><i class="fas fa-weight-hanging"></i> Quantité (tonnes) *</label>
-                                            <input type="number" id="quantite" class="form-control" placeholder="Poids total" required>
+                                            <label><i class="fas fa-weight-hanging"></i> <span data-fr="Quantité (tonnes) *" data-en="Quantity (tons) *">Quantité (tonnes) *</span></label>
+                                            <input type="number" id="quantite" class="form-control" data-fr-placeholder="Poids total" data-en-placeholder="Total weight" placeholder="Poids total" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><i class="fas fa-map-marker-alt"></i> Origine *</label>
-                                            <input type="text" id="origine" class="form-control" placeholder="Ville / Port de départ" required>
+                                            <label><i class="fas fa-map-marker-alt"></i> <span data-fr="Origine *" data-en="Origin *">Origine *</span></label>
+                                            <input type="text" id="origine" class="form-control" data-fr-placeholder="Ville / Port de départ" data-en-placeholder="City / Port of departure" placeholder="Ville / Port de départ" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><i class="fas fa-flag-checkered"></i> Destination *</label>
-                                            <input type="text" id="destination" class="form-control" placeholder="Ville / Port d'arrivée" required>
+                                            <label><i class="fas fa-flag-checkered"></i> <span data-fr="Destination *" data-en="Destination *">Destination *</span></label>
+                                            <input type="text" id="destination" class="form-control" data-fr-placeholder="Ville / Port d'arrivée" data-en-placeholder="City / Port of arrival" placeholder="Ville / Port d'arrivée" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><i class="far fa-calendar-alt"></i> Date souhaitée *</label>
+                                            <label><i class="far fa-calendar-alt"></i> <span data-fr="Date souhaitée *" data-en="Desired date *">Date souhaitée *</span></label>
                                             <input type="date" id="date" class="form-control" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><i class="fas fa-building"></i> Société</label>
-                                            <input type="text" id="societe" class="form-control" placeholder="Nom de votre société">
+                                            <label><i class="fas fa-building"></i> <span data-fr="Société" data-en="Company">Société</span></label>
+                                            <input type="text" id="societe" class="form-control" data-fr-placeholder="Nom de votre société" data-en-placeholder="Your company name" placeholder="Nom de votre société">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><i class="fas fa-user"></i> Votre nom *</label>
-                                            <input type="text" id="nom" class="form-control" placeholder="Nom et prénom" required>
+                                            <label><i class="fas fa-user"></i> <span data-fr="Votre nom *" data-en="Your name *">Votre nom *</span></label>
+                                            <input type="text" id="nom" class="form-control" data-fr-placeholder="Nom et prénom" data-en-placeholder="First and last name" placeholder="Nom et prénom" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><i class="fas fa-envelope"></i> Email *</label>
-                                            <input type="email" id="email" class="form-control" placeholder="votre@email.com" required>
+                                            <label><i class="fas fa-envelope"></i> <span data-fr="Email *" data-en="Email *">Email *</span></label>
+                                            <input type="email" id="email" class="form-control" data-fr-placeholder="votre@email.com" data-en-placeholder="your@email.com" placeholder="votre@email.com" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><i class="fas fa-phone"></i> Téléphone</label>
-                                            <input type="tel" id="telephone" class="form-control" placeholder="Numéro de téléphone">
+                                            <label><i class="fas fa-phone"></i> <span data-fr="Téléphone" data-en="Phone">Téléphone</span></label>
+                                            <input type="tel" id="telephone" class="form-control" data-fr-placeholder="Numéro de téléphone" data-en-placeholder="Phone number" placeholder="Numéro de téléphone">
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <label><i class="fas fa-comment"></i> Informations complémentaires</label>
-                                            <textarea id="complement" class="form-control" rows="3" placeholder="Dimensions, conteneurs, contraintes particulières..."></textarea>
+                                            <label><i class="fas fa-comment"></i> <span data-fr="Informations complémentaires" data-en="Additional information">Informations complémentaires</span></label>
+                                            <textarea id="complement" class="form-control" rows="3" data-fr-placeholder="Dimensions, conteneurs, contraintes particulières..." data-en-placeholder="Dimensions, containers, special constraints..." placeholder="Dimensions, conteneurs, contraintes particulières..."></textarea>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <button type="submit" class="btn-preview w-100">
-                                            <i class="fas fa-paper-plane"></i> Envoyer ma demande
+                                            <i class="fas fa-paper-plane"></i> <span data-fr="Envoyer ma demande" data-en="Submit my request">Envoyer ma demande</span>
                                         </button>
                                     </div>
                                     <div id="demandeStatus" class="col-12 mt-3"></div>
@@ -190,36 +187,36 @@
                         </div>
                     </div>
                     
-                    <!-- Demandes récentes publiées -->
                     <div class="col-lg-6" data-aos="fade-left">
                         <div class="form-section">
-                            <h3 class="form-title"><i class="fas fa-list"></i> Demandes récentes</h3>
-                            <p class="text-muted mb-4">Voici les dernières demandes de transport publiées par nos utilisateurs</p>
+                            <h3 class="form-title"><i class="fas fa-list"></i> <span data-fr="Demandes récentes" data-en="Recent requests">Demandes récentes</span></h3>
+                            <p class="text-muted mb-4" data-fr="Voici les dernières demandes de transport publiées par nos utilisateurs" data-en="Here are the latest transport requests published by our users">Voici les dernières demandes de transport publiées par nos utilisateurs</p>
                             <div class="demandes-list" id="demandesList">
                                 <div class="demande-item">
-                                    <span class="demande-badge urgent">Urgent</span>
+                                    <span class="demande-badge urgent" data-fr="Urgent" data-en="Urgent">Urgent</span>
                                     <h4>500t de cuivre</h4>
                                     <p><i class="fas fa-map-marker-alt"></i> Lubumbashi → Kinshasa</p>
-                                    <p><i class="far fa-calendar"></i> Date limite: 15/06/2025</p>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="alert('Pour plus d\'informations, contactez la Direction Générale au +243 81 641 85 65')">Voir l'offre</button>
+                                    <p><i class="far fa-calendar"></i> <span data-fr="Date limite: 15/06/2025" data-en="Deadline: 06/15/2025">Date limite: 15/06/2025</span></p>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="alert('Pour plus d\'informations, contactez la Direction Générale au +243 81 641 85 65')" data-fr="Voir l'offre" data-en="View offer">Voir l'offre</button>
                                 </div>
                                 <div class="demande-item">
-                                    <span class="demande-badge standard">Standard</span>
+                                    <span class="demande-badge standard" data-fr="Standard" data-en="Standard">Standard</span>
                                     <h4>200t de café</h4>
                                     <p><i class="fas fa-map-marker-alt"></i> Bukavu → Matadi</p>
-                                    <p><i class="far fa-calendar"></i> Date limite: 30/06/2025</p>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="alert('Pour plus d\'informations, contactez la Direction Générale au +243 81 641 85 65')">Voir l'offre</button>
+                                    <p><i class="far fa-calendar"></i> <span data-fr="Date limite: 30/06/2025" data-en="Deadline: 06/30/2025">Date limite: 30/06/2025</span></p>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="alert('Pour plus d\'informations, contactez la Direction Générale au +243 81 641 85 65')" data-fr="Voir l'offre" data-en="View offer">Voir l'offre</button>
                                 </div>
                                 <div class="demande-item">
-                                    <span class="demande-badge standard">Standard</span>
+                                    <span class="demande-badge standard" data-fr="Standard" data-en="Standard">Standard</span>
                                     <h4>1000t de bois</h4>
                                     <p><i class="fas fa-map-marker-alt"></i> Kisangani → Boma</p>
-                                    <p><i class="far fa-calendar"></i> Date limite: 10/07/2025</p>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="alert('Pour plus d\'informations, contactez la Direction Générale au +243 81 641 85 65')">Voir l'offre</button>
+                                    <p><i class="far fa-calendar"></i> <span data-fr="Date limite: 10/07/2025" data-en="Deadline: 07/10/2025">Date limite: 10/07/2025</span></p>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="alert('Pour plus d\'informations, contactez la Direction Générale au +243 81 641 85 65')" data-fr="Voir l'offre" data-en="View offer">Voir l'offre</button>
                                 </div>
                             </div>
                             <div class="alert alert-info mt-4">
-                                <i class="fas fa-info-circle"></i> Vous êtes transporteur ? Contactez-nous pour répondre aux demandes.
+                                <i class="fas fa-info-circle"></i>
+                                <span data-fr="Vous êtes transporteur ? Contactez-nous pour répondre aux demandes." data-en="Are you a carrier? Contact us to respond to requests.">Vous êtes transporteur ? Contactez-nous pour répondre aux demandes.</span>
                             </div>
                         </div>
                     </div>
@@ -236,10 +233,42 @@
     <script src="../assets/js/components.js"></script>
     <script src="../assets/js/demandes-transport.js"></script>
     <script src="../assets/js/main.js"></script>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            AOS.init({ duration: 800, once: true });
+    document.addEventListener('DOMContentLoaded', function() {
+        AOS.init({ duration: 800, once: true });
+        
+        let currentLang = localStorage.getItem('ogefrem_lang') || 'fr';
+        
+        function updatePageLanguage(lang) {
+            document.querySelectorAll('[data-fr][data-en]').forEach(el => {
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') {
+                    if (el.dataset[lang + '-placeholder']) {
+                        el.placeholder = el.dataset[lang + '-placeholder'];
+                    }
+                } else {
+                    el.textContent = el.dataset[lang];
+                }
+            });
+            // Update button texts
+            document.querySelectorAll('.btn[data-fr][data-en]').forEach(el => {
+                el.textContent = el.dataset[lang];
+            });
+        }
+        
+        const langObserver = new MutationObserver(function() {
+            const newLang = localStorage.getItem('ogefrem_lang') || 'fr';
+            if (newLang !== currentLang) {
+                currentLang = newLang;
+                updatePageLanguage(currentLang);
+            }
         });
+        langObserver.observe(document.documentElement, { childList: true, subtree: true });
+        
+        setTimeout(function() {
+            updatePageLanguage(currentLang);
+        }, 500);
+    });
     </script>
 </body>
 </html>

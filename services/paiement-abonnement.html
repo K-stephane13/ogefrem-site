@@ -140,8 +140,8 @@
 <main>
     <section class="page-header">
         <div class="container">
-            <h1 data-aos="fade-up">Paiement abonnement chargeur</h1>
-            <p data-aos="fade-up" data-aos-delay="100">Abonnez-vous à l'OGEFREM pour l'année en cours</p>
+            <h1 data-aos="fade-up" data-fr="Paiement abonnement chargeur" data-en="Shipper Subscription Payment">Paiement abonnement chargeur</h1>
+            <p data-aos="fade-up" data-aos-delay="100" data-fr="Abonnez-vous à l'OGEFREM pour l'année en cours" data-en="Subscribe to OGEFREM for the current year">Abonnez-vous à l'OGEFREM pour l'année en cours</p>
             <div class="header-decoration" data-aos="fade-up" data-aos-delay="150"></div>
         </div>
     </section>
@@ -150,137 +150,129 @@
         <div class="container payment-container">
 
             <div class="price-display" data-aos="fade-up">
-                <div class="period">Abonnement annuel</div>
+                <div class="period" data-fr="Abonnement annuel" data-en="Annual subscription">Abonnement annuel</div>
                 <div class="amount">50 <span class="currency">USD</span></div>
-                <div class="sub-period">Valable du 1er janvier au 31 décembre</div>
+                <div class="sub-period" data-fr="Valable du 1er janvier au 31 décembre" data-en="Valid from January 1st to December 31st">Valable du 1er janvier au 31 décembre</div>
             </div>
 
             <div class="row g-4">
                 <div class="col-lg-7" data-aos="fade-right">
                     <div class="payment-card">
-                        <h3><i class="fas fa-credit-card"></i> Moyens de paiement</h3>
+                        <h3><i class="fas fa-credit-card"></i> <span data-fr="Moyens de paiement" data-en="Payment methods">Moyens de paiement</span></h3>
 
-                        <!-- TOUS LES 3 MOYENS EN COURS DE DÉVELOPPEMENT -->
                         <button class="payment-method-btn" data-method="card" style="opacity: 0.8;">
                             <i class="fas fa-credit-card"></i>
-                            <span>Carte bancaire</span>
-                            <span class="badge-coming" style="margin-left: auto;">En cours</span>
+                            <span data-fr="Carte bancaire" data-en="Credit card">Carte bancaire</span>
+                            <span class="badge-coming" style="margin-left: auto;" data-fr="En cours" data-en="Coming soon">En cours</span>
                         </button>
 
                         <button class="payment-method-btn" data-method="bank" style="opacity: 0.8;">
                             <i class="fas fa-university"></i>
-                            <span>Virement bancaire</span>
-                            <span class="badge-coming" style="margin-left: auto;">En cours</span>
+                            <span data-fr="Virement bancaire" data-en="Bank transfer">Virement bancaire</span>
+                            <span class="badge-coming" style="margin-left: auto;" data-fr="En cours" data-en="Coming soon">En cours</span>
                         </button>
 
                         <button class="payment-method-btn" data-method="mobile" style="opacity: 0.8;">
                             <i class="fas fa-mobile-alt"></i>
-                            <span>Mobile Money</span>
-                            <span class="badge-coming" style="margin-left: auto;">En cours</span>
+                            <span data-fr="Mobile Money" data-en="Mobile Money">Mobile Money</span>
+                            <span class="badge-coming" style="margin-left: auto;" data-fr="En cours" data-en="Coming soon">En cours</span>
                         </button>
 
-                        <!-- Message d'information -->
                         <div class="dev-notice mt-3">
                             <i class="fas fa-code"></i>
-                            <strong>🚧 Tous les moyens de paiement sont en cours de développement</strong>
-                            <p class="mb-0 mt-1" style="font-size: 0.9rem;">
-                                Nous mettons tout en œuvre pour vous offrir ces options de paiement très prochainement.
-                                Pour toute question, contactez notre service client.
-                            </p>
+                            <strong data-fr="🚧 Tous les moyens de paiement sont en cours de développement" data-en="🚧 All payment methods are under development">🚧 Tous les moyens de paiement sont en cours de développement</strong>
+                            <p class="mb-0 mt-1" style="font-size: 0.9rem;" data-fr="Nous mettons tout en œuvre pour vous offrir ces options de paiement très prochainement. Pour toute question, contactez notre service client." data-en="We are doing our utmost to offer you these payment options very soon. For any questions, please contact our customer service.">Nous mettons tout en œuvre pour vous offrir ces options de paiement très prochainement. Pour toute question, contactez notre service client.</p>
                         </div>
 
-                        <!-- Formulaire désactivé -->
                         <form id="paymentForm" onsubmit="return false;">
                             <div class="row g-3 mt-2">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Email *</label>
-                                    <input type="email" class="form-control" placeholder="votre@email.com" disabled>
+                                    <label class="form-label fw-bold"><span data-fr="Email *" data-en="Email *">Email *</span></label>
+                                    <input type="email" class="form-control" data-fr-placeholder="votre@email.com" data-en-placeholder="your@email.com" placeholder="votre@email.com" disabled>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Nom complet *</label>
-                                    <input type="text" class="form-control" placeholder="Nom et prénom" disabled>
+                                    <label class="form-label fw-bold"><span data-fr="Nom complet *" data-en="Full name *">Nom complet *</span></label>
+                                    <input type="text" class="form-control" data-fr-placeholder="Nom et prénom" data-en-placeholder="First and last name" placeholder="Nom et prénom" disabled>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Téléphone</label>
-                                    <input type="tel" class="form-control" placeholder="+243 XXX XXX XXX" disabled>
+                                    <label class="form-label fw-bold"><span data-fr="Téléphone" data-en="Phone">Téléphone</span></label>
+                                    <input type="tel" class="form-control" data-fr-placeholder="+243 XXX XXX XXX" data-en-placeholder="+243 XXX XXX XXX" placeholder="+243 XXX XXX XXX" disabled>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Société</label>
-                                    <input type="text" class="form-control" placeholder="Nom de votre société" disabled>
+                                    <label class="form-label fw-bold"><span data-fr="Société" data-en="Company">Société</span></label>
+                                    <input type="text" class="form-control" data-fr-placeholder="Nom de votre société" data-en-placeholder="Your company name" placeholder="Nom de votre société" disabled>
                                 </div>
 
-                                <!-- NOUVEAU CHAMP : NIF (Numéro d'Identification Fiscale) -->
                                 <div class="col-md-12">
-                                    <label class="form-label fw-bold">NIF (Numéro d'Identification Fiscale)</label>
-                                    <input type="text" class="form-control" placeholder="Ex: A123456789" disabled>
-                                    <small class="text-muted">Votre numéro d'identification fiscale (si applicable)</small>
+                                    <label class="form-label fw-bold"><span data-fr="NIF (Numéro d'Identification Fiscale)" data-en="Tax ID (TIN)">NIF (Numéro d'Identification Fiscale)</span></label>
+                                    <input type="text" class="form-control" data-fr-placeholder="Ex: A123456789" data-en-placeholder="Ex: A123456789" placeholder="Ex: A123456789" disabled>
+                                    <small class="text-muted" data-fr="Votre numéro d'identification fiscale (si applicable)" data-en="Your tax identification number (if applicable)">Votre numéro d'identification fiscale (si applicable)</small>
                                 </div>
 
                             </div>
 
-                            <!-- Bouton désactivé -->
                             <button type="button" class="btn-pay-disabled mt-4" disabled>
-                                <i class="fas fa-clock"></i> Paiement indisponible - En développement
+                                <i class="fas fa-clock"></i> <span data-fr="Paiement indisponible - En développement" data-en="Payment unavailable - Under development">Paiement indisponible - En développement</span>
                             </button>
 
                             <p class="text-muted small text-center mt-2">
-                                <i class="fas fa-lock"></i> Paiement sécurisé - Disponible prochainement
+                                <i class="fas fa-lock"></i> <span data-fr="Paiement sécurisé - Disponible prochainement" data-en="Secure payment - Available soon">Paiement sécurisé - Disponible prochainement</span>
                             </p>
                         </form>
 
                         <div class="security-badge">
                             <i class="fas fa-shield-alt"></i>
-                            <span>Paiement sécurisé - Transactions cryptées SSL</span>
+                            <span data-fr="Paiement sécurisé - Transactions cryptées SSL" data-en="Secure payment - SSL encrypted transactions">Paiement sécurisé - Transactions cryptées SSL</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-lg-5" data-aos="fade-left">
                     <div class="payment-card">
-                        <h3><i class="fas fa-gift"></i> Avantages abonnement</h3>
+                        <h3><i class="fas fa-gift"></i> <span data-fr="Avantages abonnement" data-en="Subscription benefits">Avantages abonnement</span></h3>
 
                         <ul class="list-unstyled">
                             <li class="mb-3">
                                 <i class="fas fa-check-circle text-success"></i>
-                                <strong>Accès FERI/AD/FERE</strong>
-                                <br><small class="text-muted">Plateforme complète de gestion</small>
+                                <strong data-fr="Accès FERI/AD/FERE" data-en="FERI/AD/FERE Access">Accès FERI/AD/FERE</strong>
+                                <br><small class="text-muted" data-fr="Plateforme complète de gestion" data-en="Complete management platform">Plateforme complète de gestion</small>
                             </li>
 
                             <li class="mb-3">
                                 <i class="fas fa-check-circle text-success"></i>
-                                <strong>Assistance prioritaire</strong>
-                                <br><small class="text-muted">Support dédié aux abonnés</small>
+                                <strong data-fr="Assistance prioritaire" data-en="Priority support">Assistance prioritaire</strong>
+                                <br><small class="text-muted" data-fr="Support dédié aux abonnés" data-en="Dedicated support for subscribers">Support dédié aux abonnés</small>
                             </li>
 
                             <li class="mb-3">
                                 <i class="fas fa-check-circle text-success"></i>
-                                <strong>50 USD / an</strong>
-                                <br><small class="text-muted">Tarif préférentiel</small>
+                                <strong data-fr="50 USD / an" data-en="50 USD / year">50 USD / an</strong>
+                                <br><small class="text-muted" data-fr="Tarif préférentiel" data-en="Preferential rate">Tarif préférentiel</small>
                             </li>
 
                             <li class="mb-3">
                                 <i class="fas fa-check-circle text-success"></i>
-                                <strong>Valable durant l'année en cours</strong>
-                                <br><small class="text-muted">Valable du 1er janvier au 31 décembre</small>
+                                <strong data-fr="Valable durant l'année en cours" data-en="Valid during the current year">Valable durant l'année en cours</strong>
+                                <br><small class="text-muted" data-fr="Valable du 1er janvier au 31 décembre" data-en="Valid from January 1st to December 31st">Valable du 1er janvier au 31 décembre</small>
                             </li>
 
                             <li class="mb-3">
                                 <i class="fas fa-check-circle text-success"></i>
-                                <strong>Facture électronique</strong>
-                                <br><small class="text-muted">Reçu disponible immédiatement</small>
+                                <strong data-fr="Facture électronique" data-en="Electronic invoice">Facture électronique</strong>
+                                <br><small class="text-muted" data-fr="Reçu disponible immédiatement" data-en="Receipt available immediately">Reçu disponible immédiatement</small>
                             </li>
                         </ul>
                     </div>
 
                     <div class="payment-card">
-                        <h3><i class="fas fa-headset"></i> Assistance</h3>
+                        <h3><i class="fas fa-headset"></i> <span data-fr="Assistance" data-en="Support">Assistance</span></h3>
 
                         <div class="d-flex flex-column gap-2">
                             <p><i class="fas fa-envelope" style="color: #003399;"></i> <strong>dfac@ogefrem.cd</strong></p>
-                            <p><i class="fas fa-clock" style="color: #003399;"></i> Lun-Ven : 8h30 - 16h30</p>
+                            <p><i class="fas fa-clock" style="color: #003399;"></i> <span data-fr="Lun-Ven : 8h30 - 16h30" data-en="Mon-Fri: 8:30am - 4:30pm">Lun-Ven : 8h30 - 16h30</span></p>
                         </div>
                     </div>
                 </div>
@@ -299,16 +291,42 @@
 <script src="../assets/js/main.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        AOS.init({ duration: 800, once: true });
+document.addEventListener('DOMContentLoaded', function () {
+    AOS.init({ duration: 800, once: true });
+    
+    let currentLang = localStorage.getItem('ogefrem_lang') || 'fr';
+    
+    function updatePageLanguage(lang) {
+        document.querySelectorAll('[data-fr][data-en]').forEach(el => {
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') {
+                if (el.dataset[lang + '-placeholder']) {
+                    el.placeholder = el.dataset[lang + '-placeholder'];
+                }
+            } else {
+                el.textContent = el.dataset[lang];
+            }
+        });
+    }
+    
+    const langObserver = new MutationObserver(function() {
+        const newLang = localStorage.getItem('ogefrem_lang') || 'fr';
+        if (newLang !== currentLang) {
+            currentLang = newLang;
+            updatePageLanguage(currentLang);
+        }
+    });
+    langObserver.observe(document.documentElement, { childList: true, subtree: true });
+    
+    setTimeout(function() {
+        updatePageLanguage(currentLang);
+    }, 500);
 
-        // Petite interaction pour montrer que les boutons sont cliquables mais inactifs
-        document.querySelectorAll('.payment-method-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                alert('⚠️ Ce moyen de paiement est en cours de développement. Veuillez réessayer ultérieurement ou contacter notre service client.');
-            });
+    document.querySelectorAll('.payment-method-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            alert(currentLang === 'fr' ? '⚠️ Ce moyen de paiement est en cours de développement. Veuillez réessayer ultérieurement ou contacter notre service client.' : '⚠️ This payment method is under development. Please try again later or contact our customer service.');
         });
     });
+});
 </script>
 
 </body>

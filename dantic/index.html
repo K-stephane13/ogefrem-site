@@ -2207,433 +2207,781 @@
     // ============================================================
     // OPEN MODAL
     // ============================================================
-    async function openModal(type, id = null) {
-        let item = null;
-        if (id) {
-            const module = getModuleFromType(type);
-            if (module) {
-                if (module === 'ministre') {
-                    // Pour le ministre, on le charge directement
-                    try {
-                        const response = await fetch(`${API_BASE}/data.php?module=ministre`, { cache: 'no-store' });
-                        if (response.ok) {
-                            cache.ministre = await response.json();
-                        }
-                    } catch (e) {}
-                    item = cache.ministre;
-                } else {
-                    if (!cache[module]?.length) {
-                        try {
-                            cache[module] = await api(`${API_BASE}/data.php?module=${module}`);
-                        } catch (error) {
-                            cache[module] = [];
-                        }
+    // ============================================================
+// OPEN MODAL - ACTUALITÉS (VERSION COMPLÈTE)
+// ============================================================
+async function openModal(type, id = null) {
+    let item = null;
+    if (id) {
+        const module = getModuleFromType(type);
+        if (module) {
+            if (module === 'ministre') {
+                try {
+                    const response = await fetch(`${API_BASE}/data.php?module=ministre`, { cache: 'no-store' });
+                    if (response.ok) {
+                        cache.ministre = await response.json();
                     }
-                    const data = safeArray(cache[module]);
-                    item = data.find(x => Number(x.id) === Number(id));
+                } catch (e) {}
+                item = cache.ministre;
+            } else {
+                if (!cache[module]?.length) {
+                    try {
+                        cache[module] = await api(`${API_BASE}/data.php?module=${module}`);
+                    } catch (error) {
+                        cache[module] = [];
+                    }
                 }
+                const data = safeArray(cache[module]);
+                item = data.find(x => Number(x.id) === Number(id));
             }
         }
+    }
 
-        let modalHtml = '';
+    let modalHtml = '';
 
-        // ACTUALITÉ
-        if (type === 'actualite') {
-            modalHtml = `
-            <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
-                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} une actualité</h3><button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+    // ============================================================
+    // ACTUALITÉ - FORMULAIRE COMPLET AVEC TOUS LES CHAMPS
+    // ============================================================
+    if (type === 'actualite') {
+        // Récupérer les valeurs avec fallback
+        const titre = item?.titre || '';
+        const titreEn = item?.titre_en || '';
+        const description = item?.description || '';
+        const descriptionEn = item?.description_en || '';
+        const categorie = item?.categorie || '';
+        const categorieEn = item?.categorie_en || '';
+        const date = item?.date || new Date().toISOString().split('T')[0];
+        const facebookUrl = item?.facebookUrl || '';
+        const instagramUrl = item?.instagramUrl || '';
+        const twitterUrl = item?.twitterUrl || '';
+        const likes = item?.likes || 0;
+        const hasImages = item?.images?.length > 0;
+
+        modalHtml = `
+        <div class="modal-custom active" id="dynamicModal">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h3>${id ? 'Modifier' : 'Ajouter'} une actualité</h3>
+                    <button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                </div>
                 <form id="modalForm" enctype="multipart/form-data">
                     <input type="hidden" id="itemId" value="${id || ''}">
-                    <div class="form-group"><label><i class="fas fa-heading"></i> Titre <span class="required">*</span></label><input type="text" id="titre" class="form-control" value="${escapeHtml(item?.titre || '')}" required placeholder="Titre de l'actualité"></div>
-                    <div class="form-group"><label><i class="fas fa-calendar"></i> Date <span class="required">*</span></label><input type="date" id="date" class="form-control" value="${escapeHtml(item?.date || new Date().toISOString().split('T')[0])}" required></div>
-                    <div class="form-group"><label><i class="fas fa-tag"></i> Catégorie <span class="required">*</span></label>
-                        <select id="categorie" class="form-select" required>
-                            <option value="">Sélectionner une catégorie</option>
-                            ${['evenement','communique','projet','partenariat','avis'].map(c => `<option value="${c}" ${item?.categorie === c ? 'selected' : ''}>${c === 'evenement' ? 'Actualité' : c.charAt(0).toUpperCase() + c.slice(1)}</option>`).join('')}
-                        </select>
+                    <input type="hidden" id="formAction" value="${id ? 'update' : 'create'}">
+                    
+                    <!-- ========================================== -->
+                    <!-- TITRE FRANÇAIS -->
+                    <!-- ========================================== -->
+                    <div class="form-group">
+                        <label><i class="fas fa-heading"></i> Titre (Français) <span class="required">*</span></label>
+                        <input type="text" id="titre" name="titre" class="form-control" 
+                               value="${escapeHtml(titre)}" required 
+                               placeholder="Titre de l'actualité en français">
                     </div>
-                    <div class="form-group"><label><i class="fas fa-align-left"></i> Description <span class="required">*</span></label><textarea id="description" class="form-control" rows="6" required placeholder="Contenu détaillé de l'actualité...">${escapeHtml(item?.description || '')}</textarea></div>
+                    
+                    <!-- ========================================== -->
+                    <!-- TITRE ANGLAIS -->
+                    <!-- ========================================== -->
+                    <div class="form-group">
+                        <label><i class="fas fa-heading"></i> Titre (Anglais)</label>
+                        <input type="text" id="titre_en" name="titre_en" class="form-control" 
+                               value="${escapeHtml(titreEn)}" 
+                               placeholder="Title in English">
+                    </div>
+                    
+                    <!-- ========================================== -->
+                    <!-- DESCRIPTION FRANÇAIS -->
+                    <!-- ========================================== -->
+                    <div class="form-group">
+                        <label><i class="fas fa-align-left"></i> Description (Français) <span class="required">*</span></label>
+                        <textarea id="description" name="description" class="form-control" rows="6" required 
+                                  placeholder="Contenu détaillé de l'actualité en français...">${escapeHtml(description)}</textarea>
+                    </div>
+                    
+                    <!-- ========================================== -->
+                    <!-- DESCRIPTION ANGLAIS -->
+                    <!-- ========================================== -->
+                    <div class="form-group">
+                        <label><i class="fas fa-align-left"></i> Description (Anglais)</label>
+                        <textarea id="description_en" name="description_en" class="form-control" rows="6" 
+                                  placeholder="Content in English...">${escapeHtml(descriptionEn)}</textarea>
+                    </div>
+                    
+                    <!-- ========================================== -->
+                    <!-- CATÉGORIES -->
+                    <!-- ========================================== -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><i class="fas fa-tag"></i> Catégorie (Français) <span class="required">*</span></label>
+                                <select id="categorie" name="categorie" class="form-select" required>
+                                    <option value="">Sélectionner une catégorie</option>
+                                    <option value="evenement" ${categorie === 'evenement' ? 'selected' : ''}>Actualité</option>
+                                    <option value="communique" ${categorie === 'communique' ? 'selected' : ''}>Communiqué</option>
+                                    <option value="projet" ${categorie === 'projet' ? 'selected' : ''}>Projet</option>
+                                    <option value="partenariat" ${categorie === 'partenariat' ? 'selected' : ''}>Partenariat</option>
+                                    <option value="avis" ${categorie === 'avis' ? 'selected' : ''}>Avis officiel</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><i class="fas fa-tag"></i> Catégorie (Anglais)</label>
+                                <select id="categorie_en" name="categorie_en" class="form-select">
+                                    <option value="">Select a category</option>
+                                    <option value="evenement" ${categorieEn === 'evenement' ? 'selected' : ''}>News</option>
+                                    <option value="communique" ${categorieEn === 'communique' ? 'selected' : ''}>Press Release</option>
+                                    <option value="projet" ${categorieEn === 'projet' ? 'selected' : ''}>Project</option>
+                                    <option value="partenariat" ${categorieEn === 'partenariat' ? 'selected' : ''}>Partnership</option>
+                                    <option value="avis" ${categorieEn === 'avis' ? 'selected' : ''}>Official Notice</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ========================================== -->
+                    <!-- DATE -->
+                    <!-- ========================================== -->
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> Date <span class="required">*</span></label>
+                        <input type="date" id="date" name="date" class="form-control" 
+                               value="${escapeHtml(date)}" required>
+                    </div>
+                    
+                    <!-- ========================================== -->
+                    <!-- IMAGES -->
+                    <!-- ========================================== -->
                     <div class="form-group">
                         <label><i class="fas fa-images"></i> Images</label>
-                        <input type="file" id="images" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif" multiple ${id ? '' : 'required'}>
-                        <div class="form-text">Formats : JPG, PNG, WEBP ou GIF. Maximum 10 Mo par image. ${id ? 'Laissez vide pour conserver les images existantes.' : 'Sélectionnez au moins une image.'}</div>
+                        <input type="file" id="images" name="images[]" class="form-control" 
+                               accept="image/jpeg,image/png,image/webp,image/gif" multiple ${id ? '' : 'required'}>
+                        <div class="form-text">
+                            Formats : JPG, PNG, WEBP ou GIF. Maximum 10 Mo par image. 
+                            ${id ? 'Laissez vide pour conserver les images existantes.' : 'Sélectionnez au moins une image.'}
+                        </div>
                     </div>
-                    ${id && item?.images?.length ? `
+                    
+                    <!-- ========================================== -->
+                    <!-- IMAGES EXISTANTES -->
+                    <!-- ========================================== -->
+                    ${id && hasImages ? `
                         <div class="form-group">
                             <label>Images actuelles</label>
                             <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
                                 ${item.images.map(img => `<img src="../${escapeHtml(img.url)}" alt="" style="width:80px;height:60px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">`).join('')}
                             </div>
                             <label style="display:flex;gap:8px;align-items:center;margin-top:10px;cursor:pointer;">
-                                <input type="checkbox" id="replaceImages"> <span style="font-weight:normal;">Remplacer toutes les images existantes</span>
+                                <input type="checkbox" id="replaceImages" name="replaceImages" value="1"> 
+                                <span style="font-weight:normal;">Remplacer toutes les images existantes</span>
                             </label>
-                        </div>` : ''}
-                    <div class="form-group"><label><i class="fab fa-facebook"></i> Facebook URL</label><input type="url" id="facebookUrl" class="form-control" value="${escapeHtml(item?.facebookUrl || '')}" placeholder="https://facebook.com/..."></div>
-                    <div class="form-group"><label><i class="fab fa-instagram"></i> Instagram URL</label><input type="url" id="instagramUrl" class="form-control" value="${escapeHtml(item?.instagramUrl || '')}" placeholder="https://instagram.com/..."></div>
-                    <div class="form-group"><label><i class="fab fa-twitter"></i> Twitter/X URL</label><input type="url" id="twitterUrl" class="form-control" value="${escapeHtml(item?.twitterUrl || '')}" placeholder="https://twitter.com/..."></div>
-                    <div class="form-group"><label><i class="fas fa-heart"></i> Likes</label><input type="number" id="likes" class="form-control" value="${escapeHtml(item?.likes || 0)}" min="0" placeholder="Nombre de likes"></div>
-                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}</button>
+                        </div>
+                    ` : ''}
+                    
+                    <!-- ========================================== -->
+                    <!-- RÉSEAUX SOCIAUX -->
+                    <!-- ========================================== -->
+                    <div class="form-group">
+                        <label><i class="fab fa-facebook"></i> Facebook URL</label>
+                        <input type="url" id="facebookUrl" name="facebookUrl" class="form-control" 
+                               value="${escapeHtml(facebookUrl)}" placeholder="https://facebook.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fab fa-instagram"></i> Instagram URL</label>
+                        <input type="url" id="instagramUrl" name="instagramUrl" class="form-control" 
+                               value="${escapeHtml(instagramUrl)}" placeholder="https://instagram.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fab fa-twitter"></i> Twitter/X URL</label>
+                        <input type="url" id="twitterUrl" name="twitterUrl" class="form-control" 
+                               value="${escapeHtml(twitterUrl)}" placeholder="https://twitter.com/...">
+                    </div>
+                    
+                    <!-- ========================================== -->
+                    <!-- LIKES -->
+                    <!-- ========================================== -->
+                    <div class="form-group">
+                        <label><i class="fas fa-heart"></i> Likes</label>
+                        <input type="number" id="likes" name="likes" class="form-control" 
+                               value="${escapeHtml(likes)}" min="0" placeholder="Nombre de likes">
+                    </div>
+                    
+                    <!-- ========================================== -->
+                    <!-- BOUTON SUBMIT -->
+                    <!-- ========================================== -->
+                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">
+                        ${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}
+                    </button>
                 </form>
-            </div></div>`;
-        }
+            </div>
+        </div>`;
+    }
 
-        // DEMANDE
-        if (type === 'demande') {
-            modalHtml = `
-            <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
-                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} une demande</h3><button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-                <form id="modalForm">
-                    <input type="hidden" id="itemId" value="${id || ''}">
-                    <div class="form-group"><label>Marchandises <span class="required">*</span></label><input type="text" id="marchandises" class="form-control" value="${escapeHtml(item?.marchandises || '')}" required></div>
-                    <div class="form-group"><label>Origine <span class="required">*</span></label><input type="text" id="origine" class="form-control" value="${escapeHtml(item?.origine || '')}" required></div>
-                    <div class="form-group"><label>Destination <span class="required">*</span></label><input type="text" id="destination" class="form-control" value="${escapeHtml(item?.destination || '')}" required></div>
-                    <div class="form-group"><label>Date souhaitée <span class="required">*</span></label><input type="date" id="date" class="form-control" value="${escapeHtml(item?.date || '')}" required></div>
-                    <div class="form-group"><label>Nom du demandeur <span class="required">*</span></label><input type="text" id="nom" class="form-control" value="${escapeHtml(item?.nom || '')}" required></div>
-                    <div class="form-group"><label>Email</label><input type="email" id="email" class="form-control" value="${escapeHtml(item?.email || '')}"></div>
-                    <div class="form-group"><label>Téléphone</label><input type="text" id="telephone" class="form-control" value="${escapeHtml(item?.telephone || '')}"></div>
-                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}</button>
-                </form>
-            </div></div>`;
-        }
-
-        // OFFRE
-        if (type === 'offre') {
-            modalHtml = `
-            <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
-                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} une offre</h3><button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-                <form id="modalForm">
-                    <input type="hidden" id="itemId" value="${id || ''}">
-                    <div class="form-group"><label>Titre <span class="required">*</span></label><input type="text" id="titre" class="form-control" value="${escapeHtml(item?.titre || '')}" required></div>
-                    <div class="form-group"><label>Type <span class="required">*</span></label><select id="type" class="form-select">
-                        ${['Routier','Maritime','Aérien','Ferroviaire'].map(t => `<option value="${t}" ${item?.type === t ? 'selected' : ''}>${t}</option>`).join('')}
-                    </select></div>
-                    <div class="form-group"><label>Origine <span class="required">*</span></label><input type="text" id="origine" class="form-control" value="${escapeHtml(item?.origine || '')}" required></div>
-                    <div class="form-group"><label>Destination <span class="required">*</span></label><input type="text" id="destination" class="form-control" value="${escapeHtml(item?.destination || '')}" required></div>
-                    <div class="form-group"><label>Capacité</label><input type="text" id="capacite" class="form-control" value="${escapeHtml(item?.capacite || '')}"></div>
-                    <div class="form-group"><label>Tarif</label><input type="text" id="tarif" class="form-control" value="${escapeHtml(item?.tarif || '')}"></div>
-                    <div class="form-group"><label>Contact</label><input type="text" id="contact" class="form-control" value="${escapeHtml(item?.contact || '')}"></div>
-                    <div class="form-group"><label>Description</label><textarea id="description" class="form-control" rows="3">${escapeHtml(item?.description || '')}</textarea></div>
-                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}</button>
-                </form>
-            </div></div>`;
-        }
-
-        // COMITÉ - MODAL AVEC UPLOAD D'IMAGE (BLOB)
-        if (type === 'comite') {
-            modalHtml = `
-            <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
-                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} un membre du Comité de Gestion</h3><button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+    // ============================================================
+    // COMITÉ - AVEC message_en
+    // ============================================================
+    if (type === 'comite') {
+        modalHtml = `
+        <div class="modal-custom active" id="dynamicModal">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h3>${id ? 'Modifier' : 'Ajouter'} un membre du Comité de Gestion</h3>
+                    <button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                </div>
                 <form id="modalForm" enctype="multipart/form-data">
                     <input type="hidden" id="itemId" value="${id || ''}">
-                    <div class="form-group"><label>Nom <span class="required">*</span></label><input type="text" id="nom" class="form-control" value="${escapeHtml(item?.nom || '')}" required></div>
-                    <div class="form-group"><label>Titre / Fonction <span class="required">*</span></label>
-                        <select id="titre" class="form-select" required>
+                    <input type="hidden" id="formAction" value="${id ? 'update' : 'create'}">
+                    
+                    <div class="form-group">
+                        <label>Nom <span class="required">*</span></label>
+                        <input type="text" id="nom" name="nom" class="form-control" 
+                               value="${escapeHtml(item?.nom || '')}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Titre / Fonction <span class="required">*</span></label>
+                        <select id="titre" name="titre" class="form-select" required>
                             <option value="">Sélectionner...</option>
                             <option value="Directeur Général" ${item?.titre === 'Directeur Général' ? 'selected' : ''}>Directeur Général</option>
                             <option value="Directeur Général Adjoint" ${item?.titre === 'Directeur Général Adjoint' ? 'selected' : ''}>Directeur Général Adjoint</option>
                         </select>
                     </div>
+                    
+                    <div class="form-group">
+                        <label>Message (Français)</label>
+                        <textarea id="message" name="message" class="form-control" rows="3">${escapeHtml(item?.message || '')}</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Message (Anglais)</label>
+                        <textarea id="message_en" name="message_en" class="form-control" rows="3">${escapeHtml(item?.message_en || '')}</textarea>
+                    </div>
+                    
                     <div class="form-group">
                         <label>Photo <span class="required">${!id ? '*' : ''}</span></label>
-                        <input type="file" id="photo" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif" ${!id ? 'required' : ''}>
+                        <input type="file" id="photo" name="photo[]" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif" ${!id ? 'required' : ''}>
                         <div class="form-text">Formats : JPG, PNG, WEBP ou GIF. Maximum 10 Mo. ${id ? 'Laissez vide pour conserver l\'image existante.' : 'Sélectionnez une photo.'}</div>
                     </div>
+                    
                     ${id && item?.has_photo ? `
                         <div class="form-group">
                             <label>Photo actuelle</label>
                             <div style="margin-top:8px;">
                                 <img src="${item.photo_url}" alt="" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:1px solid #ddd;">
                             </div>
-                        </div>` : ''}
-                    <div class="form-group"><label>Message</label><textarea id="message" class="form-control" rows="3">${escapeHtml(item?.message || '')}</textarea></div>
-                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}</button>
+                        </div>
+                    ` : ''}
+                    
+                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">
+                        ${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}
+                    </button>
                 </form>
-            </div></div>`;
-        }
+            </div>
+        </div>`;
+    }
 
-        // CONSEIL - MODAL AVEC UPLOAD D'IMAGE (BLOB)
-        if (type === 'conseil') {
-            modalHtml = `
-            <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
-                <div class="modal-header-custom"><h3>${id ? 'Modifier' : 'Ajouter'} un membre du Conseil d'Administration</h3><button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+    // ============================================================
+    // CONSEIL - AVEC message_en
+    // ============================================================
+    if (type === 'conseil') {
+        modalHtml = `
+        <div class="modal-custom active" id="dynamicModal">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h3>${id ? 'Modifier' : 'Ajouter'} un membre du Conseil d'Administration</h3>
+                    <button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                </div>
                 <form id="modalForm" enctype="multipart/form-data">
                     <input type="hidden" id="itemId" value="${id || ''}">
-                    <div class="form-group"><label>Nom <span class="required">*</span></label><input type="text" id="nom" class="form-control" value="${escapeHtml(item?.nom || '')}" required></div>
-                    <div class="form-group"><label>Titre / Fonction <span class="required">*</span></label>
-                        <select id="titre" class="form-select" required>
+                    <input type="hidden" id="formAction" value="${id ? 'update' : 'create'}">
+                    
+                    <div class="form-group">
+                        <label>Nom <span class="required">*</span></label>
+                        <input type="text" id="nom" name="nom" class="form-control" 
+                               value="${escapeHtml(item?.nom || '')}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Titre / Fonction <span class="required">*</span></label>
+                        <select id="titre" name="titre" class="form-select" required>
                             <option value="">Sélectionner...</option>
                             <option value="Président du Conseil d'Administration" ${item?.titre === 'Président du Conseil d\'Administration' ? 'selected' : ''}>Président du Conseil d'Administration</option>
                             <option value="Représentante de la Tutelle" ${item?.titre === 'Représentante de la Tutelle' ? 'selected' : ''}>Représentante de la Tutelle</option>
                             <option value="Administrateur" ${item?.titre === 'Administrateur' ? 'selected' : ''}>Administrateur</option>
                         </select>
                     </div>
+                    
+                    <div class="form-group">
+                        <label>Message (Français)</label>
+                        <textarea id="message" name="message" class="form-control" rows="3">${escapeHtml(item?.message || '')}</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Message (Anglais)</label>
+                        <textarea id="message_en" name="message_en" class="form-control" rows="3">${escapeHtml(item?.message_en || '')}</textarea>
+                    </div>
+                    
                     <div class="form-group">
                         <label>Photo <span class="required">${!id ? '*' : ''}</span></label>
-                        <input type="file" id="photo" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif" ${!id ? 'required' : ''}>
+                        <input type="file" id="photo" name="photo[]" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif" ${!id ? 'required' : ''}>
                         <div class="form-text">Formats : JPG, PNG, WEBP ou GIF. Maximum 10 Mo. ${id ? 'Laissez vide pour conserver l\'image existante.' : 'Sélectionnez une photo.'}</div>
                     </div>
+                    
                     ${id && item?.has_photo ? `
                         <div class="form-group">
                             <label>Photo actuelle</label>
                             <div style="margin-top:8px;">
                                 <img src="${item.photo_url}" alt="" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:1px solid #ddd;">
                             </div>
-                        </div>` : ''}
-                    <div class="form-group"><label>Message (optionnel)</label><textarea id="message" class="form-control" rows="3">${escapeHtml(item?.message || '')}</textarea></div>
-                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}</button>
+                        </div>
+                    ` : ''}
+                    
+                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">
+                        ${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}
+                    </button>
                 </form>
-            </div></div>`;
-        }
+            </div>
+        </div>`;
+    }
 
-        // ============================================================
-        // MINISTRE - MODAL AVEC UPLOAD D'IMAGE (BLOB) - SUPER ADMIN UNIQUEMENT
-        // ============================================================
-        if (type === 'ministre') {
-            const hasPhoto = item?.has_photo === true || item?.has_photo === 1;
-            const photoUrl = hasPhoto ? item?.photo_url : null;
-            
-            modalHtml = `
-            <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
-                <div class="modal-header-custom"><h3><i class="fas fa-user-secret"></i> Modifier le Ministre des Transports</h3><button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+    // ============================================================
+    // MINISTRE - AVEC message_en
+    // ============================================================
+    if (type === 'ministre') {
+        const hasPhoto = item?.has_photo === true || item?.has_photo === 1;
+        const photoUrl = hasPhoto ? item?.photo_url : null;
+        
+        modalHtml = `
+        <div class="modal-custom active" id="dynamicModal">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h3><i class="fas fa-user-secret"></i> Modifier le Ministre des Transports</h3>
+                    <button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                </div>
                 <form id="modalForm" enctype="multipart/form-data">
                     <input type="hidden" id="itemId" value="${item?.id || 1}">
+                    <input type="hidden" id="formAction" value="update">
+                    
                     <div class="form-group">
                         <label>Nom <span class="required">*</span></label>
-                        <input type="text" id="nom" class="form-control" value="${escapeHtml(item?.nom || 'Ministre des Transports')}" required>
+                        <input type="text" id="nom" name="nom" class="form-control" 
+                               value="${escapeHtml(item?.nom || 'Ministre des Transports')}" required>
                     </div>
+                    
                     <div class="form-group">
                         <label>Titre <span class="required">*</span></label>
-                        <input type="text" id="titre" class="form-control" value="${escapeHtml(item?.titre || 'Ministre des Transports')}" required>
+                        <input type="text" id="titre" name="titre" class="form-control" 
+                               value="${escapeHtml(item?.titre || 'Ministre des Transports')}" required>
                     </div>
+                    
                     <div class="form-group">
-                        <label>Message</label>
-                        <textarea id="message" class="form-control" rows="3">${escapeHtml(item?.message || 'Partenariat stratégique avec l\'OGEFREM')}</textarea>
+                        <label>Message (Français)</label>
+                        <textarea id="message" name="message" class="form-control" rows="3">${escapeHtml(item?.message || 'Partenariat stratégique avec l\'OGEFREM')}</textarea>
                     </div>
+                    
+                    <div class="form-group">
+                        <label>Message (Anglais)</label>
+                        <textarea id="message_en" name="message_en" class="form-control" rows="3">${escapeHtml(item?.message_en || 'Strategic partnership with OGEFREM')}</textarea>
+                    </div>
+                    
                     <div class="form-group">
                         <label>Photo</label>
-                        <input type="file" id="photo" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif">
+                        <input type="file" id="photo" name="photo[]" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif">
                         <div class="form-text">Formats : JPG, PNG, WEBP ou GIF. Maximum 10 Mo. Laissez vide pour conserver l'image existante.</div>
                     </div>
+                    
                     ${hasPhoto && photoUrl ? `
                         <div class="form-group">
                             <label>Photo actuelle</label>
                             <div style="margin-top:8px;">
                                 <img src="${photoUrl}" alt="" style="width:120px;height:120px;object-fit:cover;border-radius:8px;border:1px solid #ddd;">
                             </div>
-                        </div>` : ''}
+                        </div>
+                    ` : ''}
+                    
                     <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">
                         <i class="fas fa-save"></i> Enregistrer
                     </button>
                 </form>
-            </div></div>`;
-        }
+            </div>
+        </div>`;
+    }
 
-        // USER (avec œil sur le mot de passe)
-        if (type === 'user') {
-            if (currentUser.role !== 'SUPER_ADMIN') return showToast('Accès refusé', 'error');
-            modalHtml = `
-            <div class="modal-custom active" id="dynamicModal"><div class="modal-content-custom">
-                <div class="modal-header-custom"><h3>Créer un utilisateur</h3><button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+    // ============================================================
+    // DEMANDE
+    // ============================================================
+    if (type === 'demande') {
+        modalHtml = `
+        <div class="modal-custom active" id="dynamicModal">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h3>${id ? 'Modifier' : 'Ajouter'} une demande</h3>
+                    <button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                </div>
                 <form id="modalForm">
-                    <div class="form-group"><label>Nom <span class="required">*</span></label><input type="text" id="nom" class="form-control" required></div>
-                    <div class="form-group"><label>Identifiant <span class="required">*</span></label><input type="text" id="usernameNew" class="form-control" required></div>
+                    <input type="hidden" id="itemId" value="${id || ''}">
+                    <input type="hidden" id="formAction" value="${id ? 'update' : 'create'}">
+                    
                     <div class="form-group">
-                        <label>Mot de passe <span class="required">*</span></label>
-                        <div class="password-wrapper" id="createUserPwdWrapper">
-                            <input type="password" id="passwordNew" class="form-control" required>
-                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('passwordNew', 'createUserPwdWrapper')" aria-label="Afficher/masquer le mot de passe">
-                                <i class="fas fa-eye"></i>
-                                <i class="fas fa-eye-slash"></i>
-                            </button>
-                        </div>
+                        <label>Marchandises <span class="required">*</span></label>
+                        <input type="text" id="marchandises" name="marchandises" class="form-control" 
+                               value="${escapeHtml(item?.marchandises || '')}" required>
                     </div>
-                    <div class="form-group"><label>Rôle <span class="required">*</span></label><select id="role" class="form-select"><option value="ADMIN">ADMIN</option><option value="SUPER_ADMIN">SUPER_ADMIN</option></select></div>
-                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;"><i class="fas fa-user-plus"></i> Créer</button>
+                    <div class="form-group">
+                        <label>Origine <span class="required">*</span></label>
+                        <input type="text" id="origine" name="origine" class="form-control" 
+                               value="${escapeHtml(item?.origine || '')}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Destination <span class="required">*</span></label>
+                        <input type="text" id="destination" name="destination" class="form-control" 
+                               value="${escapeHtml(item?.destination || '')}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date souhaitée <span class="required">*</span></label>
+                        <input type="date" id="date" name="date" class="form-control" 
+                               value="${escapeHtml(item?.date || '')}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nom du demandeur <span class="required">*</span></label>
+                        <input type="text" id="nom" name="nom" class="form-control" 
+                               value="${escapeHtml(item?.nom || '')}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="email" name="email" class="form-control" 
+                               value="${escapeHtml(item?.email || '')}">
+                    </div>
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        <input type="text" id="telephone" name="telephone" class="form-control" 
+                               value="${escapeHtml(item?.telephone || '')}">
+                    </div>
+                    
+                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">
+                        ${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}
+                    </button>
                 </form>
-            </div></div>`;
-        }
-
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
-        document.getElementById('modalForm').addEventListener('submit', e => saveModal(e, type, item));
-        setTimeout(initPasswordToggles, 100);
+            </div>
+        </div>`;
     }
 
     // ============================================================
-    // SAVE MODAL
+    // OFFRE
     // ============================================================
-    async function saveModal(e, type, oldItem) {
-        e.preventDefault();
-        const formId = document.getElementById('itemId')?.value || '';
-        let payload = {};
-        let url = '';
-        let method = formId ? 'PUT' : 'POST';
+    if (type === 'offre') {
+        modalHtml = `
+        <div class="modal-custom active" id="dynamicModal">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h3>${id ? 'Modifier' : 'Ajouter'} une offre</h3>
+                    <button class="btn-close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <form id="modalForm">
+                    <input type="hidden" id="itemId" value="${id || ''}">
+                    <input type="hidden" id="formAction" value="${id ? 'update' : 'create'}">
+                    
+                    <div class="form-group">
+                        <label>Titre <span class="required">*</span></label>
+                        <input type="text" id="titre" name="titre" class="form-control" 
+                               value="${escapeHtml(item?.titre || '')}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Type <span class="required">*</span></label>
+                        <select id="type" name="type" class="form-select">
+                            ${['Routier','Maritime','Aérien','Ferroviaire'].map(t => `<option value="${t}" ${item?.type === t ? 'selected' : ''}>${t}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Origine <span class="required">*</span></label>
+                        <input type="text" id="origine" name="origine" class="form-control" 
+                               value="${escapeHtml(item?.origine || '')}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Destination <span class="required">*</span></label>
+                        <input type="text" id="destination" name="destination" class="form-control" 
+                               value="${escapeHtml(item?.destination || '')}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Capacité</label>
+                        <input type="text" id="capacite" name="capacite" class="form-control" 
+                               value="${escapeHtml(item?.capacite || '')}">
+                    </div>
+                    <div class="form-group">
+                        <label>Tarif</label>
+                        <input type="text" id="tarif" name="tarif" class="form-control" 
+                               value="${escapeHtml(item?.tarif || '')}">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact</label>
+                        <input type="text" id="contact" name="contact" class="form-control" 
+                               value="${escapeHtml(item?.contact || '')}">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="description" name="description" class="form-control" rows="3">${escapeHtml(item?.description || '')}</textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-add" style="width:100%;padding:14px;justify-content:center;font-size:1rem;">
+                        ${id ? '<i class="fas fa-save"></i> Modifier' : '<i class="fas fa-plus-circle"></i> Ajouter'}
+                    </button>
+                </form>
+            </div>
+        </div>`;
+    }
 
-        try {
-            // ACTUALITÉ
-            if (type === 'actualite') {
-                const formData = new FormData();
-                if (formId) {
-                    formData.append('id', formId);
-                    formData.append('_method', 'PUT');
-                }
-                formData.append('titre', document.getElementById('titre').value);
-                formData.append('date', document.getElementById('date').value);
-                formData.append('categorie', document.getElementById('categorie').value);
-                formData.append('description', document.getElementById('description').value);
-                formData.append('facebookUrl', document.getElementById('facebookUrl').value);
-                formData.append('instagramUrl', document.getElementById('instagramUrl').value);
-                formData.append('twitterUrl', document.getElementById('twitterUrl').value);
-                formData.append('likes', document.getElementById('likes').value || 0);
-                formData.append('replaceImages', document.getElementById('replaceImages')?.checked ? '1' : '0');
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    document.getElementById('modalForm').addEventListener('submit', e => saveModal(e, type, item));
+    setTimeout(initPasswordToggles, 100);
+}
 
-                const files = document.getElementById('images').files;
-                for (const file of files) formData.append('images[]', file);
-
-                if (!formId && files.length === 0) {
-                    throw new Error('Sélectionnez au moins une image.');
-                }
-                if (formId && document.getElementById('replaceImages')?.checked && files.length === 0) {
-                    throw new Error('Sélectionnez les nouvelles images avant de demander le remplacement.');
-                }
-
-                url = `${API_BASE}/data.php?module=actualites`;
-                method = 'POST';
-                await api(url, { method, body: formData });
-                showToast('Actualité et images enregistrées');
-                closeModal();
-                await loadSection(getSectionFromType(type));
-                return;
+    // ============================================================
+// SAVE MODAL - VERSION COMPLÈTE AVEC TOUS LES CHAMPS
+// ============================================================
+async function saveModal(e, type, oldItem) {
+    e.preventDefault();
+    const formId = document.getElementById('itemId')?.value || '';
+    const formAction = document.getElementById('formAction')?.value || 'create';
+    
+    // Récupérer le formulaire
+    const form = document.getElementById('modalForm');
+    const formData = new FormData(form);
+    
+    // Ajouter l'action
+    formData.append('action', formAction);
+    
+    // Si c'est une modification, ajouter l'ID
+    if (formId) {
+        formData.append('id', formId);
+    }
+    
+    try {
+        // ============================================================
+        // ACTUALITÉ
+        // ============================================================
+        if (type === 'actualite') {
+            // Validation
+            const titre = formData.get('titre');
+            const date = formData.get('date');
+            const categorie = formData.get('categorie');
+            const description = formData.get('description');
+            
+            if (!titre || !date || !categorie || !description) {
+                throw new Error('Titre, date, catégorie et description sont obligatoires.');
             }
-
-            // COMITÉ - SAVE
-            if (type === 'comite') {
-                const formData = new FormData();
-                if (formId) {
-                    formData.append('id', formId);
-                    formData.append('_method', 'PUT');
-                }
-                formData.append('nom', document.getElementById('nom').value);
-                formData.append('titre', document.getElementById('titre').value);
-                formData.append('message', document.getElementById('message').value || '');
-                
-                const photoFile = document.getElementById('photo')?.files[0];
-                if (photoFile) {
-                    formData.append('photo[]', photoFile);
-                }
-                
-                url = `${API_BASE}/data.php?module=comite`;
-                method = 'POST';
-                await api(url, { method, body: formData });
-                showToast('Membre enregistré avec succès');
-                closeModal();
-                await loadSection(getSectionFromType(type));
-                return;
+            
+            // Vérifier les images
+            const files = document.getElementById('images')?.files;
+            if (!formId && (!files || files.length === 0)) {
+                throw new Error('Sélectionnez au moins une image.');
             }
-
-            // CONSEIL - SAVE
-            if (type === 'conseil') {
-                const formData = new FormData();
-                if (formId) {
-                    formData.append('id', formId);
-                    formData.append('_method', 'PUT');
-                }
-                formData.append('nom', document.getElementById('nom').value);
-                formData.append('titre', document.getElementById('titre').value);
-                formData.append('message', document.getElementById('message').value || '');
-                
-                const photoFile = document.getElementById('photo')?.files[0];
-                if (photoFile) {
-                    formData.append('photo[]', photoFile);
-                }
-                
-                url = `${API_BASE}/data.php?module=conseil`;
-                method = 'POST';
-                await api(url, { method, body: formData });
-                showToast('Membre enregistré avec succès');
-                closeModal();
-                await loadSection(getSectionFromType(type));
-                return;
+            if (formId && document.getElementById('replaceImages')?.checked && (!files || files.length === 0)) {
+                throw new Error('Sélectionnez les nouvelles images avant de demander le remplacement.');
             }
-
-            // ============================================================
-            // MINISTRE - SAVE (réservé SUPER ADMIN)
-            // ============================================================
-            if (type === 'ministre') {
-                const formData = new FormData();
-                formData.append('id', document.getElementById('itemId').value || 1);
-                formData.append('_method', 'PUT');
-                formData.append('nom', document.getElementById('nom').value);
-                formData.append('titre', document.getElementById('titre').value);
-                formData.append('message', document.getElementById('message').value || '');
-                
-                const photoFile = document.getElementById('photo')?.files[0];
-                if (photoFile) {
-                    formData.append('photo[]', photoFile);
-                }
-                
-                url = `${API_BASE}/data.php?module=ministre`;
-                method = 'POST';
-                await api(url, { method, body: formData });
-                showToast('Ministre mis à jour avec succès');
-                closeModal();
-                await loadSection(getSectionFromType(type));
-                return;
+            
+            // Envoyer
+            const response = await fetch(`${API_BASE}/data.php?module=actualites`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.message || 'Erreur lors de l\'enregistrement');
             }
-
-            // DEMANDE
-            if (type === 'demande') {
-                payload = {
-                    id: formId ? Number(formId) : undefined,
-                    marchandises: document.getElementById('marchandises').value,
-                    origine: document.getElementById('origine').value,
-                    destination: document.getElementById('destination').value,
-                    date: document.getElementById('date').value,
-                    nom: document.getElementById('nom').value,
-                    email: document.getElementById('email').value,
-                    telephone: document.getElementById('telephone').value,
-                    dateSoumission: oldItem?.dateSoumission || new Date().toLocaleString('fr-FR'),
-                    statut: oldItem?.statut || 'publiée'
-                };
-                url = `${API_BASE}/data.php?module=demandes`;
-            }
-
-            // OFFRE
-            if (type === 'offre') {
-                payload = {
-                    id: formId ? Number(formId) : undefined,
-                    titre: document.getElementById('titre').value,
-                    type: document.getElementById('type').value,
-                    origine: document.getElementById('origine').value,
-                    destination: document.getElementById('destination').value,
-                    capacite: document.getElementById('capacite').value,
-                    tarif: document.getElementById('tarif').value,
-                    contact: document.getElementById('contact').value,
-                    description: document.getElementById('description').value
-                };
-                url = `${API_BASE}/data.php?module=offres`;
-            }
-
-            // USER
-            if (type === 'user') {
-                payload = {
-                    nom: document.getElementById('nom').value,
-                    username: document.getElementById('usernameNew').value,
-                    password: document.getElementById('passwordNew').value,
-                    role: document.getElementById('role').value
-                };
-                url = `${API_BASE}/users.php`;
-                method = 'POST';
-            }
-
-            await api(url, { method, body: JSON.stringify(payload) });
-            showToast('Enregistrement effectué avec succès');
+            
+            showToast('Actualité enregistrée avec succès');
             closeModal();
-            await loadSection(getSectionFromType(type));
-        } catch (error) {
-            console.error('Erreur saveModal:', error);
-            showToast(error.message, 'error');
+            await loadSection('actualites');
+            return;
         }
+        
+        // ============================================================
+        // COMITÉ
+        // ============================================================
+        if (type === 'comite') {
+            const nom = formData.get('nom');
+            const titre = formData.get('titre');
+            
+            if (!nom || !titre) {
+                throw new Error('Nom et titre sont obligatoires.');
+            }
+            
+            const response = await fetch(`${API_BASE}/data.php?module=comite`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.message || 'Erreur lors de l\'enregistrement');
+            }
+            
+            showToast('Membre enregistré avec succès');
+            closeModal();
+            await loadSection('comite');
+            return;
+        }
+        
+        // ============================================================
+        // CONSEIL
+        // ============================================================
+        if (type === 'conseil') {
+            const nom = formData.get('nom');
+            const titre = formData.get('titre');
+            
+            if (!nom || !titre) {
+                throw new Error('Nom et titre sont obligatoires.');
+            }
+            
+            const response = await fetch(`${API_BASE}/data.php?module=conseil`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.message || 'Erreur lors de l\'enregistrement');
+            }
+            
+            showToast('Membre enregistré avec succès');
+            closeModal();
+            await loadSection('conseil');
+            return;
+        }
+        
+        // ============================================================
+        // MINISTRE
+        // ============================================================
+        if (type === 'ministre') {
+            const nom = formData.get('nom');
+            const titre = formData.get('titre');
+            
+            if (!nom || !titre) {
+                throw new Error('Nom et titre sont obligatoires.');
+            }
+            
+            const response = await fetch(`${API_BASE}/data.php?module=ministre`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.message || 'Erreur lors de l\'enregistrement');
+            }
+            
+            showToast('Ministre mis à jour avec succès');
+            closeModal();
+            await loadSection('ministre');
+            return;
+        }
+        
+        // ============================================================
+        // DEMANDE (JSON)
+        // ============================================================
+        if (type === 'demande') {
+            const payload = {
+                id: formId ? Number(formId) : undefined,
+                marchandises: formData.get('marchandises'),
+                origine: formData.get('origine'),
+                destination: formData.get('destination'),
+                date: formData.get('date'),
+                nom: formData.get('nom'),
+                email: formData.get('email'),
+                telephone: formData.get('telephone'),
+                dateSoumission: oldItem?.dateSoumission || new Date().toLocaleString('fr-FR'),
+                statut: oldItem?.statut || 'publiée'
+            };
+            
+            const response = await fetch(`${API_BASE}/data.php?module=demandes`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.message || 'Erreur lors de l\'enregistrement');
+            }
+            
+            showToast('Demande enregistrée avec succès');
+            closeModal();
+            await loadSection('demandes');
+            return;
+        }
+        
+        // ============================================================
+        // OFFRE (JSON)
+        // ============================================================
+        if (type === 'offre') {
+            const payload = {
+                id: formId ? Number(formId) : undefined,
+                titre: formData.get('titre'),
+                type: formData.get('type'),
+                origine: formData.get('origine'),
+                destination: formData.get('destination'),
+                capacite: formData.get('capacite'),
+                tarif: formData.get('tarif'),
+                contact: formData.get('contact'),
+                description: formData.get('description')
+            };
+            
+            const response = await fetch(`${API_BASE}/data.php?module=offres`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.message || 'Erreur lors de l\'enregistrement');
+            }
+            
+            showToast('Offre enregistrée avec succès');
+            closeModal();
+            await loadSection('offres');
+            return;
+        }
+        
+        // ============================================================
+        // USER (JSON)
+        // ============================================================
+        if (type === 'user') {
+            const payload = {
+                nom: formData.get('nom'),
+                username: formData.get('usernameNew'),
+                password: formData.get('passwordNew'),
+                role: formData.get('role')
+            };
+            
+            const response = await fetch(`${API_BASE}/users.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.message || 'Erreur lors de l\'enregistrement');
+            }
+            
+            showToast('Utilisateur créé avec succès');
+            closeModal();
+            await loadSection('users');
+            return;
+        }
+        
+    } catch (error) {
+        console.error('Erreur saveModal:', error);
+        showToast(error.message, 'error');
     }
+}
 
     // Exposer les fonctions globalement
     window.changePage = changePage;

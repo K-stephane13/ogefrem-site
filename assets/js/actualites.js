@@ -1,4 +1,4 @@
-// assets/js/actualites.js - VERSION COMPLÈTE AVEC LIKES PERSISTANTS
+// assets/js/actualites.js - VERSION BILINGUE COMPLÈTE
 
 let currentPage = 1;
 const itemsPerPage = 9;
@@ -15,15 +15,47 @@ function escapeHtml(value) {
         .replaceAll("'", '&#039;');
 }
 
-function getCategorieLabel(categorie) {
-    const labels = {
+// ============================================================
+// CATÉGORIES BILINGUES
+// ============================================================
+const categoryMap = {
+    fr: {
         evenement: 'Actualité',
         communique: 'Communiqué',
         projet: 'Projet',
         partenariat: 'Partenariat',
         avis: 'Avis officiel'
-    };
-    return labels[categorie] || categorie;
+    },
+    en: {
+        evenement: 'News',
+        communique: 'Press Release',
+        projet: 'Project',
+        partenariat: 'Partnership',
+        avis: 'Official Notice'
+    }
+};
+
+function getCategorieLabel(categorie, lang) {
+    const map = categoryMap[lang] || categoryMap.fr;
+    return map[categorie] || categorie;
+}
+
+// ============================================================
+// RÉCUPÉRATION DE LA LANGUE ACTUELLE
+// ============================================================
+function getCurrentLang() {
+    return localStorage.getItem('ogefrem_lang') || 'fr';
+}
+
+// ============================================================
+// FONCTION POUR OBTENIR LA VALEUR TRADUITE
+// ============================================================
+function getTranslatedValue(item, fieldFr, fieldEn) {
+    const lang = getCurrentLang();
+    if (lang === 'en' && item[fieldEn]) {
+        return item[fieldEn];
+    }
+    return item[fieldFr];
 }
 
 function imageUrl(image) {
@@ -91,7 +123,7 @@ function initLikeButtons() {
 }
 
 // ============================================================
-// CHARGEMENT ET AFFICHAGE DES ACTUALITÉS
+// CHARGEMENT DES ACTUALITÉS
 // ============================================================
 async function loadActualitesData() {
     const container = document.getElementById('actualitesGrid');
@@ -137,7 +169,12 @@ async function loadActualitesData() {
     }
 }
 
+// ============================================================
+// AFFICHAGE DES ACTUALITÉS (BILINGUE)
+// ============================================================
 function renderActualites() {
+    const lang = getCurrentLang();
+    
     let filtered = currentFilter === 'all'
         ? [...actualitesData]
         : actualitesData.filter(a => a.categorie === currentFilter);
@@ -158,9 +195,15 @@ function renderActualites() {
     }
 
     container.innerHTML = paginatedItems.map(post => {
+        // === UTILISATION DE getTranslatedValue POUR CHAQUE CHAMP ===
+        const title = getTranslatedValue(post, 'titre', 'titre_en');
+        const description = getTranslatedValue(post, 'description', 'description_en');
+        const category = getCategorieLabel(post.categorie, lang);
+        
         const images = Array.isArray(post.images) ? post.images : [];
         const imageCount = images.length;
         const isLiked = localStorage.getItem(`post_liked_${post.id}`) === 'true';
+        
         return `
             <div class="col-md-6 col-lg-4 actualite-post" data-categorie="${escapeHtml(post.categorie)}">
                 <div class="actualite-post-card" data-id="${post.id}">
@@ -169,7 +212,7 @@ function renderActualites() {
                             <div class="image-carousel">
                                 ${images.map((img, idx) => `
                                     <div class="carousel-slide ${idx === 0 ? 'active' : ''}">
-                                        <img src="${escapeHtml(imageUrl(img))}" alt="${escapeHtml(post.titre)}">
+                                        <img src="${escapeHtml(imageUrl(img))}" alt="${escapeHtml(title)}">
                                     </div>
                                 `).join('')}
                             </div>
@@ -186,11 +229,11 @@ function renderActualites() {
 
                     <div class="post-content">
                         <div class="post-header">
-                            <span class="post-categorie ${escapeHtml(post.categorie)}">${escapeHtml(getCategorieLabel(post.categorie))}</span>
+                            <span class="post-categorie ${escapeHtml(post.categorie)}">${escapeHtml(category)}</span>
                             <span class="post-date"><i class="far fa-calendar-alt"></i> ${new Date(post.date + 'T00:00:00').toLocaleDateString('fr-FR')}</span>
                         </div>
-                        <h3 class="post-title">${escapeHtml(post.titre)}</h3>
-                        <p class="post-description">${escapeHtml(post.description.substring(0, 120))}${post.description.length > 120 ? '...' : ''}</p>
+                        <h3 class="post-title">${escapeHtml(title)}</h3>
+                        <p class="post-description">${escapeHtml(description.substring(0, 120))}${description.length > 120 ? '...' : ''}</p>
                         <div class="post-actions">
                             <button class="like-btn ${isLiked ? 'liked' : ''}" type="button" data-id="${post.id}">
                                 <i class="fas fa-heart"></i>
@@ -202,7 +245,9 @@ function renderActualites() {
                                 ${post.twitterUrl ? `<a href="${escapeHtml(post.twitterUrl)}" target="_blank" rel="noopener" class="social-icon twitter"><i class="fab fa-twitter"></i></a>` : ''}
                             </div>
                         </div>
-                        <button class="btn-read-more" type="button" onclick="openPostModal(${post.id})">Lire la suite <i class="fas fa-arrow-right"></i></button>
+                        <button class="btn-read-more" type="button" onclick="openPostModal(${post.id})">
+                            ${lang === 'fr' ? 'Lire la suite' : 'Read more'} <i class="fas fa-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>`;
@@ -255,7 +300,11 @@ function renderPagination(totalPages) {
         return;
     }
 
-    let html = `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><button class="page-link" data-page="${currentPage - 1}">« Précédent</button></li>`;
+    const lang = getCurrentLang();
+    const prevText = lang === 'fr' ? '« Précédent' : '« Previous';
+    const nextText = lang === 'fr' ? 'Suivant »' : 'Next »';
+
+    let html = `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><button class="page-link" data-page="${currentPage - 1}">${prevText}</button></li>`;
     for (let i = 1; i <= totalPages; i++) {
         if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
             html += `<li class="page-item ${currentPage === i ? 'active' : ''}"><button class="page-link" data-page="${i}">${i}</button></li>`;
@@ -263,7 +312,7 @@ function renderPagination(totalPages) {
             html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
         }
     }
-    html += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}"><button class="page-link" data-page="${currentPage + 1}">Suivant »</button></li>`;
+    html += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}"><button class="page-link" data-page="${currentPage + 1}">${nextText}</button></li>`;
     paginationContainer.innerHTML = html;
 
     paginationContainer.querySelectorAll('.page-link[data-page]').forEach(btn => {
@@ -292,11 +341,17 @@ document.querySelectorAll('.filter-active-btn').forEach(btn => {
 });
 
 // ============================================================
-// MODAL
+// MODAL (BILINGUE)
 // ============================================================
 window.openPostModal = function(postId) {
+    const lang = getCurrentLang();
     const post = actualitesData.find(p => Number(p.id) === Number(postId));
     if (!post) return;
+    
+    // === UTILISATION DE getTranslatedValue ===
+    const title = getTranslatedValue(post, 'titre', 'titre_en');
+    const description = getTranslatedValue(post, 'description', 'description_en');
+    const category = getCategorieLabel(post.categorie, lang);
     const images = Array.isArray(post.images) ? post.images : [];
     const isLiked = localStorage.getItem(`post_liked_${post.id}`) === 'true';
 
@@ -304,13 +359,21 @@ window.openPostModal = function(postId) {
     document.body.insertAdjacentHTML('beforeend', `
         <div class="modal fade" id="postModal" tabindex="-1">
             <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content">
-                <div class="modal-header"><h5 class="modal-title">${escapeHtml(post.titre)}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-header">
+                    <h5 class="modal-title">${escapeHtml(title)}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
                 <div class="modal-body">
-                    ${images.length ? `<div class="modal-images">${images.map(img => `<img src="${escapeHtml(imageUrl(img))}" alt="${escapeHtml(post.titre)}">`).join('')}</div>` : ''}
-                    <div class="modal-info"><span class="post-categorie ${escapeHtml(post.categorie)}">${escapeHtml(getCategorieLabel(post.categorie))}</span><span class="post-date"><i class="far fa-calendar-alt"></i> ${new Date(post.date + 'T00:00:00').toLocaleDateString('fr-FR')}</span></div>
-                    <div class="modal-description">${post.description.split(/\r?\n/).filter(Boolean).map(p => `<p>${escapeHtml(p)}</p>`).join('')}</div>
+                    ${images.length ? `<div class="modal-images">${images.map(img => `<img src="${escapeHtml(imageUrl(img))}" alt="${escapeHtml(title)}">`).join('')}</div>` : ''}
+                    <div class="modal-info">
+                        <span class="post-categorie ${escapeHtml(post.categorie)}">${escapeHtml(category)}</span>
+                        <span class="post-date"><i class="far fa-calendar-alt"></i> ${new Date(post.date + 'T00:00:00').toLocaleDateString('fr-FR')}</span>
+                    </div>
+                    <div class="modal-description">${description.split(/\r?\n/).filter(Boolean).map(p => `<p>${escapeHtml(p)}</p>`).join('')}</div>
                     <div class="modal-actions">
-                        <button class="like-btn-modal ${isLiked ? 'liked' : ''}" type="button" data-id="${post.id}"><i class="fas fa-heart"></i> <span class="like-count">${Number(post.likes) || 0}</span></button>
+                        <button class="like-btn-modal ${isLiked ? 'liked' : ''}" type="button" data-id="${post.id}">
+                            <i class="fas fa-heart"></i> <span class="like-count">${Number(post.likes) || 0}</span>
+                        </button>
                         <div class="social-share-modal">
                             ${post.facebookUrl ? `<a href="${escapeHtml(post.facebookUrl)}" target="_blank" rel="noopener" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>` : ''}
                             ${post.instagramUrl ? `<a href="${escapeHtml(post.instagramUrl)}" target="_blank" rel="noopener" class="social-icon instagram"><i class="fab fa-instagram"></i></a>` : ''}
@@ -332,11 +395,48 @@ window.openPostModal = function(postId) {
 };
 
 // ============================================================
+// TOAST
+// ============================================================
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    if (!toast) {
+        const div = document.createElement('div');
+        div.id = 'toast';
+        div.className = 'toast-notification';
+        document.body.appendChild(div);
+    }
+    const toastEl = document.getElementById('toast');
+    toastEl.textContent = message;
+    toastEl.className = `toast-notification toast-${type}`;
+    toastEl.style.display = 'block';
+    clearTimeout(toastEl._timeout);
+    toastEl._timeout = setTimeout(() => { toastEl.style.display = 'none'; }, 3500);
+}
+
+// ============================================================
 // INITIALISATION
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
     loadActualitesData();
     if (window.AOS) AOS.refresh();
+    
+    // === ÉCOUTER LES CHANGEMENTS DE LANGUE ===
+    document.addEventListener('languageChanged', function(e) {
+        console.log('Langue changée en:', e.detail.lang);
+        // Recharger les actualités avec la nouvelle langue
+        renderActualites();
+    });
+    
+    // === SURVEILLER AUSSI localStorage DIRECTEMENT ===
+    // Pour détecter les changements de langue depuis d'autres scripts
+    const originalSetItem = localStorage.setItem;
+    localStorage.setItem = function(key, value) {
+        originalSetItem.apply(this, arguments);
+        if (key === 'ogefrem_lang') {
+            console.log('Langue changée via localStorage:', value);
+            renderActualites();
+        }
+    };
     
     // Gestion des ancres #post-xxx
     if (window.location.hash.startsWith('#post-')) {

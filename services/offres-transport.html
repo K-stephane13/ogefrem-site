@@ -1,4 +1,4 @@
-<!-- offres-transport.html - CHARGEMENT DYNAMIQUE DEPUIS AdminData -->
+<!-- offres-transport.html - VERSION BILINGUE -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -23,8 +23,8 @@
     <main>
         <section class="page-header">
             <div class="container">
-                <h1 data-aos="fade-up">Offres de transport</h1>
-                <p data-aos="fade-up" data-aos-delay="100">Annonces des transporteurs agréés pour vos expéditions</p>
+                <h1 data-aos="fade-up" data-fr="Offres de transport" data-en="Transport Offers">Offres de transport</h1>
+                <p data-aos="fade-up" data-aos-delay="100" data-fr="Annonces des transporteurs agréés pour vos expéditions" data-en="Listings from approved carriers for your shipments">Annonces des transporteurs agréés pour vos expéditions</p>
                 <div class="header-decoration" data-aos="fade-up" data-aos-delay="150"></div>
             </div>
         </section>
@@ -45,53 +45,80 @@
     <script src="../assets/js/admin-data.js"></script>
     <script src="../assets/js/components.js"></script>
     <script src="../assets/js/main.js"></script>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            AOS.init({ duration: 800, once: true });
-            
-            const offres = AdminData.getOffres();
-            const container = document.getElementById('offresContainer');
-            
-            if (container && offres.length > 0) {
-                container.innerHTML = offres.map((offre, index) => {
-                    let iconClass = 'fa-truck';
-                    if (offre.type === 'Maritime') iconClass = 'fa-ship';
-                    else if (offre.type === 'Aérien') iconClass = 'fa-plane';
-                    else if (offre.type === 'Ferroviaire') iconClass = 'fa-train';
-                    
-                    return `
-                        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
-                            <div class="offre-card">
-                                <div class="offre-header">
-                                    <i class="fas ${iconClass}"></i>
-                                    <h3>${offre.titre}</h3>
-                                </div>
-                                <div class="offre-body">
-                                    <p><i class="fas fa-map-marker-alt"></i> ${offre.origine} → ${offre.destination}</p>
-                                    ${offre.capacite ? `<p><i class="fas fa-weight-hanging"></i> Capacité : ${offre.capacite}</p>` : ''}
-                                    ${offre.tarif ? `<p><i class="fas fa-tag"></i> Tarif : ${offre.tarif}</p>` : ''}
-                                    ${offre.description ? `<p><i class="fas fa-info-circle"></i> ${offre.description}</p>` : ''}
-                                    <span class="offre-type ${offre.type.toLowerCase()}">${offre.type}</span>
-                                </div>
-                                <div class="offre-footer">
-                                    <button class="btn btn-primary btn-sm w-100" onclick="alert('Contacter ${offre.titre}: ${offre.contact || 'Contact non disponible'}')">
-                                        <i class="fas fa-phone"></i> Contacter
-                                    </button>
-                                </div>
+    document.addEventListener('DOMContentLoaded', function() {
+        AOS.init({ duration: 800, once: true });
+        
+        let currentLang = localStorage.getItem('ogefrem_lang') || 'fr';
+        
+        function updatePageLanguage(lang) {
+            document.querySelectorAll('[data-fr][data-en]').forEach(el => {
+                if (lang === 'fr' && el.dataset.fr) {
+                    el.textContent = el.dataset.fr;
+                } else if (lang === 'en' && el.dataset.en) {
+                    el.textContent = el.dataset.en;
+                }
+            });
+        }
+        
+        const langObserver = new MutationObserver(function() {
+            const newLang = localStorage.getItem('ogefrem_lang') || 'fr';
+            if (newLang !== currentLang) {
+                currentLang = newLang;
+                updatePageLanguage(currentLang);
+            }
+        });
+        langObserver.observe(document.documentElement, { childList: true, subtree: true });
+        
+        setTimeout(function() {
+            updatePageLanguage(currentLang);
+        }, 500);
+        
+        // Load offers
+        const offres = AdminData.getOffres();
+        const container = document.getElementById('offresContainer');
+        
+        if (container && offres.length > 0) {
+            container.innerHTML = offres.map((offre, index) => {
+                let iconClass = 'fa-truck';
+                if (offre.type === 'Maritime') iconClass = 'fa-ship';
+                else if (offre.type === 'Aérien') iconClass = 'fa-plane';
+                else if (offre.type === 'Ferroviaire') iconClass = 'fa-train';
+                
+                return `
+                    <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
+                        <div class="offre-card">
+                            <div class="offre-header">
+                                <i class="fas ${iconClass}"></i>
+                                <h3>${offre.titre}</h3>
                             </div>
-                        </div>
-                    `;
-                }).join('');
-            } else {
-                container.innerHTML = `
-                    <div class="col-12 text-center">
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle"></i> Aucune offre de transport disponible pour le moment.
+                            <div class="offre-body">
+                                <p><i class="fas fa-map-marker-alt"></i> ${offre.origine} → ${offre.destination}</p>
+                                ${offre.capacite ? `<p><i class="fas fa-weight-hanging"></i> <span data-fr="Capacité :" data-en="Capacity:">Capacité :</span> ${offre.capacite}</p>` : ''}
+                                ${offre.tarif ? `<p><i class="fas fa-tag"></i> <span data-fr="Tarif :" data-en="Rate:">Tarif :</span> ${offre.tarif}</p>` : ''}
+                                ${offre.description ? `<p><i class="fas fa-info-circle"></i> ${offre.description}</p>` : ''}
+                                <span class="offre-type ${offre.type.toLowerCase()}">${offre.type}</span>
+                            </div>
+                            <div class="offre-footer">
+                                <button class="btn btn-primary btn-sm w-100" onclick="alert('${currentLang === 'fr' ? 'Contacter' : 'Contact'} ${offre.titre}: ${offre.contact || (currentLang === 'fr' ? 'Contact non disponible' : 'Contact not available')}')">
+                                    <i class="fas fa-phone"></i> <span data-fr="Contacter" data-en="Contact">Contacter</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
-            }
-        });
+            }).join('');
+        } else {
+            container.innerHTML = `
+                <div class="col-12 text-center">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> <span data-fr="Aucune offre de transport disponible pour le moment." data-en="No transport offers available at the moment.">Aucune offre de transport disponible pour le moment.</span>
+                    </div>
+                </div>
+            `;
+        }
+    });
     </script>
 </body>
 </html>

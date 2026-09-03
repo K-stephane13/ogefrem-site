@@ -4,35 +4,85 @@
             <img src="assets/images/ogefrem_logo2.png" alt="OGEFREM" onerror="this.src='https://placehold.co/40x40/003399/white?text=OG'">
             <span>OGEFREM</span>
         </a>
-        <!-- ===== BOUTON HAMBURGER CORRIGÉ ===== -->
+        <!-- Language Selector -->
+        <div class="language-selector me-2">
+            <button class="lang-btn active" data-lang="fr" aria-label="Français">FR</button>
+            <span class="lang-separator">|</span>
+            <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
+        </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-label="Menu">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarMain">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="index.html">Accueil</a></li>
-                <li class="nav-item"><a class="nav-link" href="actualites.html">Actualités</a></li>
-                <li class="nav-item"><a class="nav-link" href="presentation.html">Présentation</a></li>
-                <li class="nav-item"><a class="nav-link" href="mandataires.html">Mandataires & Transitaires</a></li>
-                <li class="nav-item"><a class="nav-link" href="reglementations.html">Règlementations</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.html" data-fr="Accueil" data-en="Home">Accueil</a></li>
+                <li class="nav-item"><a class="nav-link" href="actualites.html" data-fr="Actualités" data-en="News">Actualités</a></li>
+                <li class="nav-item"><a class="nav-link" href="presentation.html" data-fr="Présentation" data-en="About">Présentation</a></li>
+                <li class="nav-item"><a class="nav-link" href="mandataires.html" data-fr="Mandataires & Transitaires" data-en="Agents & Freight Forwarders">Mandataires & Transitaires</a></li>
+                <li class="nav-item"><a class="nav-link" href="reglementations.html" data-fr="Règlementations" data-en="Regulations">Règlementations</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Services</a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-fr="Services" data-en="Services">Services</a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="services/mandataires-liste.html"> Liste des mandataires</a></li>
-                        <li><a class="dropdown-item" href="services/suivi-cargaisons.html"> Suivi des cargaisons</a></li>
-                        <li><a class="dropdown-item" href="services/operateurs-transport.html"> Opérateurs de transport</a></li>
-                        <li><a class="dropdown-item" href="services/produits-exportables.html"> Produits exportables</a></li>
-                        <li><a class="dropdown-item" href="services/mercuriales.html"> Mercuriales</a></li>
-                        <li><a class="dropdown-item" href="services/demandes-transport.html"> Demandes de transport</a></li>
-                        <li><a class="dropdown-item" href="services/offres-transport.html"> Offres de transport</a></li>
-                        <li><a class="dropdown-item" href="services/paiement-abonnement.html"> Paiement abonnement</a></li>
-                        <li><a class="dropdown-item" href="services/horaires.html"> Horaires navires/avions</a></li>
+                        <li><a class="dropdown-item" href="services/mandataires-liste.html" data-fr="Liste des mandataires" data-en="Agents List">Liste des mandataires</a></li>
+                        <li><a class="dropdown-item" href="services/suivi-cargaisons.html" data-fr="Suivi des cargaisons" data-en="Cargo Tracking">Suivi des cargaisons</a></li>
+                        <li><a class="dropdown-item" href="services/operateurs-transport.html" data-fr="Opérateurs de transport" data-en="Transport Operators">Opérateurs de transport</a></li>
+                        <li><a class="dropdown-item" href="services/produits-exportables.html" data-fr="Produits exportables" data-en="Exportable Products">Produits exportables</a></li>
+                        <li><a class="dropdown-item" href="services/mercuriales.html" data-fr="Mercuriales" data-en="Price Lists">Mercuriales</a></li>
+                        <li><a class="dropdown-item" href="services/demandes-transport.html" data-fr="Demandes de transport" data-en="Transport Requests">Demandes de transport</a></li>
+                        <li><a class="dropdown-item" href="services/offres-transport.html" data-fr="Offres de transport" data-en="Transport Offers">Offres de transport</a></li>
+                        <li><a class="dropdown-item" href="services/paiement-abonnement.html" data-fr="Paiement abonnement" data-en="Subscription Payment">Paiement abonnement</a></li>
+                        <li><a class="dropdown-item" href="services/horaires.html" data-fr="Horaires navires/avions" data-en="Ships/Planes Schedules">Horaires navires/avions</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="services.html"> Tous nos services</a></li>
+                        <li><a class="dropdown-item" href="services.html" data-fr="Tous nos services" data-en="All our services">Tous nos services</a></li>
                     </ul>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="messagerie.html">Contacts</a></li>
+                <li class="nav-item"><a class="nav-link" href="messagerie.html" data-fr="Contacts" data-en="Contact">Contacts</a></li>
             </ul>
         </div>
     </div>
 </nav>
+
+<style>
+.navbar {
+    padding: 0.5rem 0;
+    margin-bottom: 0;
+}
+.navbar-collapse {
+    padding: 0;
+}
+.language-selector {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255,255,255,0.1);
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+.lang-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+.lang-btn:hover {
+    color: rgba(255,255,255,0.9);
+}
+.lang-btn.active {
+    color: #FFCC00;
+}
+.lang-separator {
+    color: rgba(255,255,255,0.3);
+    font-size: 0.7rem;
+}
+@media (max-width: 991.98px) {
+    .language-selector {
+        margin-right: 10px !important;
+    }
+}
+</style>

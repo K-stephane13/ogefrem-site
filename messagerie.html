@@ -1,4 +1,4 @@
-<!-- messagerie.html - VERSION COMPLÈTE AVEC ADMIN-DATA.JS -->
+<!-- messagerie.html - VERSION BILINGUE COMPLÈTE -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -23,8 +23,8 @@
     <main>
         <section class="page-header">
             <div class="container">
-                <h1 data-aos="fade-up">Contacts</h1>
-                <p data-aos="fade-up" data-aos-delay="100">Contactez-nous pour toute demande d'information ou assistance</p>
+                <h1 data-aos="fade-up" data-fr="Contacts" data-en="Contact">Contacts</h1>
+                <p data-aos="fade-up" data-aos-delay="100" data-fr="Contactez-nous pour toute demande d'information ou assistance" data-en="Contact us for any information or assistance request">Contactez-nous pour toute demande d'information ou assistance</p>
                 <div class="header-decoration" data-aos="fade-up" data-aos-delay="150"></div>
             </div>
         </section>
@@ -37,74 +37,74 @@
                         <div class="messagerie-card">
                             <div class="card-header-custom">
                                 <i class="fas fa-envelope"></i>
-                                <h2>Formulaire de contact</h2>
-                                <p>Remplissez ce formulaire, nous vous répondrons dans les meilleurs délais</p>
+                                <h2 data-fr="Formulaire de contact" data-en="Contact form">Formulaire de contact</h2>
+                                <p data-fr="Remplissez ce formulaire, nous vous répondrons dans les meilleurs délais" data-en="Fill out this form, we will get back to you as soon as possible">Remplissez ce formulaire, nous vous répondrons dans les meilleurs délais</p>
                             </div>
                             <form id="contactForm">
                                 <div class="row g-4">
                                     <div class="col-md-6">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" id="nom" placeholder="Nom et prénom" required>
-                                            <label for="nom"><i class="fas fa-user"></i> Nom et prénom *</label>
+                                            <label for="nom"><i class="fas fa-user"></i> <span data-fr="Nom et prénom *" data-en="Full name *">Nom et prénom *</span></label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" id="societe" placeholder="Société">
-                                            <label for="societe"><i class="fas fa-building"></i> Société</label>
+                                            <label for="societe"><i class="fas fa-building"></i> <span data-fr="Société" data-en="Company">Société</span></label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating">
                                             <input type="email" class="form-control" id="email" placeholder="Email" required>
-                                            <label for="email"><i class="fas fa-envelope"></i> Email *</label>
+                                            <label for="email"><i class="fas fa-envelope"></i> <span data-fr="Email *" data-en="Email *">Email *</span></label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating">
                                             <input type="tel" class="form-control" id="telephone" placeholder="Téléphone">
-                                            <label for="telephone"><i class="fas fa-phone"></i> Téléphone</label>
+                                            <label for="telephone"><i class="fas fa-phone"></i> <span data-fr="Téléphone" data-en="Phone">Téléphone</span></label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating">
                                             <select class="form-select" id="categorie" required>
-                                                <option value="">(Je suis) Sélectionnez</option>
-                                                <option>Mandataire</option>
-                                                <option>Transitaire</option>
-                                                <option>Chargeur</option>
-                                                <option>Transporteur</option>
-                                                <option>Autre</option>
+                                                <option value="">(<span data-fr="Je suis" data-en="I am">Je suis</span>)</option>
+                                                <option data-fr="Mandataire" data-en="Agent">Mandataire</option>
+                                                <option data-fr="Transitaire" data-en="Freight forwarder">Transitaire</option>
+                                                <option data-fr="Chargeur" data-en="Shipper">Chargeur</option>
+                                                <option data-fr="Transporteur" data-en="Carrier">Transporteur</option>
+                                                <option data-fr="Autre" data-en="Other">Autre</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating">
                                             <select class="form-select" id="objet" required>
-                                                <option value="">(Objet) Sélectionnez</option>
-                                                <option>Assistance FERI/AD/FERE</option>
-                                                <option>Renseignement général</option>
-                                                <option>Réclamation</option>
-                                                <option>Appel d'offres</option>
-                                                <option>Partenariat</option>
-                                                <option>Autre</option>
+                                                <option value="">(<span data-fr="Objet" data-en="Subject">Objet</span>)</option>
+                                                <option data-fr="Assistance FERI/AD/FERE" data-en="FERI/AD/FERE Assistance">Assistance FERI/AD/FERE</option>
+                                                <option data-fr="Renseignement général" data-en="General information">Renseignement général</option>
+                                                <option data-fr="Réclamation" data-en="Complaint">Réclamation</option>
+                                                <option data-fr="Appel d'offres" data-en="Tender">Appel d'offres</option>
+                                                <option data-fr="Partenariat" data-en="Partnership">Partenariat</option>
+                                                <option data-fr="Autre" data-en="Other">Autre</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
                                             <textarea class="form-control" id="message" placeholder="Votre message" rows="6" style="height: 150px" required></textarea>
-                                            <label for="message"><i class="fas fa-comment"></i> Message *</label>
+                                            <label for="message"><i class="fas fa-comment"></i> <span data-fr="Message *" data-en="Message *">Message *</span></label>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <label class="form-label"><i class="fas fa-paperclip"></i> Pièce jointe (PDF, DOC, JPG - max 5 Mo)</label>
+                                        <label class="form-label"><i class="fas fa-paperclip"></i> <span data-fr="Pièce jointe (PDF, DOC, JPG - max 5 Mo)" data-en="Attachment (PDF, DOC, JPG - max 5 MB)">Pièce jointe (PDF, DOC, JPG - max 5 Mo)</span></label>
                                         <input type="file" class="form-control" id="fichier" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                                         <small class="text-muted" id="fileSizeWarning"></small>
                                     </div>
                                     <div class="col-12">
                                         <button type="submit" class="btn btn-primary btn-lg w-100">
-                                            <i class="fas fa-paper-plane"></i> Envoyer le message
+                                            <i class="fas fa-paper-plane"></i> <span data-fr="Envoyer le message" data-en="Send message">Envoyer le message</span>
                                         </button>
                                     </div>
                                     <div id="formStatus" class="col-12"></div>
@@ -118,24 +118,24 @@
                         <div class="contact-info-card">
                             <div class="card-header-custom">
                                 <i class="fas fa-headset"></i>
-                                <h2>Assistance</h2>
-                                <p>Nos équipes sont à votre écoute</p>
+                                <h2 data-fr="Assistance" data-en="Support">Assistance</h2>
+                                <p data-fr="Nos équipes sont à votre écoute" data-en="Our teams are here for you">Nos équipes sont à votre écoute</p>
                             </div>
                             
                             <div class="contact-details">
                                 <div class="contact-item">
                                     <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
                                     <div class="contact-text">
-                                        <h4>Téléphone</h4>
+                                        <h4 data-fr="Téléphone" data-en="Phone">Téléphone</h4>
                                         <p>+243 XXX XXX XXX</p>
-                                        <small>Lun-Ven: 8h30 - 16h30</small>
+                                        <small data-fr="Lun-Ven: 8h30 - 16h30" data-en="Mon-Fri: 8:30am - 4:30pm">Lun-Ven: 8h30 - 16h30</small>
                                     </div>
                                 </div>
                                 
                                 <div class="contact-item">
                                     <div class="contact-icon"><i class="fas fa-envelope"></i></div>
                                     <div class="contact-text">
-                                        <h4>Email</h4>
+                                        <h4 data-fr="Email" data-en="Email">Email</h4>
                                         <p>dg@ogefrem.cd</p>
                                         <p>contact@ogefrem.cd</p>
                                     </div>
@@ -144,18 +144,18 @@
                                 <div class="contact-item">
                                     <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
                                     <div class="contact-text">
-                                        <h4>Adresse</h4>
-                                        <p>Kinshasa/Gombe, RDC</p>
-                                        <p>Avenue TSF n°9, Immeuble OGEFREM</p>
+                                        <h4 data-fr="Adresse" data-en="Address">Adresse</h4>
+                                        <p data-fr="Kinshasa/Gombe, RDC" data-en="Kinshasa/Gombe, DRC">Kinshasa/Gombe, RDC</p>
+                                        <p data-fr="Avenue TSF n°9, Immeuble OGEFREM" data-en="TSF Avenue n°9, OGEFREM Building">Avenue TSF n°9, Immeuble OGEFREM</p>
                                     </div>
                                 </div>
                                 
                                 <div class="contact-item">
                                     <div class="contact-icon"><i class="fas fa-clock"></i></div>
                                     <div class="contact-text">
-                                        <h4>Horaires d'ouverture</h4>
-                                        <p>Lundi - Vendredi : 8h30 - 16h30</p>
-                                        <p>Permanence téléphonique jusqu'à 18h</p>
+                                        <h4 data-fr="Horaires d'ouverture" data-en="Opening hours">Horaires d'ouverture</h4>
+                                        <p data-fr="Lundi - Vendredi : 8h30 - 16h30" data-en="Monday - Friday: 8:30am - 4:30pm">Lundi - Vendredi : 8h30 - 16h30</p>
+                                        <p data-fr="Permanence téléphonique jusqu'à 18h" data-en="Phone support until 6pm">Permanence téléphonique jusqu'à 18h</p>
                                     </div>
                                 </div>
                             </div>
@@ -163,8 +163,8 @@
                             <div class="emergency-contact">
                                 <i class="fas fa-exclamation-circle"></i>
                                 <div>
-                                    <h4>Urgence FERI/AD/FERE</h4>
-                                    <p>En cas d'urgence, contactez notre hotline : <strong>+243 816 418 565/+243 899 699 492</strong></p>
+                                    <h4 data-fr="Urgence FERI/AD/FERE" data-en="FERI/AD/FERE Emergency">Urgence FERI/AD/FERE</h4>
+                                    <p data-fr="En cas d'urgence, contactez notre hotline : +243 816 418 565/+243 899 699 492" data-en="In case of emergency, contact our hotline: +243 816 418 565/+243 899 699 492">En cas d'urgence, contactez notre hotline : <strong>+243 816 418 565/+243 899 699 492</strong></p>
                                 </div>
                             </div>
                             
@@ -178,29 +178,29 @@
         <section class="faq-rapide-section bg-light">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
-                    <h2>Questions <span class="highlight">fréquentes</span></h2>
+                    <h2><span data-fr="Questions" data-en="Frequently asked">Questions</span> <span class="highlight" data-fr="fréquentes" data-en="questions">fréquentes</span></h2>
                     <div class="header-decoration"></div>
                 </div>
                 <div class="row g-4">
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                         <div class="faq-rapide-card">
                             <i class="fas fa-clock"></i>
-                            <h4>Délai de réponse ?</h4>
-                            <p>Nous répondons à tous les messages sous 48h ouvrées.</p>
+                            <h4 data-fr="Délai de réponse ?" data-en="Response time?">Délai de réponse ?</h4>
+                            <p data-fr="Nous répondons à tous les messages sous 48h ouvrées." data-en="We respond to all messages within 48 working hours.">Nous répondons à tous les messages sous 48h ouvrées.</p>
                         </div>
                     </div>
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
                         <div class="faq-rapide-card">
                             <i class="fas fa-file-alt"></i>
-                            <h4>Documents à fournir ?</h4>
-                            <p>Préparez votre numéro FERI ou FERE pour un traitement plus rapide.</p>
+                            <h4 data-fr="Documents à fournir ?" data-en="Documents to provide?">Documents à fournir ?</h4>
+                            <p data-fr="Préparez votre numéro FERI ou FERE pour un traitement plus rapide." data-en="Prepare your FERI or FERE number for faster processing.">Préparez votre numéro FERI ou FERE pour un traitement plus rapide.</p>
                         </div>
                     </div>
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
                         <div class="faq-rapide-card">
                             <i class="fas fa-shield-alt"></i>
-                            <h4>Confidentialité</h4>
-                            <p>Tous vos échanges sont sécurisés et confidentiels.</p>
+                            <h4 data-fr="Confidentialité" data-en="Confidentiality">Confidentialité</h4>
+                            <p data-fr="Tous vos échanges sont sécurisés et confidentiels." data-en="All your exchanges are secure and confidential.">Tous vos échanges sont sécurisés et confidentiels.</p>
                         </div>
                     </div>
                 </div>
@@ -216,5 +216,47 @@
     <script src="assets/js/components.js"></script>
     <script src="assets/js/messagerie.js"></script>
     <script src="assets/js/main.js"></script>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        AOS.init({ duration: 800, once: true });
+        
+        // Language management for static text
+        let currentLang = localStorage.getItem('ogefrem_lang') || 'fr';
+        
+        function updatePageLanguage(lang) {
+            // Update labels in form
+            document.querySelectorAll('[data-fr][data-en]').forEach(el => {
+                if (el.tagName === 'OPTION') {
+                    el.textContent = el.dataset[lang];
+                } else if (el.tagName === 'SELECT') {
+                    // For select elements, update the placeholder option
+                } else if (el.tagName === 'LABEL') {
+                    // Handle labels with nested elements
+                } else {
+                    el.textContent = el.dataset[lang];
+                }
+            });
+            
+            // Update select options
+            document.querySelectorAll('select option[data-fr][data-en]').forEach(opt => {
+                opt.textContent = opt.dataset[lang];
+            });
+        }
+        
+        const langObserver = new MutationObserver(function() {
+            const newLang = localStorage.getItem('ogefrem_lang') || 'fr';
+            if (newLang !== currentLang) {
+                currentLang = newLang;
+                updatePageLanguage(currentLang);
+            }
+        });
+        langObserver.observe(document.documentElement, { childList: true, subtree: true });
+        
+        setTimeout(function() {
+            updatePageLanguage(currentLang);
+        }, 500);
+    });
+    </script>
 </body>
 </html>

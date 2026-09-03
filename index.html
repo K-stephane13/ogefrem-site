@@ -1,4 +1,4 @@
-<!-- index.html - VERSION COMPLÈTE AVEC SLIDER ET MESSAGE DG EN DUR -->
+<!-- index.html - VERSION CORRIGÉE AVEC SLIDER COLLÉ À LA NAVBAR -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -17,332 +17,25 @@
     <link rel="stylesheet" href="assets/css/responsive.css">
     <link rel="stylesheet" href="assets/css/animations.css">
     
-    <style>
-        /* ===== SLIDER D'ACTUALITÉS ===== */
-        .news-slider-section {
-            background: var(--primary-blue);
-            padding: 12px 0;
-            border-bottom: 3px solid var(--primary-black);
-            position: relative;
-            z-index: 10;
-        }
-        
-        .news-slider-wrapper {
-            max-width: 1320px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 0 15px;
-        }
-        
-        .news-slider-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--primary-yellow);
-            font-weight: 700;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            flex-shrink: 0;
-            background: rgba(255,204,0,0.15);
-            padding: 8px 16px;
-            border-radius: 30px;
-        }
-        
-        .news-slider-label i {
-            font-size: 1.1rem;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        .news-slider-container {
-            flex: 1;
-            overflow: hidden;
-            position: relative;
-            height: 44px;
-        }
-        
-        .news-slider-track {
-            position: relative;
-            height: 100%;
-            width: 100%;
-        }
-        
-        .news-slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease;
-            pointer-events: none;
-            padding: 0 10px;
-        }
-        
-        .news-slide.active {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-        
-        .news-slide a {
-            color: white;
-            text-decoration: none;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .news-slide a:hover {
-            color: var(--primary-yellow);
-        }
-        
-        .news-slide .slide-badge {
-            font-size: 0.6rem;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-            white-space: nowrap;
-            flex-shrink: 0;
-            background: rgba(255,255,255,0.15);
-            color: white;
-        }
-        
-        .news-slide .slide-badge.actualite { background: rgba(255,204,0,0.25); color: var(--primary-yellow); }
-        .news-slide .slide-badge.communique { background: rgba(46,125,50,0.3); color: #81c784; }
-        .news-slide .slide-badge.projet { background: rgba(245,124,0,0.3); color: #ffb74d; }
-        .news-slide .slide-badge.partenariat { background: rgba(194,24,91,0.3); color: #f06292; }
-        .news-slide .slide-badge.avis { background: rgba(198,40,40,0.3); color: #ef9a9a; }
-        
-        .news-slide .slide-title {
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .news-slide .slide-date {
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.6);
-            white-space: nowrap;
-            flex-shrink: 0;
-            margin-left: auto;
-        }
-        
-        .news-slider-controls {
-            display: flex;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-        
-        .news-slider-controls button {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: white;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .news-slider-controls button:hover {
-            background: var(--primary-yellow);
-            color: var(--primary-blue);
-        }
-        
-        .news-slider-progress {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 2px;
-            background: var(--primary-yellow);
-            width: 0%;
-            transition: width 0.1s linear;
-        }
-        
-        /* Responsive slider */
-        @media (max-width: 768px) {
-            .news-slider-wrapper {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 6px;
-            }
-            
-            .news-slider-label {
-                font-size: 0.75rem;
-                padding: 4px 12px;
-                align-self: flex-start;
-            }
-            
-            .news-slider-container {
-                height: 52px;
-            }
-            
-            .news-slide a {
-                font-size: 0.8rem;
-                flex-wrap: wrap;
-                gap: 6px;
-            }
-            
-            .news-slide .slide-title {
-                white-space: normal;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                flex: 1 1 100%;
-                order: 3;
-            }
-            
-            .news-slide .slide-date {
-                font-size: 0.6rem;
-                margin-left: 0;
-                order: 4;
-                width: 100%;
-            }
-            
-            .news-slide .slide-badge {
-                font-size: 0.5rem;
-                padding: 1px 8px;
-                order: 1;
-            }
-            
-            .news-slider-controls button {
-                width: 28px;
-                height: 28px;
-                font-size: 0.7rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .news-slider-container {
-                height: 60px;
-            }
-            
-            .news-slide a {
-                font-size: 0.7rem;
-            }
-            
-            .news-slide .slide-badge {
-                font-size: 0.45rem;
-                padding: 1px 6px;
-            }
-        }
-    /* Correction d'urgence pour le slider mobile */
-    @media (max-width: 768px) {
-        .news-slider-section {
-            margin-top: 85px !important;
-            padding: 4px 0 !important;
-            min-height: 34px !important;
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-        }
-        .news-slider-wrapper {
-            display: flex !important;
-            flex-direction: row !important;
-            align-items: center !important;
-            gap: 5px !important;
-            padding: 0 5px !important;
-        }
-        .news-slider-container {
-            height: 34px !important;
-            flex: 1 !important;
-            min-width: 0 !important;
-            overflow: hidden !important;
-        }
-        .news-slide {
-            height: 100% !important;
-            display: flex !important;
-            align-items: center !important;
-        }
-        .news-slide a {
-            font-size: 0.6rem !important;
-            display: flex !important;
-            align-items: center !important;
-            gap: 4px !important;
-            width: 100% !important;
-        }
-        .news-slide .slide-title {
-            font-size: 0.6rem !important;
-            white-space: nowrap !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-            flex: 1 !important;
-            min-width: 0 !important;
-        }
-        .news-slide .slide-badge {
-            font-size: 0.4rem !important;
-            padding: 1px 5px !important;
-            flex-shrink: 0 !important;
-        }
-        .news-slide .slide-date {
-            display: none !important;
-        }
-        .news-slider-controls button {
-            width: 20px !important;
-            height: 20px !important;
-            font-size: 0.5rem !important;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        .news-slider-section {
-            margin-top: 80px !important;
-            min-height: 28px !important;
-        }
-        .news-slider-container {
-            height: 28px !important;
-        }
-        .news-slide a {
-            font-size: 0.5rem !important;
-        }
-        .news-slide .slide-title {
-            font-size: 0.5rem !important;
-        }
-        .news-slide .slide-badge {
-            font-size: 0.35rem !important;
-            padding: 1px 3px !important;
-        }
-    }
-    </style>
 </head>
 <body>
 
     <div id="navbar-placeholder"></div>
 
     <main>
-        <!-- ===== SLIDER D'ACTUALITÉS ===== -->
-        <section class="news-slider-section" id="newsSlider">
+        <!-- ===== SLIDER D'ACTUALITÉS - COLLÉ À LA NAVBAR ===== -->
+        <section class="news-slider-section" id="newsSlider"><br><br>
             <div class="news-slider-wrapper">
                 <div class="news-slider-label">
                     <i class="fas fa-bolt"></i>
-                    <span>Flash</span>
+                    <span data-fr="Flash" data-en="Flash">Flash</span>
                 </div>
                 <div class="news-slider-container">
                     <div class="news-slider-track" id="sliderTrack">
                         <div class="news-slide active">
                             <a href="actualites.html">
-                                <span class="slide-badge">Chargement</span>
-                                <span class="slide-title">Chargement des actualités...</span>
+                                <span class="slide-badge" data-fr="Chargement" data-en="Loading">Chargement</span>
+                                <span class="slide-title" data-fr="Chargement des actualités..." data-en="Loading news...">Chargement des actualités...</span>
                             </a>
                         </div>
                     </div>
@@ -361,15 +54,16 @@
             <div class="hero-content container">
                 <h1 data-aos="fade-up" data-aos-duration="1000">
                     <span class="highlight">OGEFREM</span><br>
-                    <span>La gestion du fret multimodal</span><br>
-                    <span class="text-gradient">100% connectée</span>
+                    <span data-fr="La gestion du fret multimodal" data-en="Multimodal freight management">La gestion du fret multimodal</span><br>
+                    <span class="text-gradient" data-fr="100% connectée" data-en="100% connected">100% connectée</span>
                 </h1>
                 <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">
-                    <i class="fas fa-check-circle"></i> De la lourdeur documentaire à la fluidité numérique
+                    <i class="fas fa-check-circle"></i>
+                    <span data-fr="De la lourdeur documentaire à la fluidité numérique" data-en="From paperwork to digital fluidity">De la lourdeur documentaire à la fluidité numérique</span>
                 </p>
                 <div class="hero-buttons" data-aos="fade-up" data-aos-delay="400">
-                    <a href="https://www.ogefrem-feri-fere-ad.org/ogf-fiche/" class="btn btn-primary btn-lg"><i class="fas fa-tachometer-alt"></i> Accéder à la plateforme FERI/FERE AD</a>
-                    <a href="presentation.html" class="btn btn-outline-light btn-lg"><i class="fas fa-info-circle"></i> Découvrir l'OGEFREM</a>
+                    <a href="https://www.ogefrem-feri-fere-ad.org/ogf-fiche/" class="btn btn-primary btn-lg"><i class="fas fa-tachometer-alt"></i> <span data-fr="Accéder à la plateforme FERI/FERE AD" data-en="Access FERI/FERE AD platform">Accéder à la plateforme FERI/FERE AD</span></a>
+                    <a href="presentation.html" class="btn btn-outline-light btn-lg"><i class="fas fa-info-circle"></i> <span data-fr="Découvrir l'OGEFREM" data-en="Discover OGEFREM">Découvrir l'OGEFREM</span></a>
                 </div>
             </div>
         </section><br>
@@ -378,8 +72,8 @@
         <section class="leaders-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up"><br><br><br>
-                    <h2>Gouvernance de <span class="highlight">l'OGEFREM</span></h2>
-                    <p>Les dirigeants et partenaires institutionnels</p>
+                    <h2><span data-fr="Gouvernance de" data-en="Governance of">Gouvernance de</span> <span class="highlight" data-fr="l'OGEFREM" data-en="OGEFREM">l'OGEFREM</span></h2>
+                    <p data-fr="Les dirigeants et partenaires institutionnels" data-en="Leaders and institutional partners">Les dirigeants et partenaires institutionnels</p>
                     <div class="header-decoration"></div>
                 </div>
                 <div class="row g-5" id="leadersContainer">
@@ -392,7 +86,7 @@
         <section class="mot-dg-section-large">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
-                    <h2>Mot du <span class="highlight">Directeur Général</span></h2>
+                    <h2><span data-fr="Mot du" data-en="Message from">Mot du</span> <span class="highlight" data-fr="Directeur Général" data-en="Director General">Directeur Général</span></h2>
                     <div class="header-decoration"></div>
                 </div>
                 <div class="row align-items-center g-5">
@@ -403,7 +97,7 @@
                             </div>
                             <div class="dg-signature">
                                 <h4 id="dgName">Directeur Général</h4>
-                                <p id="dgTitle">Directeur Général de l'OGEFREM</p>
+                                <p id="dgTitle" data-fr="Directeur Général de l'OGEFREM" data-en="Director General of OGEFREM">Directeur Général de l'OGEFREM</p>
                             </div>
                         </div>
                     </div>
@@ -411,14 +105,13 @@
                         <div class="mot-dg-content-large">
                             <i class="fas fa-quote-left"></i>
                             <div id="dgMessageContainer">
-                                <!-- MESSAGE EN DUR - NE PAS MODIFIER -->
-                                <p>"L'OGEFREM s'engage résolument dans la modernisation du fret congolais. Notre vision est de faire de la RDC un hub logistique régional de référence, grâce à la digitalisation, la transparence et l'efficacité.</p>
-                                <p>La plateforme FERI/FERE modernisée, le futur Port Sec de Kasumbalesa, l'Observatoire national des transports et la Bourse nationale des transports sont autant de projets concrets qui façonnent l'avenir du secteur.</p>
-                                <p>Ensemble, construisons un fret multimodal 100% connecté, au service des chargeurs et de l'économie nationale."</p>
+                                <p data-fr="L'OGEFREM s'engage résolument dans la modernisation du fret congolais. Notre vision est de faire de la RDC un hub logistique régional de référence, grâce à la digitalisation, la transparence et l'efficacité." data-en="OGEFREM is resolutely committed to modernizing Congolese freight. Our vision is to make the DRC a benchmark regional logistics hub, through digitalization, transparency and efficiency.">L'OGEFREM s'engage résolument dans la modernisation du fret congolais. Notre vision est de faire de la RDC un hub logistique régional de référence, grâce à la digitalisation, la transparence et l'efficacité.</p>
+                                <p data-fr="La plateforme FERI/FERE modernisée, le futur Port Sec de Kasumbalesa, l'Observatoire national des transports et la Bourse nationale des transports sont autant de projets concrets qui façonnent l'avenir du secteur." data-en="The modernized FERI/FERE platform, the future Kasumbalesa Dry Port, the National Transport Observatory and the National Transport Exchange are all concrete projects shaping the future of the sector.">La plateforme FERI/FERE modernisée, le futur Port Sec de Kasumbalesa, l'Observatoire national des transports et la Bourse nationale des transports sont autant de projets concrets qui façonnent l'avenir du secteur.</p>
+                                <p data-fr="Ensemble, construisons un fret multimodal 100% connecté, au service des chargeurs et de l'économie nationale." data-en="Together, let's build a 100% connected multimodal freight service, serving shippers and the national economy.">Ensemble, construisons un fret multimodal 100% connecté, au service des chargeurs et de l'économie nationale.</p>
                             </div>
                             <div class="signature-block">
                                 <div class="signature-line"></div>
-                                <p id="dgSignature">Le Directeur Général</p>
+                                <p id="dgSignature" data-fr="Le Directeur Général" data-en="The Director General">Le Directeur Général</p>
                             </div>
                         </div>
                     </div>
@@ -430,8 +123,8 @@
         <section class="stats-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
-                    <h2>L'OGEFREM en <span class="highlight">chiffres</span></h2>
-                    <p>40 ans d'expertise au service du fret congolais</p>
+                    <h2><span data-fr="L'OGEFREM en" data-en="OGEFREM in">L'OGEFREM en</span> <span class="highlight" data-fr="chiffres" data-en="numbers">chiffres</span></h2>
+                    <p data-fr="40 ans d'expertise au service du fret congolais" data-en="40 years of expertise serving Congolese freight">40 ans d'expertise au service du fret congolais</p>
                     <div class="header-decoration"></div>
                 </div>
                 <div class="row g-4">
@@ -439,28 +132,28 @@
                         <div class="stat-card">
                             <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
                             <div class="stat-number" data-target="1980">0</div>
-                            <div class="stat-label">Création</div>
+                            <div class="stat-label" data-fr="Création" data-en="Creation">Création</div>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="200">
                         <div class="stat-card">
                             <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
                             <div class="stat-number" data-target="45">0</div>
-                            <div class="stat-label">Ans d'expérience <span class="stat-plus">+</span></div>
+                            <div class="stat-label"><span data-fr="Ans d'expérience" data-en="Years of experience">Ans d'expérience</span> <span class="stat-plus">+</span></div>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="300">
                         <div class="stat-card">
                             <div class="stat-icon"><i class="fas fa-ship"></i></div>
                             <div class="stat-number" data-target="500000">0</div>
-                            <div class="stat-label">Fret/an (tonnes) <span class="stat-plus">+</span></div>
+                            <div class="stat-label"><span data-fr="Fret/an (tonnes)" data-en="Freight/year (tons)">Fret/an (tonnes)</span> <span class="stat-plus">+</span></div>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="400">
                         <div class="stat-card">
                             <div class="stat-icon"><i class="fas fa-handshake"></i></div>
                             <div class="stat-number" data-target="25">0</div>
-                            <div class="stat-label">Partenaires institutionnels <span class="stat-plus">+</span></div>
+                            <div class="stat-label"><span data-fr="Partenaires institutionnels" data-en="Institutional partners">Partenaires institutionnels</span> <span class="stat-plus">+</span></div>
                         </div>
                     </div>
                 </div>
@@ -471,56 +164,56 @@
         <section class="services-preview-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up"><br><br><br>
-                    <h2>Nos <span class="highlight">services</span> opérationnels</h2>
-                    <p>Des solutions digitales pour tous vos besoins en fret multimodal</p>
+                    <h2><span data-fr="Nos" data-en="Our">Nos</span> <span class="highlight" data-fr="services" data-en="services">services</span> <span data-fr="opérationnels" data-en="operational">opérationnels</span></h2>
+                    <p data-fr="Des solutions digitales pour tous vos besoins en fret multimodal" data-en="Digital solutions for all your multimodal freight needs">Des solutions digitales pour tous vos besoins en fret multimodal</p>
                     <div class="header-decoration"></div>
                 </div>
                 <div class="row g-4">
                     <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="100">
                         <a href="services/mandataires-liste.html" class="service-mini-card">
                             <div class="service-mini-icon"><i class="fas fa-users"></i></div>
-                            <h4>Liste des mandataires</h4>
-                            <p>Annuaire officiel des mandataires agréés avec contacts complets</p>
+                            <h4 data-fr="Liste des mandataires" data-en="Agents list">Liste des mandataires</h4>
+                            <p data-fr="Annuaire officiel des mandataires agréés avec contacts complets" data-en="Official directory of approved agents with full contacts">Annuaire officiel des mandataires agréés avec contacts complets</p>
                         </a>
                     </div>
                     <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="150">
                         <a href="services/suivi-cargaisons.html" class="service-mini-card">
                             <div class="service-mini-icon"><i class="fas fa-map-marked-alt"></i></div>
-                            <h4>Suivi des cargaisons</h4>
-                            <p>Traçabilité en temps réel FERI/FERE de vos marchandises</p>
+                            <h4 data-fr="Suivi des cargaisons" data-en="Cargo tracking">Suivi des cargaisons</h4>
+                            <p data-fr="Traçabilité en temps réel FERI/FERE de vos marchandises" data-en="Real-time FERI/FERE traceability of your goods">Traçabilité en temps réel FERI/FERE de vos marchandises</p>
                         </a>
                     </div>
                     <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="200">
                         <a href="services/operateurs-transport.html" class="service-mini-card">
                             <div class="service-mini-icon"><i class="fas fa-truck"></i></div>
-                            <h4>Opérateurs de transport</h4>
-                            <p>Base des transporteurs agréés par l'OGEFREM</p>
+                            <h4 data-fr="Opérateurs de transport" data-en="Transport operators">Opérateurs de transport</h4>
+                            <p data-fr="Base des transporteurs agréés par l'OGEFREM" data-en="Database of OGEFREM-approved carriers">Base des transporteurs agréés par l'OGEFREM</p>
                         </a>
                     </div>
                     <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="250">
                         <a href="services/produits-exportables.html" class="service-mini-card">
                             <div class="service-mini-icon"><i class="fas fa-boxes"></i></div>
-                            <h4>Produits exportables</h4>
-                            <p>Liste des marchandises exportables de la RDC</p>
+                            <h4 data-fr="Produits exportables" data-en="Exportable products">Produits exportables</h4>
+                            <p data-fr="Liste des marchandises exportables de la RDC" data-en="List of exportable goods from the DRC">Liste des marchandises exportables de la RDC</p>
                         </a>
                     </div>
                     <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="300">
                         <a href="services/mercuriales.html" class="service-mini-card">
                             <div class="service-mini-icon"><i class="fas fa-chart-line"></i></div>
-                            <h4>Mercuriales</h4>
-                            <p>Prix de référence du fret actualisés mensuellement</p>
+                            <h4 data-fr="Mercuriales" data-en="Price lists">Mercuriales</h4>
+                            <p data-fr="Prix de référence du fret actualisés mensuellement" data-en="Monthly updated freight reference prices">Prix de référence du fret actualisés mensuellement</p>
                         </a>
                     </div>
                     <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="350">
                         <a href="services/demandes-transport.html" class="service-mini-card">
                             <div class="service-mini-icon"><i class="fas fa-file-signature"></i></div>
-                            <h4>Demandes de transport</h4>
-                            <p>Publiez un besoin de transport pour vos marchandises</p>
+                            <h4 data-fr="Demandes de transport" data-en="Transport requests">Demandes de transport</h4>
+                            <p data-fr="Publiez un besoin de transport pour vos marchandises" data-en="Post a transport need for your goods">Publiez un besoin de transport pour vos marchandises</p>
                         </a>
                     </div>
                 </div>
                 <div class="text-center mt-5" data-aos="fade-up">
-                    <a href="services.html" class="btn btn-primary btn-lg">Voir tous nos services <i class="fas fa-arrow-right"></i></a>
+                    <a href="services.html" class="btn btn-primary btn-lg"><span data-fr="Voir tous nos services" data-en="View all our services">Voir tous nos services</span> <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </section>
@@ -529,13 +222,13 @@
         <section class="news-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
-                    <h2>Actualités & <span class="highlight">Communiqués</span></h2>
-                    <p>Restez informés des dernières nouvelles d'OGEFREM</p>
+                    <h2><span data-fr="Actualités &" data-en="News &">Actualités &</span> <span class="highlight" data-fr="Communiqués" data-en="Press releases">Communiqués</span></h2>
+                    <p data-fr="Restez informés des dernières nouvelles d'OGEFREM" data-en="Stay informed with the latest OGEFREM news">Restez informés des dernières nouvelles d'OGEFREM</p>
                     <div class="header-decoration"></div>
                 </div>
                 <div class="row g-4" id="actualites-container"></div>
                 <div class="text-center mt-4" data-aos="fade-up">
-                    <a href="actualites.html" class="btn btn-outline-primary">Voir toutes les actualités <i class="fas fa-arrow-right"></i></a>
+                    <a href="actualites.html" class="btn btn-outline-primary"><span data-fr="Voir toutes les actualités" data-en="View all news">Voir toutes les actualités</span> <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </section>
@@ -544,35 +237,35 @@
         <section class="partners-section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
-                    <h2>Nos <span class="highlight">partenaires</span></h2>
-                    <p>Une collaboration étroite pour l'efficacité du fret</p>
+                    <h2><span data-fr="Nos" data-en="Our">Nos</span> <span class="highlight" data-fr="partenaires" data-en="partners">partenaires</span></h2>
+                    <p data-fr="Une collaboration étroite pour l'efficacité du fret" data-en="Close collaboration for freight efficiency">Une collaboration étroite pour l'efficacité du fret</p>
                     <div class="header-decoration"></div>
                 </div>
                 <div class="partners-grid">
                     <div class="partner-item">
                         <div class="partner-logo"><img src="assets/images/partenaires/logo-ministre.png" alt="Ministère" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><span class="partner-fallback">Ministère</span></div>
-                        <span class="partner-name">Ministère des Transports</span>
-                        <small>Tutelle</small>
+                        <span class="partner-name" data-fr="Ministère des Transports" data-en="Ministry of Transport">Ministère des Transports</span>
+                        <small data-fr="Tutelle" data-en="Supervisory authority">Tutelle</small>
                     </div>
                     <div class="partner-item">
                         <div class="partner-logo"><img src="assets/images/partenaires/Logo-dgda.png" alt="DGDA" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><span class="partner-fallback">DGDA</span></div>
                         <span class="partner-name">DGDA</span>
-                        <small>Direction Générale des Douanes</small>
+                        <small data-fr="Direction Générale des Douanes" data-en="Customs Administration">Direction Générale des Douanes</small>
                     </div>
                     <div class="partner-item">
                         <div class="partner-logo"><img src="assets/images/partenaires/logo-occ.jpg" alt="OCC" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><span class="partner-fallback">OCC</span></div>
                         <span class="partner-name">OCC</span>
-                        <small>Office Congolais de Contrôle</small>
+                        <small data-fr="Office Congolais de Contrôle" data-en="Congolese Control Office">Office Congolais de Contrôle</small>
                     </div>
                     <div class="partner-item">
                         <div class="partner-logo"><img src="assets/images/partenaires/logo-seguce.png" alt="SEGUCE" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><span class="partner-fallback">SEGUCE</span></div>
                         <span class="partner-name">SEGUCE</span>
-                        <small>Guichet Unique</small>
+                        <small data-fr="Guichet Unique" data-en="Single Window">Guichet Unique</small>
                     </div>
                     <div class="partner-item">
                         <div class="partner-logo"><img src="assets/images/partenaires/logo-ucca.png" alt="Fédération" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><span class="partner-fallback">Fédération</span></div>
-                        <span class="partner-name">L'Union des Conseils des Chargeurs Africains</span>
-                        <small>Représentants des chargeurs</small>
+                        <span class="partner-name" data-fr="L'Union des Conseils des Chargeurs Africains" data-en="Union of African Shippers Councils">L'Union des Conseils des Chargeurs Africains</span>
+                        <small data-fr="Représentants des chargeurs" data-en="Shippers' representatives">Représentants des chargeurs</small>
                     </div>
                 </div>
             </div>
@@ -587,247 +280,247 @@
     <script src="assets/js/home.js"></script>
     <script src="assets/js/main.js"></script>
 
-    <!-- ============================================================
-    SCRIPT POUR CHARGER LES LEADERS DEPUIS L'API
-    ============================================================ -->
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialiser AOS
-    if (typeof AOS !== 'undefined') {
-        AOS.init({ duration: 800, once: true });
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialiser AOS
+        if (typeof AOS !== 'undefined') {
+            AOS.init({ duration: 800, once: true });
+        }
 
-    // ============================================================
-    // CHARGEMENT DES LEADERS (GOUVERNANCE) - VERSION BLOB + MINISTRE
-    // ============================================================
-    async function loadLeaders() {
-        const container = document.getElementById('leadersContainer');
-        if (!container) return;
+        // ===== LANGUAGE MANAGEMENT FOR STATIC TEXT =====
+        function updatePageLanguage(lang) {
+            document.querySelectorAll('[data-fr][data-en]').forEach(el => {
+                if (lang === 'fr' && el.dataset.fr) {
+                    el.textContent = el.dataset.fr;
+                } else if (lang === 'en' && el.dataset.en) {
+                    el.textContent = el.dataset.en;
+                }
+            });
+        }
 
-        try {
-            // 1. Charger le comité depuis l'API
-            const comiteResponse = await fetch('assets/php/api/data.php?module=comite', { cache: 'no-store' });
-            let comite = [];
-            if (comiteResponse.ok) {
-                comite = await comiteResponse.json();
+        let currentLang = localStorage.getItem('ogefrem_lang') || 'fr';
+        
+        // Observer language changes from navbar
+        const langObserver = new MutationObserver(function() {
+            const newLang = localStorage.getItem('ogefrem_lang') || 'fr';
+            if (newLang !== currentLang) {
+                currentLang = newLang;
+                updatePageLanguage(currentLang);
             }
-            console.log('Comité chargé (home):', comite);
+        });
+        langObserver.observe(document.documentElement, { childList: true, subtree: true });
 
-            // 2. Charger le conseil depuis l'API
-            const conseilResponse = await fetch('assets/php/api/data.php?module=conseil', { cache: 'no-store' });
-            let conseil = [];
-            if (conseilResponse.ok) {
-                conseil = await conseilResponse.json();
-            }
-            console.log('Conseil chargé (home):', conseil);
+        // Initial update
+        setTimeout(function() {
+            updatePageLanguage(currentLang);
+        }, 500);
 
-            // 3. Charger le Ministre des Transports depuis l'API
-            const ministreResponse = await fetch('assets/php/api/data.php?module=ministre', { cache: 'no-store' });
-            let ministre = null;
-            if (ministreResponse.ok) {
-                ministre = await ministreResponse.json();
-            }
-            console.log('Ministre chargé (home):', ministre);
+        // ============================================================
+        // CHARGEMENT DES LEADERS (GOUVERNANCE) - VERSION BLOB + MINISTRE
+        // ============================================================
+        async function loadLeaders() {
+            const container = document.getElementById('leadersContainer');
+            if (!container) return;
 
-            // 4. Extraire les membres
-            const dg = comite.find(m => m.titre === 'Directeur Général');
-            const dga = comite.find(m => m.titre === 'Directeur Général Adjoint');
-            const pca = conseil.find(m => m.titre === 'Président du Conseil d\'Administration');
+            try {
+                const comiteResponse = await fetch('assets/php/api/data.php?module=comite', { cache: 'no-store' });
+                let comite = [];
+                if (comiteResponse.ok) {
+                    comite = await comiteResponse.json();
+                }
 
-            // 5. Mettre à jour la section MOT DU DG
-            if (dg) {
-                // Mettre à jour la photo du DG
-                const dgPhoto = document.querySelector('#dgPhotoContainer img');
-                if (dgPhoto) {
-                    const hasPhoto = dg.has_photo === true || dg.has_photo === 1;
-                    if (hasPhoto && dg.photo_url) {
-                        dgPhoto.src = dg.photo_url;
-                        dgPhoto.style.display = 'block';
-                    } else {
-                        dgPhoto.style.display = 'none';
-                        // Vérifier si l'icône existe déjà
-                        let iconDiv = dgPhoto.parentElement.querySelector('.dg-icon-fallback');
-                        if (!iconDiv) {
-                            iconDiv = document.createElement('div');
-                            iconDiv.className = 'dg-icon-fallback';
-                            iconDiv.style.cssText = 'width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:5rem;';
-                            iconDiv.innerHTML = '<i class="fas fa-user-circle"></i>';
-                            dgPhoto.parentElement.appendChild(iconDiv);
+                const conseilResponse = await fetch('assets/php/api/data.php?module=conseil', { cache: 'no-store' });
+                let conseil = [];
+                if (conseilResponse.ok) {
+                    conseil = await conseilResponse.json();
+                }
+
+                const ministreResponse = await fetch('assets/php/api/data.php?module=ministre', { cache: 'no-store' });
+                let ministre = null;
+                if (ministreResponse.ok) {
+                    ministre = await ministreResponse.json();
+                }
+
+                const dg = comite.find(m => m.titre === 'Directeur Général');
+                const dga = comite.find(m => m.titre === 'Directeur Général Adjoint');
+                const pca = conseil.find(m => m.titre === 'Président du Conseil d\'Administration');
+
+                if (dg) {
+                    const dgPhoto = document.querySelector('#dgPhotoContainer img');
+                    if (dgPhoto) {
+                        const hasPhoto = dg.has_photo === true || dg.has_photo === 1;
+                        if (hasPhoto && dg.photo_url) {
+                            dgPhoto.src = dg.photo_url;
+                            dgPhoto.style.display = 'block';
+                        } else {
+                            dgPhoto.style.display = 'none';
+                            let iconDiv = dgPhoto.parentElement.querySelector('.dg-icon-fallback');
+                            if (!iconDiv) {
+                                iconDiv = document.createElement('div');
+                                iconDiv.className = 'dg-icon-fallback';
+                                iconDiv.style.cssText = 'width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:5rem;';
+                                iconDiv.innerHTML = '<i class="fas fa-user-circle"></i>';
+                                dgPhoto.parentElement.appendChild(iconDiv);
+                            }
+                            iconDiv.style.display = 'flex';
                         }
-                        iconDiv.style.display = 'flex';
                     }
+
+                    const dgName = document.getElementById('dgName');
+                    if (dgName) dgName.textContent = dg.nom;
+
+                    const dgTitle = document.getElementById('dgTitle');
+                    if (dgTitle) dgTitle.textContent = dg.titre + ' de l\'OGEFREM';
+
+                    const dgSignature = document.getElementById('dgSignature');
+                    if (dgSignature) dgSignature.textContent = 'Le ' + dg.titre;
                 }
 
-                // Mettre à jour le nom et le titre
-                const dgName = document.getElementById('dgName');
-                if (dgName) dgName.textContent = dg.nom;
+                const leaders = [
+                    ministre ? {
+                        nom: ministre.nom || 'Ministre des Transports',
+                        titre: ministre.titre || 'Ministre des Transports',
+                        has_photo: ministre.has_photo === true || ministre.has_photo === 1,
+                        photo_url: ministre.has_photo ? ministre.photo_url : null,
+                        message: ministre.message || 'Partenariat stratégique avec l\'OGEFREM'
+                    } : {
+                        nom: 'Ministre des Transports',
+                        titre: 'Ministre des Transports',
+                        has_photo: false,
+                        photo_url: null,
+                        message: 'Partenariat stratégique avec l\'OGEFREM'
+                    },
+                    pca ? {
+                        nom: pca.nom,
+                        titre: pca.titre,
+                        has_photo: pca.has_photo === true || pca.has_photo === 1,
+                        photo_url: pca.has_photo ? pca.photo_url : null,
+                        message: pca.message || 'Une gouvernance transparente et efficace'
+                    } : {
+                        nom: 'Président du CA',
+                        titre: 'Président du Conseil d\'Administration',
+                        has_photo: false,
+                        photo_url: null,
+                        message: 'Une gouvernance transparente et efficace'
+                    },
+                    dg ? {
+                        nom: dg.nom,
+                        titre: dg.titre,
+                        has_photo: dg.has_photo === true || dg.has_photo === 1,
+                        photo_url: dg.has_photo ? dg.photo_url : null,
+                        message: dg.message || 'Moderniser le fret congolais pour une meilleure compétitivité'
+                    } : {
+                        nom: 'Directeur Général',
+                        titre: 'Directeur Général',
+                        has_photo: false,
+                        photo_url: null,
+                        message: 'Moderniser le fret congolais pour une meilleure compétitivité'
+                    },
+                    dga ? {
+                        nom: dga.nom,
+                        titre: dga.titre,
+                        has_photo: dga.has_photo === true || dga.has_photo === 1,
+                        photo_url: dga.has_photo ? dga.photo_url : null,
+                        message: dga.message || 'L\'innovation au service des chargeurs'
+                    } : {
+                        nom: 'Directeur Général Adjoint',
+                        titre: 'Directeur Général Adjoint',
+                        has_photo: false,
+                        photo_url: null,
+                        message: 'L\'innovation au service des chargeurs'
+                    }
+                ];
 
-                const dgTitle = document.getElementById('dgTitle');
-                if (dgTitle) dgTitle.textContent = dg.titre + ' de l\'OGEFREM';
+                container.innerHTML = leaders.map((leader, index) => {
+                    const hasPhoto = leader.has_photo === true || leader.has_photo === 1;
+                    const photoUrl = hasPhoto ? leader.photo_url : null;
+                    
+                    let iconClass = 'fa-user-circle';
+                    const titreLower = (leader.titre || '').toLowerCase();
+                    if (titreLower.includes('ministre')) iconClass = 'fa-user-tie';
+                    else if (titreLower.includes('président')) iconClass = 'fa-user-tie';
+                    else if (titreLower.includes('directeur général')) iconClass = 'fa-user-circle';
+                    
+                    let photoHTML = '';
+                    if (hasPhoto && photoUrl) {
+                        photoHTML = `
+                            <img src="${photoUrl}" alt="${leader.nom}" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div style="display:none;width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:4rem;">
+                                <i class="fas ${iconClass}"></i>
+                            </div>
+                        `;
+                    } else {
+                        photoHTML = `
+                            <div style="width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:4rem;">
+                                <i class="fas ${iconClass}"></i>
+                            </div>
+                        `;
+                    }
 
-                // Mettre à jour la signature
-                const dgSignature = document.getElementById('dgSignature');
-                if (dgSignature) dgSignature.textContent = 'Le ' + dg.titre;
-            }
-
-            // 6. Construire les données des leaders avec le Ministre
-            const leaders = [
-                // Ministre des Transports (depuis l'API)
-                ministre ? {
-                    nom: ministre.nom || 'Ministre des Transports',
-                    titre: ministre.titre || 'Ministre des Transports',
-                    has_photo: ministre.has_photo === true || ministre.has_photo === 1,
-                    photo_url: ministre.has_photo ? ministre.photo_url : null,
-                    message: ministre.message || 'Partenariat stratégique avec l\'OGEFREM'
-                } : {
-                    nom: 'Ministre des Transports',
-                    titre: 'Ministre des Transports',
-                    has_photo: false,
-                    photo_url: null,
-                    message: 'Partenariat stratégique avec l\'OGEFREM'
-                },
-                // PCA
-                pca ? {
-                    nom: pca.nom,
-                    titre: pca.titre,
-                    has_photo: pca.has_photo === true || pca.has_photo === 1,
-                    photo_url: pca.has_photo ? pca.photo_url : null,
-                    message: pca.message || 'Une gouvernance transparente et efficace'
-                } : {
-                    nom: 'Président du CA',
-                    titre: 'Président du Conseil d\'Administration',
-                    has_photo: false,
-                    photo_url: null,
-                    message: 'Une gouvernance transparente et efficace'
-                },
-                // DG
-                dg ? {
-                    nom: dg.nom,
-                    titre: dg.titre,
-                    has_photo: dg.has_photo === true || dg.has_photo === 1,
-                    photo_url: dg.has_photo ? dg.photo_url : null,
-                    message: dg.message || 'Moderniser le fret congolais pour une meilleure compétitivité'
-                } : {
-                    nom: 'Directeur Général',
-                    titre: 'Directeur Général',
-                    has_photo: false,
-                    photo_url: null,
-                    message: 'Moderniser le fret congolais pour une meilleure compétitivité'
-                },
-                // DGA
-                dga ? {
-                    nom: dga.nom,
-                    titre: dga.titre,
-                    has_photo: dga.has_photo === true || dga.has_photo === 1,
-                    photo_url: dga.has_photo ? dga.photo_url : null,
-                    message: dga.message || 'L\'innovation au service des chargeurs'
-                } : {
-                    nom: 'Directeur Général Adjoint',
-                    titre: 'Directeur Général Adjoint',
-                    has_photo: false,
-                    photo_url: null,
-                    message: 'L\'innovation au service des chargeurs'
-                }
-            ];
-
-            // 7. Afficher les leaders
-            container.innerHTML = leaders.map((leader, index) => {
-                // 🔥 VÉRIFICATION IMPORTANTE : has_photo peut être un booléen ou un nombre
-                const hasPhoto = leader.has_photo === true || leader.has_photo === 1;
-                const photoUrl = hasPhoto ? leader.photo_url : null;
-                
-                console.log(`Leader ${index} - ${leader.nom}: hasPhoto=${hasPhoto}, photoUrl=${photoUrl}`);
-                
-                // Choix de l'icône selon le leader
-                let iconClass = 'fa-user-circle';
-                const titreLower = (leader.titre || '').toLowerCase();
-                if (titreLower.includes('ministre')) iconClass = 'fa-user-tie';
-                else if (titreLower.includes('président')) iconClass = 'fa-user-tie';
-                else if (titreLower.includes('directeur général')) iconClass = 'fa-user-circle';
-                
-                // Construction du HTML pour la photo
-                let photoHTML = '';
-                if (hasPhoto && photoUrl) {
-                    photoHTML = `
-                        <img src="${photoUrl}" alt="${leader.nom}" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div style="display:none;width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:4rem;">
-                            <i class="fas ${iconClass}"></i>
+                    return `
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
+                            <div class="leader-card-large">
+                                <div class="leader-photo-large">
+                                    ${photoHTML}
+                                </div>
+                                <h4>${leader.nom}</h4>
+                                <p class="leader-title">${leader.titre}</p>
+                                <p class="leader-message">"${leader.message || ''}"</p>
+                            </div>
                         </div>
                     `;
-                } else {
-                    photoHTML = `
-                        <div style="width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:4rem;">
-                            <i class="fas ${iconClass}"></i>
-                        </div>
-                    `;
-                }
+                }).join('');
 
-                return `
-                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
+            } catch (error) {
+                console.error('Erreur chargement leaders:', error);
+                container.innerHTML = `
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
                         <div class="leader-card-large">
                             <div class="leader-photo-large">
-                                ${photoHTML}
+                                <div style="width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:4rem;"><i class="fas fa-user-tie"></i></div>
                             </div>
-                            <h4>${leader.nom}</h4>
-                            <p class="leader-title">${leader.titre}</p>
-                            <p class="leader-message">"${leader.message || ''}"</p>
+                            <h4>Ministre des Transports</h4>
+                            <p class="leader-title">Ministre des Transports</p>
+                            <p class="leader-message">"Partenariat stratégique avec l'OGEFREM"</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="leader-card-large">
+                            <div class="leader-photo-large">
+                                <div style="width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:4rem;"><i class="fas fa-user-tie"></i></div>
+                            </div>
+                            <h4>Président du CA</h4>
+                            <p class="leader-title">Président du Conseil d'Administration</p>
+                            <p class="leader-message">"Une gouvernance transparente et efficace"</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="leader-card-large">
+                            <div class="leader-photo-large">
+                                <div style="width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:4rem;"><i class="fas fa-user-circle"></i></div>
+                            </div>
+                            <h4>Directeur Général</h4>
+                            <p class="leader-title">Directeur Général</p>
+                            <p class="leader-message">"Moderniser le fret congolais pour une meilleure compétitivité"</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                        <div class="leader-card-large">
+                            <div class="leader-photo-large">
+                                <div style="width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:4rem;"><i class="fas fa-user-circle"></i></div>
+                            </div>
+                            <h4>Directeur Général Adjoint</h4>
+                            <p class="leader-title">Directeur Général Adjoint</p>
+                            <p class="leader-message">"L'innovation au service des chargeurs"</p>
                         </div>
                     </div>
                 `;
-            }).join('');
-
-        } catch (error) {
-            console.error('Erreur chargement leaders:', error);
-            // Fallback en dur si l'API échoue
-            container.innerHTML = `
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="leader-card-large">
-                        <div class="leader-photo-large">
-                            <div style="width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:4rem;"><i class="fas fa-user-tie"></i></div>
-                        </div>
-                        <h4>Ministre des Transports</h4>
-                        <p class="leader-title">Ministre des Transports</p>
-                        <p class="leader-message">"Partenariat stratégique avec l'OGEFREM"</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="leader-card-large">
-                        <div class="leader-photo-large">
-                            <div style="width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:4rem;"><i class="fas fa-user-tie"></i></div>
-                        </div>
-                        <h4>Président du CA</h4>
-                        <p class="leader-title">Président du Conseil d'Administration</p>
-                        <p class="leader-message">"Une gouvernance transparente et efficace"</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="leader-card-large">
-                        <div class="leader-photo-large">
-                            <div style="width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:4rem;"><i class="fas fa-user-circle"></i></div>
-                        </div>
-                        <h4>Directeur Général</h4>
-                        <p class="leader-title">Directeur Général</p>
-                        <p class="leader-message">"Moderniser le fret congolais pour une meilleure compétitivité"</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
-                    <div class="leader-card-large">
-                        <div class="leader-photo-large">
-                            <div style="width:100%;height:100%;background:linear-gradient(135deg,#003399,#0066CC);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:4rem;"><i class="fas fa-user-circle"></i></div>
-                        </div>
-                        <h4>Directeur Général Adjoint</h4>
-                        <p class="leader-title">Directeur Général Adjoint</p>
-                        <p class="leader-message">"L'innovation au service des chargeurs"</p>
-                    </div>
-                </div>
-            `;
+            }
         }
-    }
 
-    // Exécuter le chargement des leaders
-    loadLeaders();
-});
-</script>
+        loadLeaders();
+    });
+    </script>
 </body>
 </html>

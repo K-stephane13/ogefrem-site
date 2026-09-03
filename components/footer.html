@@ -4,25 +4,25 @@
             <div class="col-md-4 mb-4">
                 <div class="footer-logo">
                     <img src="assets/images/ogefrem_logo2.png" alt="OGEFREM" onerror="this.src='https://placehold.co/150x50/003399/white?text=OGEFREM'">
-                    <p>Office de Gestion du Fret Multimodal</p>
+                    <p data-fr="Office de Gestion du Fret Multimodal" data-en="Multimodal Freight Management Office">Office de Gestion du Fret Multimodal</p>
                 </div>
-                <p class="footer-description">Autorité de régulation du fret congolais, au service des chargeurs et opérateurs économiques depuis 1980.</p>
+                <p class="footer-description" data-fr="Autorité de régulation du fret congolais, au service des chargeurs et opérateurs économiques depuis 1980." data-en="Congolese freight regulatory authority, serving shippers and economic operators since 1980.">Autorité de régulation du fret congolais, au service des chargeurs et opérateurs économiques depuis 1980.</p>
             </div>
             <div class="col-md-4 mb-4">
-                <h5>Liens utiles</h5>
+                <h5 data-fr="Liens utiles" data-en="Useful links">Liens utiles</h5>
                 <ul>
-                    <li><a href="presentation.html">À propos</a></li>
-                    <li><a href="reglementations.html">Règlementations</a></li>
-                    <li><a href="services.html">Nos services</a></li>
-                    <li><a href="mandataires.html">Devenir mandataire</a></li>
-                    <li><a href="#">Appels d'offres</a></li>
-                    <li><a href="#">Mentions légales</a></li>
-                    <li><a href="#">Politique de confidentialité</a></li>
+                    <li><a href="presentation.html" data-fr="À propos" data-en="About">À propos</a></li>
+                    <li><a href="reglementations.html" data-fr="Règlementations" data-en="Regulations">Règlementations</a></li>
+                    <li><a href="services.html" data-fr="Nos services" data-en="Our services">Nos services</a></li>
+                    <li><a href="mandataires.html" data-fr="Devenir mandataire" data-en="Become an agent">Devenir mandataire</a></li>
+                    <li><a href="#" data-fr="Appels d'offres" data-en="Tenders">Appels d'offres</a></li>
+                    <li><a href="#" data-fr="Mentions légales" data-en="Legal notices">Mentions légales</a></li>
+                    <li><a href="#" data-fr="Politique de confidentialité" data-en="Privacy policy">Politique de confidentialité</a></li>
                 </ul>
             </div>
             <div class="col-md-4 mb-4">
-                <h5>Contact</h5>
-                <p><i class="fas fa-map-marker-alt"></i> Kinshasa/Gombe, RDC Av. TSF n°9</p>
+                <h5 data-fr="Contact" data-en="Contact">Contact</h5>
+                <p><i class="fas fa-map-marker-alt"></i> <span data-fr="Kinshasa/Gombe, RDC Av. TSF n°9" data-en="Kinshasa/Gombe, DRC Av. TSF n°9">Kinshasa/Gombe, RDC Av. TSF n°9</span></p>
                 <p><i class="fas fa-envelope"></i> dg@ogefrem.cd</p>
                 <div class="social-links">
                     <a href="https://www.facebook.com/share/17rmxmKJUF/" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
@@ -33,7 +33,34 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 OGEFREM - Tous droits réservés.</p>
+            <p data-fr="&copy; 2026 OGEFREM - Tous droits réservés." data-en="&copy; 2026 OGEFREM - All rights reserved.">&copy; 2026 OGEFREM - Tous droits réservés.</p>
         </div>
     </div>
 </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Synchronize with navbar language
+    let currentLang = localStorage.getItem('ogefrem_lang') || 'fr';
+    
+    function updateFooterLanguage(lang) {
+        document.querySelectorAll('.footer [data-fr][data-en]').forEach(el => {
+            el.textContent = el.dataset[lang];
+        });
+    }
+    
+    // Listen for language changes
+    const observer = new MutationObserver(function() {
+        let lang = localStorage.getItem('ogefrem_lang') || 'fr';
+        if (lang !== currentLang) {
+            currentLang = lang;
+            updateFooterLanguage(lang);
+        }
+    });
+    
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    
+    // Initial update
+    updateFooterLanguage(currentLang);
+});
+</script>

@@ -1,16 +1,44 @@
 <?php
-// assets/php/api/data.php - API REST OGEFREM (VERSION AVEC MINISTRE ET BLOB)
+// assets/php/api/data.php - API REST OGEFREM
 
 require_once __DIR__ . '/config.php';
 
 $module = $_GET['module'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'];
 
-writeLog("API: $method $module");
+// ============================================================
+// LIRE L'ACTION DEPUIS POST OU GET
+// ============================================================
+$action = $_POST['action'] ?? $_GET['action'] ?? '';
 
-// Gestion du _method pour PUT/DELETE via POST
-if ($method === 'POST' && isset($_POST['_method'])) {
-    $method = strtoupper($_POST['_method']);
+// Si action = create ou update, on force la méthode
+if ($action === 'create') {
+    $method = 'POST';
+    writeLog("ACTION create détectée -> méthode POST");
+} elseif ($action === 'update') {
+    $method = 'PUT';
+    writeLog("ACTION update détectée -> méthode PUT");
+}
+
+writeLog("API: $method $module (action: $action)");
+
+// ============================================================
+// GESTION DU _method POUR COMPATIBILITÉ
+// ============================================================
+if ($method === 'POST') {
+    if (isset($_POST['_method'])) {
+        $method = strtoupper($_POST['_method']);
+        writeLog("_method trouvé dans POST: " . $method);
+    } else {
+        $inputRaw = file_get_contents('php://input');
+        if (!empty($inputRaw)) {
+            $jsonData = json_decode($inputRaw, true);
+            if (isset($jsonData['_method'])) {
+                $method = strtoupper($jsonData['_method']);
+                writeLog("_method trouvé dans JSON: " . $method);
+            }
+        }
+    }
 }
 
 $allowed = ['actualites', 'demandes', 'offres', 'comite', 'conseil', 'ministre'];
@@ -168,12 +196,9 @@ function save_ministre_image($pdo, $id, $file) {
 // GET - RÉCUPÉRATION DES DONNÉES
 // ============================================================
 if ($method === 'GET') {
-    // ============================================================
-    // ACTUALITÉS
-    // ============================================================
     if ($module === 'actualites') {
         try {
-            $rows = $pdo->query('SELECT id, titre, date_publication, categorie, description, facebook_url, instagram_url, twitter_url, likes, created_at, updated_at FROM actualites ORDER BY date_publication DESC, id DESC')->fetchAll();
+            $rows = $pdo->query('SELECT id, titre, titre_en, date_publication, categorie, categorie_en, description, description_en, facebook_url, instagram_url, twitter_url, likes, created_at, updated_at FROM actualites ORDER BY date_publication DESC, id DESC')->fetchAll();
             
             $imgStmt = $pdo->prepare('SELECT id, nom_fichier, type_mime, taille, ordre FROM actualite_images WHERE actualite_id = ? ORDER BY ordre, id');
 
@@ -184,9 +209,12 @@ if ($method === 'GET') {
                 return [
                     'id' => (int)$r['id'],
                     'titre' => $r['titre'],
+                    'titre_en' => $r['titre_en'],
                     'date' => $r['date_publication'],
                     'categorie' => $r['categorie'],
+                    'categorie_en' => $r['categorie_en'],
                     'description' => $r['description'],
+                    'description_en' => $r['description_en'],
                     'images' => array_map(function($img) {
                         return [
                             'id' => (int)$img['id'],
@@ -213,12 +241,9 @@ if ($method === 'GET') {
         }
     }
 
-    // ============================================================
-    // COMITÉ - AVEC IMAGES BLOB
-    // ============================================================
     if ($module === 'comite') {
         try {
-            $rows = $pdo->query('SELECT id, nom, titre, message, photo_data IS NOT NULL as has_photo, photo_type, photo_nom FROM comite_gestion ORDER BY id ASC')->fetchAll();
+            $rows = $pdo->query('SELECT id, nom, titre, message, message_en, photo_data IS NOT NULL as has_photo, photo_type, photo_nom FROM comite_gestion ORDER BY id ASC')->fetchAll();
             
             $data = array_map(function($r) {
                 return [
@@ -226,6 +251,7 @@ if ($method === 'GET') {
                     'nom' => $r['nom'],
                     'titre' => $r['titre'],
                     'message' => $r['message'],
+                    'message_en' => $r['message_en'],
                     'has_photo' => (bool)$r['has_photo'],
                     'photo_type' => $r['photo_type'],
                     'photo_nom' => $r['photo_nom'],
@@ -233,7 +259,6 @@ if ($method === 'GET') {
                 ];
             }, $rows);
             
-            writeLog('Comité GET - Nombre de lignes: ' . count($data));
             json_response($data);
         } catch (PDOException $e) {
             writeLog('Erreur GET comite: ' . $e->getMessage(), null, 'ERROR');
@@ -241,12 +266,9 @@ if ($method === 'GET') {
         }
     }
 
-    // ============================================================
-    // CONSEIL - AVEC IMAGES BLOB
-    // ============================================================
     if ($module === 'conseil') {
         try {
-            $rows = $pdo->query('SELECT id, nom, titre, message, photo_data IS NOT NULL as has_photo, photo_type, photo_nom FROM conseil_administration ORDER BY id ASC')->fetchAll();
+            $rows = $pdo->query('SELECT id, nom, titre, message, message_en, photo_data IS NOT NULL as has_photo, photo_type, photo_nom FROM conseil_administration ORDER BY id ASC')->fetchAll();
             
             $data = array_map(function($r) {
                 return [
@@ -254,6 +276,7 @@ if ($method === 'GET') {
                     'nom' => $r['nom'],
                     'titre' => $r['titre'],
                     'message' => $r['message'],
+                    'message_en' => $r['message_en'],
                     'has_photo' => (bool)$r['has_photo'],
                     'photo_type' => $r['photo_type'],
                     'photo_nom' => $r['photo_nom'],
@@ -261,7 +284,6 @@ if ($method === 'GET') {
                 ];
             }, $rows);
             
-            writeLog('Conseil GET - Nombre de lignes: ' . count($data));
             json_response($data);
         } catch (PDOException $e) {
             writeLog('Erreur GET conseil: ' . $e->getMessage(), null, 'ERROR');
@@ -269,12 +291,9 @@ if ($method === 'GET') {
         }
     }
 
-    // ============================================================
-    // MINISTRE - AVEC IMAGES BLOB
-    // ============================================================
     if ($module === 'ministre') {
         try {
-            $stmt = $pdo->prepare('SELECT id, nom, titre, message, photo_data IS NOT NULL as has_photo, photo_type, photo_nom, updated_at FROM ministre_transports WHERE id = 1 LIMIT 1');
+            $stmt = $pdo->prepare('SELECT id, nom, titre, message, message_en, photo_data IS NOT NULL as has_photo, photo_type, photo_nom, updated_at FROM ministre_transports WHERE id = 1 LIMIT 1');
             $stmt->execute();
             $row = $stmt->fetch();
             
@@ -284,6 +303,7 @@ if ($method === 'GET') {
                     'nom' => $row['nom'],
                     'titre' => $row['titre'],
                     'message' => $row['message'],
+                    'message_en' => $row['message_en'],
                     'has_photo' => (bool)$row['has_photo'],
                     'photo_type' => $row['photo_type'],
                     'photo_nom' => $row['photo_nom'],
@@ -292,7 +312,6 @@ if ($method === 'GET') {
                 ];
                 json_response($data);
             } else {
-                // Créer l'entrée par défaut si elle n'existe pas
                 $stmt = $pdo->prepare('INSERT INTO ministre_transports (id, nom, titre, message) VALUES (1, "Ministre des Transports", "Ministre des Transports", "Partenariat stratégique avec l\'OGEFREM")');
                 $stmt->execute();
                 json_response([
@@ -300,6 +319,7 @@ if ($method === 'GET') {
                     'nom' => 'Ministre des Transports',
                     'titre' => 'Ministre des Transports',
                     'message' => 'Partenariat stratégique avec l\'OGEFREM',
+                    'message_en' => 'Strategic partnership with OGEFREM',
                     'has_photo' => false,
                     'photo_type' => null,
                     'photo_nom' => null,
@@ -345,7 +365,6 @@ if ($module === 'actualites' && $_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET[
         $existing = $checkStmt->fetch();
         
         if ($existing) {
-            // Supprimer le like
             $deleteStmt = $pdo->prepare('DELETE FROM likes WHERE actualite_id = ? AND user_identifier = ?');
             $deleteStmt->execute([$id, $userIdentifier]);
             
@@ -364,7 +383,6 @@ if ($module === 'actualites' && $_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET[
             ]);
         }
         
-        // Ajouter le like
         $insertStmt = $pdo->prepare('INSERT INTO likes(actualite_id, user_identifier) VALUES (?, ?)');
         $insertStmt->execute([$id, $userIdentifier]);
         
@@ -388,7 +406,18 @@ if ($module === 'actualites' && $_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET[
 require_auth();
 
 $isMultipart = strpos($_SERVER['CONTENT_TYPE'] ?? '', 'multipart/form-data') !== false;
-$input = $isMultipart ? $_POST : (json_decode(file_get_contents('php://input'), true) ?: []);
+
+// Récupérer les données en fonction du type de requête
+if ($isMultipart) {
+    $input = $_POST;
+    // Pour les requêtes multipart, _method est déjà traité plus haut
+} else {
+    $inputRaw = file_get_contents('php://input');
+    $input = json_decode($inputRaw, true) ?: [];
+}
+
+writeLog("DATA.PHP - Method: $method, Module: $module, IsMultipart: " . ($isMultipart ? 'true' : 'false'));
+writeLog("DATA.PHP - Input: " . json_encode($input));
 
 // ============================================================
 // ACTUALITÉS - POST / PUT
@@ -396,15 +425,20 @@ $input = $isMultipart ? $_POST : (json_decode(file_get_contents('php://input'), 
 if ($module === 'actualites' && in_array($method, ['POST', 'PUT'], true)) {
     $id = (int)($input['id'] ?? 0);
     $titre = trim($input['titre'] ?? '');
+    $titreEn = trim($input['titre_en'] ?? '');
     $date = trim($input['date'] ?? '');
     $categorie = trim($input['categorie'] ?? '');
+    $categorieEn = trim($input['categorie_en'] ?? '');
     $description = trim($input['description'] ?? '');
+    $descriptionEn = trim($input['description_en'] ?? '');
     $facebook = trim($input['facebookUrl'] ?? '');
     $instagram = trim($input['instagramUrl'] ?? '');
     $twitter = trim($input['twitterUrl'] ?? '');
     $likes = (int)($input['likes'] ?? 0);
     $replaceImages = ($input['replaceImages'] ?? '0') === '1';
     $files = normalize_uploaded_files('images');
+
+    writeLog("ACTUALITES SAVE - ID: $id, Titre: $titre, Date: $date, Categorie: $categorie");
 
     if ($titre === '' || $date === '' || $categorie === '' || $description === '') {
         json_response(['success' => false, 'message' => 'Titre, date, catégorie et description sont obligatoires.'], 422);
@@ -414,9 +448,10 @@ if ($module === 'actualites' && in_array($method, ['POST', 'PUT'], true)) {
         $pdo->beginTransaction();
 
         if ($method === 'POST') {
-            $stmt = $pdo->prepare('INSERT INTO actualites(titre, date_publication, categorie, description, facebook_url, instagram_url, twitter_url, likes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-            $stmt->execute([$titre, $date, $categorie, $description, $facebook, $instagram, $twitter, $likes]);
+            $stmt = $pdo->prepare('INSERT INTO actualites(titre, titre_en, date_publication, categorie, categorie_en, description, description_en, facebook_url, instagram_url, twitter_url, likes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            $stmt->execute([$titre, $titreEn, $date, $categorie, $categorieEn, $description, $descriptionEn, $facebook, $instagram, $twitter, $likes]);
             $id = (int)$pdo->lastInsertId();
+            writeLog("ACTUALITES - Nouvel ID: $id");
             
             if (!$id) {
                 throw new RuntimeException('Échec de l\'insertion');
@@ -426,15 +461,18 @@ if ($module === 'actualites' && in_array($method, ['POST', 'PUT'], true)) {
                 throw new RuntimeException('ID invalide');
             }
             
-            $stmt = $pdo->prepare('UPDATE actualites SET titre=?, date_publication=?, categorie=?, description=?, facebook_url=?, instagram_url=?, twitter_url=?, likes=? WHERE id=?');
-            $stmt->execute([$titre, $date, $categorie, $description, $facebook, $instagram, $twitter, $likes, $id]);
+            $stmt = $pdo->prepare('UPDATE actualites SET titre=?, titre_en=?, date_publication=?, categorie=?, categorie_en=?, description=?, description_en=?, facebook_url=?, instagram_url=?, twitter_url=?, likes=? WHERE id=?');
+            $stmt->execute([$titre, $titreEn, $date, $categorie, $categorieEn, $description, $descriptionEn, $facebook, $instagram, $twitter, $likes, $id]);
+            writeLog("ACTUALITES - Mise à jour ID: $id");
 
             if ($replaceImages) {
                 $pdo->prepare('DELETE FROM actualite_images WHERE actualite_id = ?')->execute([$id]);
+                writeLog("ACTUALITES - Images supprimées pour ID: $id");
             }
         }
 
-        if ($files) {
+        if (!empty($files)) {
+            writeLog("ACTUALITES - Sauvegarde de " . count($files) . " images");
             save_actualite_images($pdo, $id, $files);
         }
 
@@ -450,14 +488,17 @@ if ($module === 'actualites' && in_array($method, ['POST', 'PUT'], true)) {
 }
 
 // ============================================================
-// COMITE - POST / PUT (AVEC IMAGE BLOB)
+// COMITE - POST / PUT
 // ============================================================
 if ($module === 'comite' && in_array($method, ['POST', 'PUT'], true)) {
     $id = (int)($input['id'] ?? 0);
     $nom = trim($input['nom'] ?? '');
     $titre = trim($input['titre'] ?? '');
     $message = trim($input['message'] ?? '');
+    $messageEn = trim($input['message_en'] ?? '');
     $files = normalize_uploaded_files('photo');
+    
+    writeLog("COMITE SAVE - ID: $id, Nom: $nom, Titre: $titre");
     
     if ($nom === '' || $titre === '') {
         json_response(['success' => false, 'message' => 'Nom et titre sont obligatoires.'], 422);
@@ -465,12 +506,11 @@ if ($module === 'comite' && in_array($method, ['POST', 'PUT'], true)) {
     
     try {
         if ($method === 'POST') {
-            // Création
-            $stmt = $pdo->prepare('INSERT INTO comite_gestion(nom, titre, message) VALUES (?, ?, ?)');
-            $stmt->execute([$nom, $titre, $message]);
+            $stmt = $pdo->prepare('INSERT INTO comite_gestion(nom, titre, message, message_en) VALUES (?, ?, ?, ?)');
+            $stmt->execute([$nom, $titre, $message, $messageEn]);
             $id = $pdo->lastInsertId();
+            writeLog("COMITE - Nouvel ID: $id");
             
-            // Si une image est fournie
             if (!empty($files)) {
                 save_leader_image($pdo, 'comite_gestion', $id, $files[0]);
             }
@@ -478,16 +518,14 @@ if ($module === 'comite' && in_array($method, ['POST', 'PUT'], true)) {
             add_log($pdo, 'CREATE', 'comite', $id, 'Membre comité ajouté');
             json_response(['success' => true, 'id' => $id]);
         } else {
-            // Modification
             if ($id <= 0) {
                 json_response(['success' => false, 'message' => 'ID invalide'], 400);
             }
             
-            // Mettre à jour les champs texte
-            $stmt = $pdo->prepare('UPDATE comite_gestion SET nom=?, titre=?, message=? WHERE id=?');
-            $stmt->execute([$nom, $titre, $message, $id]);
+            $stmt = $pdo->prepare('UPDATE comite_gestion SET nom=?, titre=?, message=?, message_en=? WHERE id=?');
+            $stmt->execute([$nom, $titre, $message, $messageEn, $id]);
+            writeLog("COMITE - Mise à jour ID: $id");
             
-            // Si une nouvelle image est fournie, remplacer
             if (!empty($files)) {
                 save_leader_image($pdo, 'comite_gestion', $id, $files[0]);
             }
@@ -502,14 +540,17 @@ if ($module === 'comite' && in_array($method, ['POST', 'PUT'], true)) {
 }
 
 // ============================================================
-// CONSEIL - POST / PUT (AVEC IMAGE BLOB)
+// CONSEIL - POST / PUT
 // ============================================================
 if ($module === 'conseil' && in_array($method, ['POST', 'PUT'], true)) {
     $id = (int)($input['id'] ?? 0);
     $nom = trim($input['nom'] ?? '');
     $titre = trim($input['titre'] ?? '');
     $message = trim($input['message'] ?? '');
+    $messageEn = trim($input['message_en'] ?? '');
     $files = normalize_uploaded_files('photo');
+    
+    writeLog("CONSEIL SAVE - ID: $id, Nom: $nom, Titre: $titre");
     
     if ($nom === '' || $titre === '') {
         json_response(['success' => false, 'message' => 'Nom et titre sont obligatoires.'], 422);
@@ -517,12 +558,11 @@ if ($module === 'conseil' && in_array($method, ['POST', 'PUT'], true)) {
     
     try {
         if ($method === 'POST') {
-            // Création
-            $stmt = $pdo->prepare('INSERT INTO conseil_administration(nom, titre, message) VALUES (?, ?, ?)');
-            $stmt->execute([$nom, $titre, $message]);
+            $stmt = $pdo->prepare('INSERT INTO conseil_administration(nom, titre, message, message_en) VALUES (?, ?, ?, ?)');
+            $stmt->execute([$nom, $titre, $message, $messageEn]);
             $id = $pdo->lastInsertId();
+            writeLog("CONSEIL - Nouvel ID: $id");
             
-            // Si une image est fournie
             if (!empty($files)) {
                 save_leader_image($pdo, 'conseil_administration', $id, $files[0]);
             }
@@ -530,16 +570,14 @@ if ($module === 'conseil' && in_array($method, ['POST', 'PUT'], true)) {
             add_log($pdo, 'CREATE', 'conseil', $id, 'Membre CA ajouté');
             json_response(['success' => true, 'id' => $id]);
         } else {
-            // Modification
             if ($id <= 0) {
                 json_response(['success' => false, 'message' => 'ID invalide'], 400);
             }
             
-            // Mettre à jour les champs texte
-            $stmt = $pdo->prepare('UPDATE conseil_administration SET nom=?, titre=?, message=? WHERE id=?');
-            $stmt->execute([$nom, $titre, $message, $id]);
+            $stmt = $pdo->prepare('UPDATE conseil_administration SET nom=?, titre=?, message=?, message_en=? WHERE id=?');
+            $stmt->execute([$nom, $titre, $message, $messageEn, $id]);
+            writeLog("CONSEIL - Mise à jour ID: $id");
             
-            // Si une nouvelle image est fournie, remplacer
             if (!empty($files)) {
                 save_leader_image($pdo, 'conseil_administration', $id, $files[0]);
             }
@@ -554,37 +592,39 @@ if ($module === 'conseil' && in_array($method, ['POST', 'PUT'], true)) {
 }
 
 // ============================================================
-// MINISTRE - POST / PUT (AVEC IMAGE BLOB) - Réservé SUPER ADMIN
+// MINISTRE - POST / PUT
 // ============================================================
 if ($module === 'ministre' && in_array($method, ['POST', 'PUT'], true)) {
-    // Seul le SUPER_ADMIN peut modifier le ministre
     require_super_admin();
     
     $id = (int)($input['id'] ?? 1);
     $nom = trim($input['nom'] ?? '');
     $titre = trim($input['titre'] ?? '');
     $message = trim($input['message'] ?? '');
+    $messageEn = trim($input['message_en'] ?? '');
     $files = normalize_uploaded_files('photo');
+    
+    writeLog("MINISTRE SAVE - ID: $id, Nom: $nom");
     
     if ($nom === '' || $titre === '') {
         json_response(['success' => false, 'message' => 'Nom et titre sont obligatoires.'], 422);
     }
     
     try {
-        // Vérifier si l'entrée existe
         $checkStmt = $pdo->prepare('SELECT id FROM ministre_transports WHERE id = ?');
         $checkStmt->execute([$id]);
         $exists = $checkStmt->fetch();
         
         if (!$exists) {
-            $stmt = $pdo->prepare('INSERT INTO ministre_transports (id, nom, titre, message) VALUES (?, ?, ?, ?)');
-            $stmt->execute([$id, $nom, $titre, $message]);
+            $stmt = $pdo->prepare('INSERT INTO ministre_transports (id, nom, titre, message, message_en) VALUES (?, ?, ?, ?, ?)');
+            $stmt->execute([$id, $nom, $titre, $message, $messageEn]);
+            writeLog("MINISTRE - Insertion ID: $id");
         } else {
-            $stmt = $pdo->prepare('UPDATE ministre_transports SET nom=?, titre=?, message=? WHERE id=?');
-            $stmt->execute([$nom, $titre, $message, $id]);
+            $stmt = $pdo->prepare('UPDATE ministre_transports SET nom=?, titre=?, message=?, message_en=? WHERE id=?');
+            $stmt->execute([$nom, $titre, $message, $messageEn, $id]);
+            writeLog("MINISTRE - Mise à jour ID: $id");
         }
         
-        // Si une nouvelle image est fournie
         if (!empty($files)) {
             save_ministre_image($pdo, $id, $files[0]);
         }
