@@ -5154,3 +5154,83 @@ body.dark-mode .pdf-info small {
                 font-size: 0.4rem !important;
             }
         }
+
+        /* ============================================================
+   BOUTON DE PARTAGE
+   ============================================================ */
+.share-btn,
+.share-btn-modal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 30px;
+    color: #555;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f0f2f5;
+}
+
+.share-btn:hover,
+.share-btn-modal:hover {
+    background: #003399;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,51,153,0.25);
+}
+
+.share-btn i,
+.share-btn-modal i {
+    font-size: 0.9rem;
+}
+
+.share-btn.copied,
+.share-btn-modal.copied {
+    background: #28a745;
+    color: #fff;
+}
+
+/* En dark mode */
+body.dark-mode .share-btn,
+body.dark-mode .share-btn-modal {
+    background: #2a2f3e;
+    color: #bbb;
+}
+
+body.dark-mode .share-btn:hover,
+body.dark-mode .share-btn-modal:hover {
+    background: #FFCC00;
+    color: #003399;
+}
+
+body.dark-mode .share-btn.copied,
+body.dark-mode .share-btn-modal.copied {
+    background: #28a745;
+    color: #fff;
+}
+
+/* Disposition responsive des actions */
+.post-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+body.dark-mode .modal-actions {
+    border-top-color: #2a2f3e;
+}

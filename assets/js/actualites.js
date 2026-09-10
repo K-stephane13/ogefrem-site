@@ -1,4 +1,4 @@
-// assets/js/actualites.js - VERSION BILINGUE COMPLÈTE
+// assets/js/actualites.js - VERSION BILINGUE COMPLÈTE AVEC PARTAGE DE LIEN
 
 let currentPage = 1;
 const itemsPerPage = 9;
@@ -123,6 +123,65 @@ function initLikeButtons() {
 }
 
 // ============================================================
+// PARTAGE DE LIEN - NOUVEAU !
+// ============================================================
+function sharePostLink(postId, button) {
+    const lang = getCurrentLang();
+    // Construire l'URL complète avec l'ancre
+    const url = window.location.origin + window.location.pathname + '#post-' + postId;
+    
+    // Vérifier si l'API Clipboard est disponible
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(() => {
+            // Feedback visuel
+            const originalHtml = button.innerHTML;
+            const successMsg = lang === 'fr' ? '✅ Lien copié !' : '✅ Link copied!';
+            button.innerHTML = successMsg;
+            button.classList.add('copied');
+            
+            setTimeout(() => {
+                button.innerHTML = originalHtml;
+                button.classList.remove('copied');
+            }, 2500);
+        }).catch(() => {
+            // Fallback pour les erreurs de clipboard
+            fallbackCopy(url, button, lang);
+        });
+    } else {
+        // Fallback pour les navigateurs sans Clipboard API
+        fallbackCopy(url, button, lang);
+    }
+}
+
+// Fallback : créer un input temporaire
+function fallbackCopy(text, button, lang) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+    
+    try {
+        document.execCommand('copy');
+        const originalHtml = button.innerHTML;
+        const successMsg = lang === 'fr' ? '✅ Lien copié !' : '✅ Link copied!';
+        button.innerHTML = successMsg;
+        button.classList.add('copied');
+        setTimeout(() => {
+            button.innerHTML = originalHtml;
+            button.classList.remove('copied');
+        }, 2500);
+    } catch (e) {
+        // Si la copie échoue, ouvrir un prompt avec le lien
+        const msg = lang === 'fr' ? 'Copiez ce lien manuellement :' : 'Copy this link manually:';
+        prompt(msg, text);
+    }
+    document.body.removeChild(textarea);
+}
+
+// ============================================================
 // CHARGEMENT DES ACTUALITÉS
 // ============================================================
 async function loadActualitesData() {
@@ -170,7 +229,7 @@ async function loadActualitesData() {
 }
 
 // ============================================================
-// AFFICHAGE DES ACTUALITÉS (BILINGUE)
+// AFFICHAGE DES ACTUALITÉS (BILINGUE) - AVEC BOUTON DE PARTAGE
 // ============================================================
 function renderActualites() {
     const lang = getCurrentLang();
@@ -203,6 +262,7 @@ function renderActualites() {
         const images = Array.isArray(post.images) ? post.images : [];
         const imageCount = images.length;
         const isLiked = localStorage.getItem(`post_liked_${post.id}`) === 'true';
+        const shareLabel = lang === 'fr' ? 'Partager' : 'Share';
         
         return `
             <div class="col-md-6 col-lg-4 actualite-post" data-categorie="${escapeHtml(post.categorie)}">
@@ -238,6 +298,10 @@ function renderActualites() {
                             <button class="like-btn ${isLiked ? 'liked' : ''}" type="button" data-id="${post.id}">
                                 <i class="fas fa-heart"></i>
                                 <span class="like-count">${Number(post.likes) || 0}</span>
+                            </button>
+                            <button class="share-btn" type="button" data-id="${post.id}" onclick="sharePostLink(${post.id}, this)">
+                                <i class="fas fa-link"></i>
+                                <span class="share-label">${shareLabel}</span>
                             </button>
                             <div class="social-share">
                                 ${post.facebookUrl ? `<a href="${escapeHtml(post.facebookUrl)}" target="_blank" rel="noopener" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>` : ''}
@@ -341,7 +405,7 @@ document.querySelectorAll('.filter-active-btn').forEach(btn => {
 });
 
 // ============================================================
-// MODAL (BILINGUE)
+// MODAL (BILINGUE) - AVEC BOUTON DE PARTAGE
 // ============================================================
 window.openPostModal = function(postId) {
     const lang = getCurrentLang();
@@ -354,6 +418,7 @@ window.openPostModal = function(postId) {
     const category = getCategorieLabel(post.categorie, lang);
     const images = Array.isArray(post.images) ? post.images : [];
     const isLiked = localStorage.getItem(`post_liked_${post.id}`) === 'true';
+    const shareLabel = lang === 'fr' ? 'Copier le lien' : 'Copy link';
 
     document.getElementById('postModal')?.remove();
     document.body.insertAdjacentHTML('beforeend', `
@@ -373,6 +438,9 @@ window.openPostModal = function(postId) {
                     <div class="modal-actions">
                         <button class="like-btn-modal ${isLiked ? 'liked' : ''}" type="button" data-id="${post.id}">
                             <i class="fas fa-heart"></i> <span class="like-count">${Number(post.likes) || 0}</span>
+                        </button>
+                        <button class="share-btn-modal" type="button" onclick="sharePostLink(${post.id}, this)">
+                            <i class="fas fa-link"></i> <span class="share-label">${shareLabel}</span>
                         </button>
                         <div class="social-share-modal">
                             ${post.facebookUrl ? `<a href="${escapeHtml(post.facebookUrl)}" target="_blank" rel="noopener" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>` : ''}
